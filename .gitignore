@@ -1,0 +1,74 @@
+# WordPress core
+wp-config.php
+wp-admin/
+wp-includes/
+wp-*.php
+index.php
+license.txt
+readme.html
+xmlrpc.php
+
+# WP Engine specific
+_wpeprivate
+wp-content/object-cache.php
+wp-content/mysql.sql
+wp-content/mu-plugins/mu-plugin.php
+wp-content/mu-plugins/slt-force-strong-passwords.php
+wp-content/mu-plugins/wpengine-common/
+wp-content/mu-plugins/limit-login-attempts/
+
+# Uploads and media (managed outside Git)
+wp-content/uploads/
+wp-content/blogs.dir/
+wp-content/upgrade/
+
+# Large / binary files disallowed by WP Engine
+*.hqx
+*.bin
+*.exe
+*.dll
+*.deb
+*.dmg
+*.iso
+*.img
+*.msi
+*.msp
+*.msm
+*.mid
+*.midi
+*.kar
+*.mp3
+*.ogg
+*.m4a
+*.ra
+*.3gpp
+*.3gp
+*.mp4
+*.mpeg
+*.mpg
+*.mov
+*.webm
+*.flv
+*.m4v
+*.mng
+*.asx
+*.asf
+*.wmv
+*.avi
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (if applicable)
+node_modules/
+
+# Logs
+*.log
+wp-content/.logs/
