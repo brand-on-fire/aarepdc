@@ -1,0 +1,116 @@
+<?php 
+if (isset($_POST['ers_add_event'] ) && wp_verify_nonce($_POST['ers_add_event'], 'event_details' )){
+	global $wpdb;
+
+	$first_name = $_POST['first_name'];
+	$last_name = $_POST['last_name'];
+	$email_address = $_POST['email_address'];
+
+  $billing_address = $_POST['billing_address'];
+  $billing_city = $_POST['billing_city'];
+  $billing_state = $_POST['billing_state'];
+  $billing_postalcode = $_POST['billing_postalcode'];
+  $event_id = $_POST['event_id'];
+  $payment_type = $_POST['payment_type'];  
+	$date_added = date('Y-m-d H:i:s');
+
+	// $ms = $wpdb->insert('aal10_event_registration_master',array('first_name'=>$first_name,'last_name'=>$last_name,'email_address'=>$email_address,'billing_address'=>$billing_address,'billing_city'=>$billing_city,'billing_state'=>$billing_state,'billing_postalcode'=>$billing_postalcode,'date_added'=>$date_added));
+
+  $ms = $wpdb->query("insert into aal10_event_registration_master set
+  first_name = '".$first_name."',
+  last_name = '".$last_name."',
+  email_address = '".$email_address."',
+  billing_address= '".$billing_address."',
+  billing_city = '".$billing_city."',
+  billing_state = '".$billing_state."',
+  billing_postal_code = '".$billing_postalcode."',
+  event_id = '".$event_id."',
+  card_type = '".$payment_type."',
+  date_added = '".$date_added."'
+");
+	  
+  if($ms!=false)
+	{ 
+		$msg = 'success';
+	}	
+}
+?>
+
+<div class="wrap">
+  <h2>
+    <?php  _e('Add Event Details','aarepdc'); ?>
+    <a class="add-new-h2" href="admin.php?page=event-registration">Back to Main Page</a>
+  </h2>
+  <?php if($msg){ ?>
+  <?php if($msg == 'success'){ ?>
+  <div class="updated notice notice-success is-dismissible" id="message">
+    <p>Details Added successfully.</p>
+    <button class="notice-dismiss" type="button"><span class="screen-reader-text">Dismiss this notice.</span></button>
+  </div>
+  <?php }?>
+  <?php }?>
+  <div class="form">
+    <form method="post" action="" onSubmit="return event_validate();">
+      <table class="form-table" >
+        <tr valign="top">
+          <th scope="row"><label> <?php _e('First Name*:','aarepdc'); ?> </label></th>
+          <td id="user_search_box"><input type="text" name="first_name" id="first_name"  placeholder="<?php _e('First Name','aarepdc'); ?>" 
+          autocomplete="off" /> </td>
+        </tr>
+        <tr valign="top">
+          <th scope="row"><label> <?php _e('Last Name*:','aarepdc'); ?> </label></th>
+          <td><input type="text" name="last_name" id="last_name" placeholder="<?php _e('Last Name','aarepdc'); ?>" /></td>
+        </tr>
+        <tr valign="top">
+          <th scope="row"><label> <?php _e('Email Address*:','aarepdc'); ?>  </label></th>
+          <td><input type="email" name="email_address" id="email_address" placeholder="<?php _e('Email Address','aarepdc'); ?>" /></td>
+        </tr>
+        <tr valign="top">
+          <th scope="row"><label> <?php _e('Billing Address*:','aarepdc'); ?>  </label></th>
+          <td><input type="text" name="billing_address" id="billing_address" placeholder="<?php _e('Billing Address','aarepdc'); ?>" /></td>
+        </tr>
+        <tr valign="top">
+          <th scope="row"><label> <?php _e('Billing city*:','aarepdc'); ?>  </label></th>
+          <td><input type="text" name="billing_city" id="billing_city" placeholder="<?php _e('Billing city','aarepdc'); ?>" /></td>
+        </tr>
+        <tr valign="top">
+          <th scope="row"><label> <?php _e('Billing State*:','aarepdc'); ?>  </label></th>
+          <td><input type="text" name="billing_state" id="billing_state" placeholder="<?php _e('Billing State','aarepdc'); ?>" /></td>
+        </tr>
+        <tr valign="top">
+          <th scope="row"><label> <?php _e('Billing Postal Code*:','aarepdc'); ?>  </label></th>
+          <td><input type="text" name="billing_postalcode" id="billing_postalcode" placeholder="<?php _e('Billing Postal Code','aarepdc'); ?>" /></td>
+        </tr>
+
+        <tr valign="top">
+          <th scope="row"><label> <?php _e('Event Name*:','aarepdc'); ?>  </label></th>
+          <td><select name="event_id" id="event_id" style="width: 162px;">
+              <option value=""> Select Event </option>
+              <?php
+              $eventDatas = $wpdb->get_results("SELECT ID, post_title FROM adc10_posts WHERE `post_status` LIKE 'publish' AND `post_type` LIKE 'tribe_events' ");
+             // print_r($eventDatas);
+              foreach( $eventDatas as $eventData){
+                echo '<option value="'.$eventData->ID.'">'.$eventData->post_title.'</option>';
+              } ?>           
+        </select></td>
+        </tr>
+        <tr valign="top">
+          <th scope="row"><label> <?php _e('Payment Type*:','aarepdc'); ?>  </label></th>
+          <td>        
+          <input type="checkbox" id="payment_type" name="payment_type" value="Cheque">
+          <label for="payment_type"> Cheque</label>
+        </td>
+        </tr>
+        <tr valign="top">
+          <th scope="row"></th>
+          <td><input type="hidden" name="pp_event_id" id="pp_event_id" />
+            <input type="submit" name="submit" value="<?php _e('Submit','aarepdc'); ?>" class="button-primary" />
+            <?php wp_nonce_field("event_details","ers_add_event");?></td>
+        </tr>
+      </table>
+    </form>
+  </div>
+</div>
+<script type="text/javascript">
+ var plugin_url = '<?php echo PP_PLUGIN_URL;?>';
+</script>

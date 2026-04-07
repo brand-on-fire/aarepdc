@@ -1,0 +1,7 @@
+.status_image{ height:25px;}
+
+#membership_form .form-table input.tog, .form-table input[type="radio"] { 
+margin: 0 10px !important;
+}
+
+#membership_form .wp-core-ui select

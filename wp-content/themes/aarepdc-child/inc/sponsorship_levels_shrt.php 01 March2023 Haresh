@@ -1,0 +1,92 @@
+<?php 
+add_shortcode( 'sponsorship_corporate_levels_shrt', 'sponsorship_corporate_levels_shrt_section' );
+function sponsorship_corporate_levels_shrt_section ($atts) { ob_start(); 
+	$args = array(  
+		'post_type' => 'sponsorship',
+		'post_status' => 'publish',
+		'posts_per_page' => -1,
+		'orderby' => 'id',
+		'order' => 'desc',
+		'id'=> '',	
+		'tax_query' => array(
+			array(
+		   'taxonomy' => 'sponsorships-category',
+							   'field' => 'slug', //can be set to ID
+							   'terms' => 'corporate-membership', //if field is ID you can reference by cat/term number
+							 )
+					   )
+	);
+    ?>
+<?php
+    $sponsorship_Query = new WP_Query( $args );
+    if( $sponsorship_Query->have_posts() ) ?>
+<?php while( $sponsorship_Query->have_posts() ) : $sponsorship_Query->the_post();  ?>
+<div class="col-sm-6 slb_wrapp">
+	<div class="sponsership_level_box">
+
+		<div class="sponsership_level_box_title ld-fh-element lqd-highlight-underline lqd-highlight-grow-left text-decoration-default lqd-split-chars ca-initvalues-applied lqd-animations-done split-text-applied" data-custom-animations="true" data-ca-options="{&quot;triggerHandler&quot;:&quot;inview&quot;,&quot;animationTarget&quot;:&quot;all-childs&quot;,&quot;duration&quot;:&quot;1600&quot;,&quot;startDelay&quot;:&quot;700&quot;,&quot;delay&quot;:&quot;160&quot;,&quot;ease&quot;:&quot;power4.inOut&quot;,&quot;direction&quot;:&quot;forward&quot;,&quot;initValues&quot;:{&quot;opacity&quot;:0,&quot;translateX&quot;:150},&quot;animations&quot;:{&quot;opacity&quot;:1,&quot;translateX&quot;:0}}" style="background-color: #<?php the_field("sponsorship_color_code");?>;">
+
+			<?php the_title(); ?> <span class="sponsership_level_price">$<?php echo number_format(get_field("sponsorship_price"));?></span>
+		</div>
+
+		<div class="wpb_wrapper ca-initvalues-applied sponsership_level_box_data" data-custom-animations="true" data-ca-options="{&quot;triggerHandler&quot;:&quot;inview&quot;,&quot;animationTarget&quot;:&quot;all-childs&quot;,&quot;duration&quot;:&quot;1600&quot;,&quot;startDelay&quot;:&quot;700&quot;,&quot;delay&quot;:&quot;160&quot;,&quot;ease&quot;:&quot;power4.inOut&quot;,&quot;direction&quot;:&quot;forward&quot;,&quot;initValues&quot;:{&quot;opacity&quot;:0,&quot;translateX&quot;:150},&quot;animations&quot;:{&quot;opacity&quot;:1,&quot;translateX&quot;:0}}">
+
+			<div class="sponsers_content_wrapp"><?php the_content(); ?></div>
+
+			 <div class="level_content_button lqd-unit-animation-done" style=""><a href="<?php echo site_url(); ?>/sponsorship-information/?price=<?php the_field("sponsorship_price"); ?>&type=<?php the_title(); ?>" class="site_button btn btn-solid semi-round border-none btn-has-label btn000 ld_button_635fafcd0e14d vc_custom_1665943812055"><span class="btn_inner_000"><span class="btn-txt" data-text="Click Here">Buy Now</span></span></a></div>
+		</div>	
+       
+	</div>	
+</div>
+<?php endwhile; ?>
+<?php 
+ wp_reset_query();
+ return ob_get_clean();
+}
+
+/* Individual Membership Shortcode */
+add_shortcode( 'sponsorship_individual_levels_shrt', 'sponsorship_individual_levels_shrt_section' );
+function sponsorship_individual_levels_shrt_section ($atts) { ob_start(); 
+	$args = array(  
+		'post_type' => 'sponsorship',
+		'post_status' => 'publish',
+		'posts_per_page' => -1,
+		'orderby' => 'id',
+		'order' => 'desc',
+		'id'=> '',	
+		'tax_query' => array(
+			array(
+		   'taxonomy' => 'sponsorships-category',
+							   'field' => 'slug', //can be set to ID
+							   'terms' => 'individual-membership', //if field is ID you can reference by cat/term number
+							 )
+					   )
+	);
+    ?>
+<?php
+    $sponsorship_Query = new WP_Query( $args );
+    if( $sponsorship_Query->have_posts() ) ?>
+<?php while( $sponsorship_Query->have_posts() ) : $sponsorship_Query->the_post();  ?>
+<div class="col-sm-6 slb_wrapp">
+	<div class="sponsership_level_box">
+
+		<div class="sponsership_level_box_title ld-fh-element lqd-highlight-underline lqd-highlight-grow-left text-decoration-default lqd-split-chars ca-initvalues-applied lqd-animations-done split-text-applied" data-custom-animations="true" data-ca-options="{&quot;triggerHandler&quot;:&quot;inview&quot;,&quot;animationTarget&quot;:&quot;all-childs&quot;,&quot;duration&quot;:&quot;1600&quot;,&quot;startDelay&quot;:&quot;700&quot;,&quot;delay&quot;:&quot;160&quot;,&quot;ease&quot;:&quot;power4.inOut&quot;,&quot;direction&quot;:&quot;forward&quot;,&quot;initValues&quot;:{&quot;opacity&quot;:0,&quot;translateX&quot;:150},&quot;animations&quot;:{&quot;opacity&quot;:1,&quot;translateX&quot;:0}}" style="background-color: #<?php the_field("sponsorship_color_code");?>;">
+
+			<?php the_title(); ?> <span class="sponsership_level_price">$<?php echo number_format(get_field("sponsorship_price"));?></span>
+		</div>
+
+		<div class="wpb_wrapper ca-initvalues-applied sponsership_level_box_data" data-custom-animations="true" data-ca-options="{&quot;triggerHandler&quot;:&quot;inview&quot;,&quot;animationTarget&quot;:&quot;all-childs&quot;,&quot;duration&quot;:&quot;1600&quot;,&quot;startDelay&quot;:&quot;700&quot;,&quot;delay&quot;:&quot;160&quot;,&quot;ease&quot;:&quot;power4.inOut&quot;,&quot;direction&quot;:&quot;forward&quot;,&quot;initValues&quot;:{&quot;opacity&quot;:0,&quot;translateX&quot;:150},&quot;animations&quot;:{&quot;opacity&quot;:1,&quot;translateX&quot;:0}}">
+
+			<div class="sponsers_content_wrapp"><?php the_content(); ?></div>
+
+			<div class="level_content_button lqd-unit-animation-done" style=""><a href="<?php echo site_url(); ?>/sponsorship-information/?price=<?php the_field("sponsorship_price"); ?>&type=<?php the_title(); ?>" class="site_button btn btn-solid semi-round border-none btn-has-label btn000 ld_button_635fafcd0e14d vc_custom_1665943812055"><span class="btn_inner_000"><span class="btn-txt" data-text="Click Here">Buy Now</span></span></a></div>
+			
+		</div>	
+        
+	</div>	
+</div>
+<?php endwhile; ?>
+<?php 
+ wp_reset_query();
+ return ob_get_clean();
+}

@@ -1,0 +1,685 @@
+<?php
+add_shortcode( 'memberships_shrt', 'memberships_shortcode' );
+function memberships_shortcode(){
+ob_start(); ?>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+  jQuery( function() {
+    jQuery( "#date_education" ).datepicker();
+  } );
+  /*jQuery('#email_address').keyup(function(){
+    jQuery('#user_name').val(this.value);
+  });*/
+
+  jQuery( document ).ready(function() {
+    jQuery('#email_address').keyup(function(){
+    	jQuery('#user_name').val(this.value);
+  	});
+	});
+  </script>
+  <style type="text/css">
+  	.alredy { color: #ff0000; }
+  </style>
+<div id="clients_loder1" style="display:none; position:fixed; vertical-align:middle; z-index:1050; background-color: #b5b5b5; height: 100%; left: 0; opacity: 0.8; position: fixed; top: 0; width: 100%; z-index: 1001;" align="center"><br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <img src="<?php echo site_url('images/loader-img.gif'); ?>"></div>
+<div class="mycontainer mycontent">
+	<form onsubmit="return false;" method="post" action="" name="membership_form" id="membership_form" style="padding-top: 0;">
+		<h2 class="text-center please_fillout">Please fill out ALL of your information.</h2>
+		<!-- =============================================================================== -->
+		<p style="margin-top: 0;" class="full-width text-center membership_parts application_row"><strong>Application</strong></p>
+
+
+<!-- -------------------------------------------------------------------------------------- -->
+		<div class="donate-block donate-block-fix application_row trg11 trg11_new">
+				<div class="vc_row radio_select_row1" id="top_radio_group1_new">
+						 <div class="vc_col-sm-4">
+						 		<div class="radio_wrapp">
+			            <span class="fancy_radio"><input type="radio" value="General membership" id="general_membership" name="membership_type" checked><span class="checkmark"></span></span>
+			            <label for="general_membership"><strong><?php echo get_field('add_label_general_membership'); ?> - $<?php echo get_field('general_membership_price'); ?></strong></label>
+			          </div>
+						 </div>
+						 <div class="vc_col-sm-4">
+						 		<div class="radio_wrapp">
+									<span class="fancy_radio"><input type="radio" value="Non-Profit / Government" id="non_profit_government" name="membership_type"><span class="checkmark"></span></span>
+									<label for="non_profit_government"><strong><?php echo get_field('add_label_government'); ?> - $<?php echo get_field('non_profit_gov_membership_price'); ?></strong></label>
+								</div>
+						 </div>
+						 <div class="vc_col-sm-4">
+						 		<div class="radio_wrapp">
+									<span class="fancy_radio"><input type="radio" value="Young Professional / Student" id="young_professional_student" name="membership_type" ><span class="checkmark"></span></span>
+									<label for="young_professional_student"><strong><?php echo get_field('add_label_young_profession'); ?> - 
+										$<?php echo get_field('young_professional_membership_price'); ?></strong></label>
+								</div>
+						 </div>
+				</div>	
+		</div>	
+<!-- -------------------------------------------------------------------------------------- -->
+<div class="donate-block donate-block-fix top_radio_group1_new_description" id="top_radio_group1_new_description">
+	<ul>
+		<li>General membership is open to real estate professionals in the Washington, D.C. area. Membership runs through the calendar year and expires on December 31 of the current year, regardless of when activated.</li>
+		<li>Government membership is open to real estate professionals in the Washington, D.C. area that work for a Government agency. Proof of employment will be required. Membership runs through the calendar year and expires on December 31 of the current year, regardless of when activated.</li>
+		<li>Young Professional / Student membership is open to real estate professionals in the Washington, D.C. area that are currently enrolled in an accredited educational program related to real estate and/or for those individuals 30 years and under. Proof of enrollment or age will be required. Membership runs through the calendar year and expires on December 31 of the current year, regardless of when activated.</li>
+	</ul>
+</div>
+<!-- -------------------------------------------------------------------------------------- -->		
+		<div class="donate-block donate-block-fix radio_select_row1 ">
+					
+			<section id="individual" class="myrow">
+				
+				<div class="vc_row yd_row01 business_organization">
+          <div class="vc_col-sm-6"><input type="text" name="business_name" id="business_name" kl_virtual_keyboard_secure_input="on" placeholder="Business/Organization*"></div>
+          <div class="vc_col-sm-6 mobile_hide000">&nbsp;</div>
+        </div>
+        <div class="vc_row yd_row01">
+					<div class="vc_col-sm-4"><input type="text" name="first_name" id="first_name" kl_virtual_keyboard_secure_input="on" placeholder="First name*"></div>
+					<div class="vc_col-sm-4"><input type="text" name="last_name" id="last_name" kl_virtual_keyboard_secure_input="on" placeholder="Last name*"></div>
+					<div class="vc_col-sm-4"><input type="text" name="company_name" value="" id="company_name" placeholder="Company name"></div>
+				</div>
+				<!-- ================================================= -->
+				<div class="vc_row yd_row01">
+					<div class="vc_col-sm-4"> <input type="text" name="email_address" id="email_address" onblur="email_exists_val();" placeholder="Email address*"> <span id="loader_img_email" style="text-align: left; display: block;"></span></div>
+					<!-- <div class="vc_col-sm-4"><input type="text" name="user_name" id="user_name" readonly style="background-color: #f1f1f1;" placeholder="User name*"> <span id="loader_img" style="text-align: left; display: block;"></span></div> -->
+					<!-- <div class="vc_col-sm-4"><input type="password" name="password" id="password" kl_virtual_keyboard_secure_input="on" placeholder="Password*"></div> -->
+					<div class="vc_col-sm-4">
+						<input type="text" maxlength="14" onkeydown="phone_formate(event,this.id)" name="phone_number" id="phone_number" kl_virtual_keyboard_secure_input="on" placeholder="Phone number" >
+					</div>
+					<div class="vc_col-lg-4 vc_col-md-12">
+						<div class="vc_row radio_inner_row01">
+							<div class="vc_col-sm-6">
+								<div class="radio_wrapp">
+									<span class="fancy_radio"><input type="radio" value="Work" id="mdl_work" name="phone_type" ><span class="checkmark"></span></span>
+									<label for="mdl_work">Work</label>
+								</div>
+							</div>
+							<div class="vc_col-sm-6">
+								<div class="radio_wrapp">
+									<span class="fancy_radio"><input type="radio" value="Mobile" id="mdl_mobile" name="phone_type" checked><span class="checkmark"></span></span>
+									<label for="mdl_mobile">Mobile</label>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+			  </div>
+				<!-- ================================================= -->
+				<!-- <div class="vc_row yd_row02">
+           <div class="vc_col-sm-4">
+          	<input type="password" name="confirm_password" id="confirm_password" kl_virtual_keyboard_secure_input="on" placeholder="Confirm Password*">  
+          </div> 
+					<div class="vc_col-sm-4">
+						<input type="text" maxlength="14" onkeydown="phone_formate(event,this.id)" name="phone_number" id="phone_number" kl_virtual_keyboard_secure_input="on" placeholder="Phone number" >
+					</div>
+					<div class="vc_col-lg-4 vc_col-md-12">
+						<div class="vc_row radio_inner_row01">
+							<div class="vc_col-sm-6">
+								<div class="radio_wrapp">
+									<span class="fancy_radio"><input type="radio" value="Work" id="mdl_work" name="phone_type" ><span class="checkmark"></span></span>
+									<label for="mdl_work">Work</label>
+								</div>
+							</div>
+							<div class="vc_col-sm-6">
+								<div class="radio_wrapp">
+									<span class="fancy_radio"><input type="radio" value="Mobile" id="mdl_mobile" name="phone_type" checked><span class="checkmark"></span></span>
+									<label for="mdl_mobile">Mobile</label>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div> -->
+				<!-- ================================================= -->
+				<div class="vc_row yd_row03">
+					<div class="vc_col-sm-4">
+						<input type="text" name="address1"   id="address1" value="" placeholder="Address line 1*">
+					</div>
+					<div class="vc_col-sm-4">
+						<input type="text" name="address2"  id="address2"  value="" placeholder="Address line 2">
+					</div>
+					<div class="vc_col-sm-4">
+						<input type="text" name="city" id="city" placeholder="City*">
+					</div>
+				</div>
+				<!-- ================================================= -->
+				<div class="vc_row yd_row04">
+					
+					<div class="vc_col-sm-4">
+						<input type="text" name="state" id="state" placeholder="State/Province*">
+					</div>
+					<div class="vc_col-sm-4">
+						<input maxlength="10" type="text" name="postal_code"  id="postal_code"  value="" placeholder="Postal code*">
+					</div>
+					<div class="vc_col-sm-4">
+						<select name="country" id="country" value="">
+							<option value="" selected="selected">Select Country*</option>
+							<option value="CA">Canada</option>
+							<option value="AF">Afghanistan</option>
+							<option value="AL">Albania</option>
+							<option value="DZ">Algeria</option>
+							<option value="AS">American Samoa</option>
+							<option value="AD">Andorra</option>
+							<option value="AO">Angola</option>
+							<option value="AI">Anguilla</option>
+							<option value="AQ">Antarctica</option>
+							<option value="AG">Antigua and Barbuda</option>
+							<option value="AR">Argentina</option>
+							<option value="AM">Armenia</option>
+							<option value="AW">Aruba</option>
+							<option value="AU">Australia</option>
+							<option value="AT">Austria</option>
+							<option value="AZ">Azerbaijan</option>
+							<option value="BS">Bahamas</option>
+							<option value="BH">Bahrain</option>
+							<option value="BD">Bangladesh</option>
+							<option value="BB">Barbados</option>
+							<option value="BY">Belarus</option>
+							<option value="BE">Belgium</option>
+							<option value="BZ">Belize</option>
+							<option value="BJ">Benin</option>
+							<option value="BM">Bermuda</option>
+							<option value="BT">Bhutan</option>
+							<option value="BO">Bolivia</option>
+							<option value="BA">Bosnia and Herzegovina</option>
+							<option value="BW">Botswana</option>
+							<option value="BV">Bouvet Island</option>
+							<option value="BR">Brazil</option>
+							<option value="IO">British Indian Ocean Territory</option>
+							<option value="BN">Brunei</option>
+							<option value="BG">Bulgaria</option>
+							<option value="BF">Burkina Faso</option>
+							<option value="BI">Burundi</option>
+							<option value="KH">Cambodia</option>
+							<option value="CM">Cameroon</option>
+							<option value="CV">Cape Verde</option>
+							<option value="KY">Cayman Islands</option>
+							<option value="CF">Central African Republic</option>
+							<option value="TD">Chad</option>
+							<option value="CL">Chile</option>
+							<option value="CN">China</option>
+							<option value="CX">Christmas Island</option>
+							<option value="CC">Cocos (Keeling) Islands</option>
+							<option value="CO">Colombia</option>
+							<option value="KM">Comoros</option>
+							<option value="CG">Congo</option>
+							<option value="CK">Cook Islands</option>
+							<option value="CR">Costa Rica</option>
+							<option value="CI">Cote d'Ivoire</option>
+							<option value="HR">Croatia (Hrvatska)</option>
+							<option value="CU">Cuba</option>
+							<option value="CY">Cyprus</option>
+							<option value="CZ">Czech Republic</option>
+							<option value="CD">Congo (DRC)</option>
+							<option value="DK">Denmark</option>
+							<option value="DJ">Djibouti</option>
+							<option value="DM">Dominica</option>
+							<option value="DO">Dominican Republic</option>
+							<option value="TP">East Timor</option>
+							<option value="EC">Ecuador</option>
+							<option value="EG">Egypt</option>
+							<option value="SV">El Salvador</option>
+							<option value="GQ">Equatorial Guinea</option>
+							<option value="ER">Eritrea</option>
+							<option value="EE">Estonia</option>
+							<option value="ET">Ethiopia</option>
+							<option value="FK">Falkland Islands (Islas Malvinas)</option>
+							<option value="FO">Faroe Islands</option>
+							<option value="FJ">Fiji Islands</option>
+							<option value="FI">Finland</option>
+							<option value="FR">France</option>
+							<option value="GF">French Guiana</option>
+							<option value="PF">French Polynesia</option>
+							<option value="TF">French Southern and Antarctic Lands</option>
+							<option value="GA">Gabon</option>
+							<option value="GM">Gambia</option>
+							<option value="GE">Georgia</option>
+							<option value="DE">Germany</option>
+							<option value="GH">Ghana</option>
+							<option value="GI">Gibraltar</option>
+							<option value="GR">Greece</option>
+							<option value="GL">Greenland</option>
+							<option value="GD">Grenada</option>
+							<option value="GP">Guadeloupe</option>
+							<option value="GU">Guam</option>
+							<option value="GT">Guatemala</option>
+							<option value="GN">Guinea</option>
+							<option value="GW">Guinea-Bissau</option>
+							<option value="GY">Guyana</option>
+							<option value="HT">Haiti</option>
+							<option value="HM">Heard Island and McDonald Islands</option>
+							<option value="HN">Honduras</option>
+							<option value="HK">Hong Kong SAR</option>
+							<option value="HU">Hungary</option>
+							<option value="IS">Iceland</option>
+							<option value="IN">India</option>
+							<option value="ID">Indonesia</option>
+							<option value="IR">Iran</option>
+							<option value="IQ">Iraq</option>
+							<option value="IE">Ireland</option>
+							<option value="IL">Israel</option>
+							<option value="IT">Italy</option>
+							<option value="JM">Jamaica</option>
+							<option value="JP">Japan</option>
+							<option value="JO">Jordan</option>
+							<option value="KZ">Kazakhstan</option>
+							<option value="KE">Kenya</option>
+							<option value="KI">Kiribati</option>
+							<option value="KR">Korea</option>
+							<option value="KW">Kuwait</option>
+							<option value="KG">Kyrgyzstan</option>
+							<option value="LA">Laos</option>
+							<option value="LV">Latvia</option>
+							<option value="LB">Lebanon</option>
+							<option value="LS">Lesotho</option>
+							<option value="LR">Liberia</option>
+							<option value="LY">Libya</option>
+							<option value="LI">Liechtenstein</option>
+							<option value="LT">Lithuania</option>
+							<option value="LU">Luxembourg</option>
+							<option value="MO">Macao SAR</option>
+							<option value="MK">Macedonia</option>
+							<option value="MG">Madagascar</option>
+							<option value="MW">Malawi</option>
+							<option value="MY">Malaysia</option>
+							<option value="MV">Maldives</option>
+							<option value="ML">Mali</option>
+							<option value="MT">Malta</option>
+							<option value="MH">Marshall Islands</option>
+							<option value="MQ">Martinique</option>
+							<option value="MR">Mauritania</option>
+							<option value="MU">Mauritius</option>
+							<option value="YT">Mayotte</option>
+							<option value="MX">Mexico</option>
+							<option value="FM">Micronesia</option>
+							<option value="MD">Moldova</option>
+							<option value="MC">Monaco</option>
+							<option value="MN">Mongolia</option>
+							<option value="MS">Montserrat</option>
+							<option value="MA">Morocco</option>
+							<option value="MZ">Mozambique</option>
+							<option value="MM">Myanmar</option>
+							<option value="NA">Namibia</option>
+							<option value="NR">Nauru</option>
+							<option value="NP">Nepal</option>
+							<option value="NL">Netherlands</option>
+							<option value="AN">Netherlands Antilles</option>
+							<option value="NC">New Caledonia</option>
+							<option value="NZ">New Zealand</option>
+							<option value="NI">Nicaragua</option>
+							<option value="NE">Niger</option>
+							<option value="NG">Nigeria</option>
+							<option value="NU">Niue</option>
+							<option value="NF">Norfolk Island</option>
+							<option value="KP">North Korea</option>
+							<option value="MP">Northern Mariana Islands</option>
+							<option value="NO">Norway</option>
+							<option value="OM">Oman</option>
+							<option value="PK">Pakistan</option>
+							<option value="PW">Palau</option>
+							<option value="PA">Panama</option>
+							<option value="PG">Papua New Guinea</option>
+							<option value="PY">Paraguay</option>
+							<option value="PE">Peru</option>
+							<option value="PH">Philippines</option>
+							<option value="PN">Pitcairn Islands</option>
+							<option value="PL">Poland</option>
+							<option value="PT">Portugal</option>
+							<option value="PR">Puerto Rico</option>
+							<option value="QA">Qatar</option>
+							<option value="RE">Reunion</option>
+							<option value="RO">Romania</option>
+							<option value="RU">Russia</option>
+							<option value="RW">Rwanda</option>
+							<option value="WS">Samoa</option>
+							<option value="SM">San Marino</option>
+							<option value="ST">Sao Tome and Principe</option>
+							<option value="SA">Saudi Arabia</option>
+							<option value="SN">Senegal</option>
+							<option value="YU">Serbia and Montenegro</option>
+							<option value="SC">Seychelles</option>
+							<option value="SL">Sierra Leone</option>
+							<option value="SG">Singapore</option>
+							<option value="SK">Slovakia</option>
+							<option value="SI">Slovenia</option>
+							<option value="SB">Solomon Islands</option>
+							<option value="SO">Somalia</option>
+							<option value="ZA">South Africa</option>
+							<option value="GS">South Georgia and the South Sandwich Islands</option>
+							<option value="ES">Spain</option>
+							<option value="LK">Sri Lanka</option>
+							<option value="SH">St. Helena</option>
+							<option value="KN">St. Kitts and Nevis</option>
+							<option value="LC">St. Lucia</option>
+							<option value="PM">St. Pierre and Miquelon</option>
+							<option value="VC">St. Vincent and the Grenadines</option>
+							<option value="SD">Sudan</option>
+							<option value="SR">Suriname</option>
+							<option value="SJ">Svalbard and Jan Mayen</option>
+							<option value="SZ">Swaziland</option>
+							<option value="SE">Sweden</option>
+							<option value="CH">Switzerland</option>
+							<option value="SY">Syria</option>
+							<option value="TW">Taiwan</option>
+							<option value="TJ">Tajikistan</option>
+							<option value="TZ">Tanzania</option>
+							<option value="TH">Thailand</option>
+							<option value="TG">Togo</option>
+							<option value="TK">Tokelau</option>
+							<option value="TO">Tonga</option>
+							<option value="TT">Trinidad and Tobago</option>
+							<option value="TN">Tunisia</option>
+							<option value="TR">Turkey</option>
+							<option value="TM">Turkmenistan</option>
+							<option value="TC">Turks and Caicos Islands</option>
+							<option value="TV">Tuvalu</option>
+							<option value="UG">Uganda</option>
+							<option value="UA">Ukraine</option>
+							<option value="AE">United Arab Emirates</option>
+							<option value="GB">United Kingdom</option>
+              <option value="US" selected>United States</option>
+							<option value="UM">United States Minor Outlying Islands</option>
+							<option value="UY">Uruguay</option>
+							<option value="UZ">Uzbekistan</option>
+							<option value="VU">Vanuatu</option>
+							<option value="VA">Vatican City</option>
+							<option value="VE">Venezuela</option>
+							<option value="VN">Viet Nam</option>
+							<option value="VG">Virgin Islands (British)</option>
+							<option value="VI">Virgin Islands</option>
+							<option value="WF">Wallis and Futuna</option>
+							<option value="YE">Yemen</option>
+							<option value="ZM">Zambia</option>
+							<option value="ZW">Zimbabwe</option>
+						</select>
+					</div>
+				</div>
+				
+			</section>
+			<!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+		</div>
+
+		<div class="student_section" id="student_section" style="display: none;">
+		<p style="margin-top: 0;" class="full-width text-center membership_parts"><strong>STUDENT INFORMATION</strong></p>
+		<div class="donate-block donate-block-fix">
+     <section id="student_info_data" class="myrow">
+			<div class="vc_row ma_add_info" id="hide_comopany_info">
+				<div class="vc_col-sm-6">
+					<input type="text" name="college_university" value="" id="college_university" placeholder="College/University*">
+					</div>
+				<div class="vc_col-sm-6"><input type="text" name="date_education" value="" id="date_education" placeholder="Date of graduation*"></div>
+			</div>
+          
+      <div class="vc_row ma_add_info">
+        <div class="vc_col-sm-6">
+          <input type="text" name="degree_expected" id="degree_expected" placeholder="Degree Expected*">
+        </div>
+        <div class="vc_col-sm-6"><input type="text" name="credits_completed" id="credits_completed" placeholder="# of credits completed"></div>
+      </div>
+    			
+			<div class="vc_row ma_add_info">  
+        <div class="vc_col-sm-12">
+        		<textarea id="relevant_experience" name="relevant_experience" placeholder="Relevant real estate Experience"></textarea>
+        </div>
+        
+      </div>
+      <div class="vc_row ma_add_info">  
+        <div class="vc_col-sm-12">
+        		Student must be at least a junior and still matriculating at college taking real estate as a major/minor or some related field. A member of the membership committee will follow-up with to confirm your interest and confirm status at school.
+        </div>
+      </div>
+      </section>
+		</div>
+		
+		</div>
+		<!-- =============================================================================== -->
+		<p style="margin-top: 0;" class="full-width text-center membership_parts"><strong>BILLING INFORMATION</strong></p>
+		<div class="donate-block donate-block-fix" id="billing_info_data" >
+
+      <div class="vc_col-sm-6 checkbox_fix11 mb20px">
+        <span class="fancy_checkbox">
+          <input type="checkbox" id="same_as_above" name="same_as_above" value="1" /><span class="checkmark"></span>
+        </span>
+        <label for="same_as_above">Same as above</label>
+      </div>
+
+			<div class="vc_row ma_add_info" id="hide_comopany_info">
+				<div class="vc_col-sm-6"><input type="text" name="company_address" value="" id="company_address" placeholder="Billing address*"></div>
+				<div class="vc_col-sm-6"><input type="text" name="billing_city" id="billing_city" placeholder="City*"></div>
+        
+			</div>
+            
+      <div class="vc_row ma_add_info">
+        <div class="vc_col-sm-6">
+          <input type="text" name="billing_state" id="billing_state" placeholder="State/Province*">
+        </div>
+        <div class="vc_col-sm-6">
+          <input maxlength="10" type="text" name="billing_postal_code"  id="billing_postal_code"  value="" placeholder="Postal code*">
+        </div>
+      </div>
+      <div class="vc_row ma_add_info">  
+        <div class="vc_col-sm-6">
+          
+          <input type="text" name="experience_real_estate" value="" id="experience_real_estate" placeholder="Years of experience in real estate industry*" title="Years of experience in real estate industry">
+        </div>
+        <div class="vc_col-sm-6 hide_991px">
+          &nbsp;
+        </div>
+      </div>
+
+      <div class="vc_row ma_add_info">
+				<div class="vc_col-sm-6 reipfix">
+					Professional Level* (please check one)
+				</div>
+				<div class="vc_col-sm-6">
+					<select name="real_estate_industry_professional" id="real_estate_industry_professional" class="rei_professional">
+						<option value="">Select</option>
+						<option value="Entry Level">Entry Level</option>
+						<option value="Associate">Associate</option>
+						<option value="Mid-Senior Level">Mid-Senior Level</option>
+						<option value="Executive">Executive</option>
+						<option value="CEO/Founder">CEO/Founder</option>
+						<option value="Retired">Retired</option>
+					</select>
+				</div>
+			</div>
+
+      <div class="vc_row ma_add_info">
+        <div class="vc_col-sm-6 reipfix">
+          Real Estate Sector* (please check one)
+        </div>
+        <div class="vc_col-sm-6">
+          <select name="comme_real_estate_sector" id="comme_real_estate_sector" class="rei_professional">
+            <option value="">Select</option>
+            <option value="Architecture">Architecture</option>
+            <option value="Affordable housing">Affordable housing</option>
+            <option value="Brokerage">Brokerage</option>
+            <option value="Capital Markets">Capital Markets</option>
+            <option value="Construction">Construction</option>
+            <option value="Development">Development</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Finance">Finance</option>
+            <option value="Government">Government</option>
+            <option value="Green Building">Green Building</option>
+            <option value="Law">Law</option>
+            <option value="Property management">Property management</option>
+            <option value="Proptech">Proptech</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="vc_row ma_add_info" id="ma_add_info">
+        <div class="vc_col-sm-12">
+          <input type="text" name="other01" value="" id="other01" placeholder="If Other (please specify)">
+        </div>
+      </div>
+		
+			<div class="vc_row ma_add_info">
+				<div class="vc_col-sm-12">Committee preference* (please check at least one)</div>
+				<div class="vc_col-sm-12">
+					<div class="vc_row committee_option">
+						<div class="vc_col-sm-6 cpo_col1">
+							<div class="checkbox_wrapp_00">
+								<span class="fancy_checkbox"><input type="checkbox" id="co_events" name="committee_preference[]" value="Programming"><span class="checkmark"></span></span>
+								<label for="co_events"> Programming </label>
+							</div>
+							<div class="checkbox_wrapp_00">
+								<span class="fancy_checkbox"><input type="checkbox" id="co_communications" name="committee_preference[]" value="Gala"><span class="checkmark"></span></span>
+								<label for="co_communications"> Gala</label>
+							</div>
+						</div>
+						<div class="vc_col-sm-6 cpo_col2">
+							<div class="checkbox_wrapp_00">
+								<span class="fancy_checkbox"><input type="checkbox" id="co_outreach" name="committee_preference[]" value="Community Engagement"><span class="checkmark"></span></span>
+								<label for="co_outreach"> Community Engagement</label>
+							</div>
+							<div class="checkbox_wrapp_00">
+								<span class="fancy_checkbox"><input type="checkbox" id="co_fundraising" name="committee_preference[]" value="Membership and Sponsorships"><span class="checkmark"></span></span>
+								<label for="co_fundraising"> Membership and Sponsorships</label>
+							</div>
+						</div>
+						<div class="vc_col-sm-6 cpo_col3">
+							<div class="checkbox_wrapp_00">
+								<span class="fancy_checkbox"><input type="checkbox" id="co_governance" name="committee_preference[]" value="Legislative / Advocacy"><span class="checkmark"></span></span>
+								<label for="co_governance"> Legislative / Advocacy</label>
+							</div>
+							
+						</div>
+						<div class="vc_col-sm-6 cpo_col3">
+							<div class="checkbox_wrapp_00">
+								<span class="fancy_checkbox"><input type="checkbox" id="co_membership" name="committee_preference[]" value="Young Professionals"><span class="checkmark"></span></span>
+								<label for="co_membership"> Young Professionals</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		<!-- =============================================================================== -->
+		<p style="margin-top: 0;" class="full-width text-center membership_parts"><strong>Review</strong></p>
+		<div class="donate-block donate-block-fix00 review_block" id="review_info">
+			<!-- ================================================= -->
+			<div class="row">
+				<div class="col-lg-12 clearfix">
+					<div class="review-box white-new">
+						<div class="rebox-pads">
+							<ul class="cart-views-list">								
+								<li class="hidden-xs bottom-bline">
+									<div class="row cart-sixfourty">
+										<div class="col-xs-12 col-sm-6"><strong>ITEM</strong></div>
+										<!-- <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 text-center"><strong>PRICE</strong></div>
+										<div class="col-xs-12 col-sm-3 col-md-3 col-lg-1 text-center"><strong>QUANTITY</strong></div> -->
+										<div class="col-xs-12 col-sm-6 text-right"><strong>TOTAL</strong></div>
+									</div>
+								</li>
+								<li>
+									<div class="row cart-sixfourty">
+										<div class="col-xs-12 col-sm-6"><strong class="brk-line-long-txt" id="mbrshp_val">General Membership</strong></div>
+										<div class="col-xs-12 col-sm-6 text-right"><strong>$</strong><strong id="todays_total"><?php echo get_field('general_membership_price'); ?></strong></div>
+									</div>
+								</li>
+										
+							</ul>
+						</div>
+					</div>
+				</div>
+
+        <div class="col-lg-12 clearfix" style="display: none;"><strong class="brk-line-long-txt payment_section" style="display: block; text-align: center; margin-top: 15px;">My membership will be automatically charged annually.</strong></div>
+
+				<div class="clearfix"></div>				
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<!-- ================================================= -->
+	
+  <p class="full-width text-center membership_parts clear payment_section"><strong>Payment Information</strong></p>
+	<div class="donate-block donate-block-fix payinfo fonts-fix payment_section" id="payment_info_data">
+		<div class="form_row1">
+			<div class="one_half"><input type="text" name="card_name" id="card_name" kl_virtual_keyboard_secure_input="on" placeholder="Name on card*" ></div>
+			<div class="one_half last">
+        <select name="card_type" id="card_type" class="txtbox">
+  				<option value="">Card Type*</option>
+  				<option value="Visa">Visa</option>
+  				<option value="MasterCard">Mastercard</option>
+  				<option value="American Express">American Express</option>
+  				<option value="Discover">Discover</option>
+			</select></div>
+		</div>
+		<div class="form_row1">
+			<div class="one_half"><input type="text" maxlength="16" name="card_number" id="card_number" kl_virtual_keyboard_secure_input="on" placeholder="Card number*" onkeypress="return numbersonly(event);"></div>
+			<div class="one_half last"><input type="password" maxlength="4" name="card_cvc" id="card_cvc" kl_virtual_keyboard_secure_input="on" placeholder="CVV number*" onkeypress="return numbersonly(event);"></div>
+		</div>
+		<div class="form_row1 cssfix00">
+			<div class="full_row">
+				<label class="cce_one" style="width: auto; float: left; margin-right: 50px;">Credit Card Expiration:*</label>
+				<div class="date-combo-fix date-combo2">
+					<table width="1%" cellspacing="0" cellpadding="2" border="0" class="vmiddle-tbl m0px-fix">
+						<tbody>
+							<tr>
+								<td align="left" valign="middle">Month&nbsp;</td>
+								<td align="left" valign="middle">
+                  <select name="expiry_month" id="expiry_month" class="txtbox m0px-fix fnone-fix">
+									<option value="01">01</option>
+									<option value="02">02</option>
+									<option value="03">03</option>
+									<option value="04">04</option>
+									<option value="05">05</option>
+									<option value="06">06</option>
+									<option value="07">07</option>
+									<option value="08">08</option>
+									<option value="09">09</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+								</select></td>
+								<td align="left" valign="middle">Year&nbsp;</td>
+								<td align="left" valign="middle">
+                  <select name="expiry_year" id="expiry_year" class="txtbox m0px-fix fnone-fix">
+									<option value="21">21</option>
+									<option value="22">22</option>
+									<option value="23">23</option>
+									<option value="24">24</option>
+									<option value="25">25</option>
+									<option value="26">26</option>
+									<option value="27">27</option>
+									<option value="28">28</option>
+									<option value="29">29</option>
+									<option value="30">30</option>
+									<option value="31">31</option>
+									<option value="32">32</option>
+								</select></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+
+	<div class="full-width submit_wrapp">
+    <div class="one_half last">
+        <div class="g-recaptcha" data-sitekey="6LfbOj4kAAAAAHukgHhTiCc9a2NbdWgDTLkq1PUn" ></div>
+    </div>
+    <input type="hidden" name="finale_amount" id="finale_amount" value="<?php echo get_field('general_membership_price'); ?>">
+		<input style="margin-top: 17px;" type="submit" value="Submit" onclick="membership_validation();" name="donate" id="donate" class="donate-submit-btn dsb">
+	</div>
+
+</div>
+
+</form>
+
+<div class="full-width disclaimer_text" style="clear: both; ">
+  <p>*If you do not meet the qualifications for membership you will be refunded and contacted to discuss your interests</p>
+</div>
+<?php
+	return ob_get_clean();
+}

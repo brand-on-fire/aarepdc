@@ -1,0 +1,86 @@
+<?php 
+add_shortcode( 'home_bod_section_shrt', 'home_bod_section_shrt_section' );
+
+function home_bod_section_shrt_section ($atts) { ob_start(); 
+
+	$leftBods = get_field('left_board_of_directors', 5);
+	$rightBods = get_field('right_board_of_directors', 5);
+	
+	
+?>
+
+<div class="vc_row bod_shrt_row">
+<?php
+		$args = array(  
+			'post_type' => 'board-member',
+			'post_status' => 'publish',
+			'posts_per_page' => 5,
+			'orderby' => 'rand',
+			//'post__in' => array( 321, 322, 323, 324, 325, 326, 376 ),
+			'post__in' => $leftBods,
+		);
+	?> 
+
+
+<?php
+	remove_all_filters('posts_orderby');
+    $team_data_Query = new WP_Query( $args );
+    if( $team_data_Query->have_posts() ) ?>	
+	<div class="vc_col-sm-4 bodshrt_left">
+	<?php 
+	$i=1;
+	while( $team_data_Query->have_posts() ) : $team_data_Query->the_post();  ?>
+	<?php
+    $thumbnail_url = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full', true );               
+	?>
+		<a href="<?php the_field("linkedin_url");?>" target="_blank" class="bio_image" id="bio_left_image<?php echo $i++;?>" style="background-image: url(<?php echo $thumbnail_url[0]; ?>);"><img src="<?php echo get_stylesheet_directory_uri(); ?>/images/bio.gif" class="bio_palceholder" /></a>
+		<?php 
+	    endwhile; 
+		?>	
+	</div>	
+
+	<div class="vc_col-sm-4 bodshrt_mid text-center hide_991px">
+		<h1><?php echo date('Y'); ?> Board of <br>Directors</h1>
+		<a href="<?php echo site_url(); ?>/our-board/" class="site_button">Click Here</a>
+	</div>
+
+	<?php
+		$args1 = array(  
+			'post_type' => 'board-member',
+			'post_status' => 'publish',
+			'posts_per_page' => 5,
+			'orderby' => 'rand',
+			//'post__in' => array( 327, 328, 329, 330, 331, 332 ),
+			'post__in' => $rightBods,
+			
+		);
+	?> 
+<?php
+	remove_all_filters('posts_orderby');
+    $current_bio_data_Query = new WP_Query( $args1 );
+    if( $current_bio_data_Query->have_posts() ) ?>	
+	<div class="vc_col-sm-4 bodshrt_right">
+	<?php 
+	$i=1;
+	while( $current_bio_data_Query->have_posts() ) : $current_bio_data_Query->the_post();  ?>
+	<?php
+    $thumbnail_url = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full', true );               
+	?>
+		<a href="<?php the_field("linkedin_url");?>" target="_blank" class="bio_image" id="bio_right_image<?php echo $i++;?>" style="background-image: url(<?php echo $thumbnail_url[0]; ?>);">
+			<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/bio.gif" class="bio_palceholder" /></a>
+		<?php 
+	    endwhile; 
+		?>	
+	</div>
+</div>
+
+<div class="vc_col-sm-4 bodshrt_mid text-center show_991px">
+		<h1>2024 Board of <br>Directors</h1>
+		<a href="<?php echo site_url(); ?>/our-board/" class="site_button">Click Here</a>
+	</div>
+
+<?php 
+ wp_reset_query();
+ return ob_get_clean();
+}
+

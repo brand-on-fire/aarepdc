@@ -1,0 +1,715 @@
+var site_url = "https://aarepdc.org";
+
+function membership_validation()
+{
+  //var mem_quantity=document.getElementById('mem_quantity');
+  //var business_name=document.getElementById('business_name');
+  var first_name=document.getElementById('first_name');
+  var last_name=document.getElementById('last_name');
+  var company_name=document.getElementById('company_name');
+  var email=document.getElementById('email_address'); 
+
+  // var user_name=document.getElementById('user_name');
+  // var password=document.getElementById('password');
+  // var confirm_password=document.getElementById('confirm_password');
+
+  var address1=document.getElementById('address1');
+  var city=document.getElementById('city');
+  var state=document.getElementById('state');
+  var postal_code=document.getElementById('postal_code');
+  var country=document.getElementById('country');  
+
+  var college_university=document.getElementById('college_university');  	  
+  var date_education=document.getElementById('date_education');  
+  var degree_expected=document.getElementById('degree_expected');
+
+  var company_address=document.getElementById('company_address');
+  //var city_state_zip=document.getElementById('city_state_zip');
+  var county=document.getElementById('county');
+  //var other_real_estate_associat_membership = document.getElementById('other_real_estate_associat_membership');
+  var experience_real_estate = document.getElementById('experience_real_estate');
+  var real_estate_industry_professional=document.getElementById('real_estate_industry_professional');
+  var comme_real_estate_sector=document.getElementById('comme_real_estate_sector');
+  var card_name=document.getElementById('card_name');
+  var card_type=document.getElementById('card_type');  
+  var card_number=document.getElementById('card_number');
+  var card_cvc=document.getElementById('card_cvc');
+
+  var form_data = new FormData(document.querySelector("form"));
+
+  
+  // if(jQuery('#mem_business').prop('checked')){
+  //   if(business_name.value=="")
+  //   {
+  //     alert("Please Enter Business/Organization Name");
+  //     business_name.focus();
+  //     return false;
+  //   }
+  // }
+  if(first_name.value=="")
+  {
+    alert("Please Enter First Name");
+    first_name.focus();
+    return false;
+  }
+  if(last_name.value=="")
+  {
+    alert("Please Enter Last Name");
+    last_name.focus();
+    return false;
+  }
+  // if(company_name.value=="")
+  // {
+  //   alert("Please Enter Company Name");
+  //   company_name.focus();
+  //   return false;
+  // } 
+  if(email.value=="")
+  {
+    alert("Please Enter Email Address");
+    email.focus();
+    return false;
+  }
+  else if(validateEmail(email) == false)
+  {
+    alert("Please Enter Valid Email Address");
+    email.focus();
+    return false;
+  }
+  // if(user_name.value=="")
+  // {
+  //   alert("Please Enter User Name");
+  //   user_name.focus();
+  //   return false;
+  // }
+  // if(password.value=="")
+  // {
+  //   alert("Please Enter Password");
+  //   password.focus();
+  //   return false;
+  // }
+  // if(confirm_password.value=="")
+  // {
+  //   alert("Please Enter Confirm Password");
+  //   confirm_password.focus();
+  //   return false;
+  // }
+  // if(password.value != confirm_password.value)
+  // {
+  //   alert("Password does Not Match, Please Re-Enter Confirm Password");
+  //   confirm_password.focus();
+  //   return false;
+  // }
+  if(address1.value=="")
+  {
+    alert("Please Enter Address");
+    address1.focus();
+    return false;
+  }
+  if(city.value=="")
+  {
+    alert("Please Enter City");
+    city.focus();
+    return false;
+  }
+  if(state.value=="")
+  {
+    alert("Please Enter State");
+    state.focus();
+    return false;
+  }
+  if(postal_code.value=="")
+  {
+    alert("Please Enter Postal Code");
+    postal_code.focus();
+    return false;
+  }
+  if(country.value=="")
+  {
+    alert("Please Select Country");
+    country.focus();
+    return false;
+  }
+  if( jQuery('#young_professional_student').is(':checked') ){
+	  if(college_university.value=="")
+	  {
+	    alert("Please Enter College/University");
+	    college_university.focus();
+	    return false;
+	  }
+	  if(date_education.value=="")
+	  {
+	    alert("Please Enter Date of Graduation");
+	    date_education.focus();
+	    return false;
+	  }
+	  if(degree_expected.value=="")
+	  {
+	    alert("Please Select Degree Expected");
+	    degree_expected.focus();
+	    return false;
+	  }
+  }  
+  if(company_address.value=="")
+  {
+    alert("Please Enter Billing Address");
+    company_address.focus();
+    return false;
+  }
+
+  if(billing_city.value=="")
+  {
+    alert("Please Enter Billing City");
+    billing_city.focus();
+    return false;
+  }
+
+  if(billing_state.value=="")
+  {
+    alert("Please Enter Billing State");
+    billing_state.focus();
+    return false;
+  }
+
+  if(billing_postal_code.value=="")
+  {
+    alert("Please Enter Billing Postal Code");
+    billing_postal_code.focus();
+    return false;
+  }
+
+  // if(other_real_estate_associat_membership.value=="")
+  // {
+  //   alert("Please Enter Other real estate trade association memberships");
+  //   other_real_estate_associat_membership.focus();
+  //   return false;
+  // }
+  if(experience_real_estate.value=="")
+  {
+    alert("Please Enter Years of experience in real estate industry");
+    experience_real_estate.focus();
+    return false;
+  }
+  // if (jQuery('input[name="website_member"]:checked').length == 0) {
+  //   alert("Please Check Any One Website Member Option");
+  //   jQuery('#site_member1').is('checked');
+  //   return false;
+  // }
+
+  if(real_estate_industry_professional.value=="")
+  {
+    alert("Please Select Professional Level");
+    real_estate_industry_professional.focus();
+    return false;
+  }
+  // if(real_estate_industry_professional.value=="other")
+  // {
+  //   if(jQuery('#other01').val() == "" )
+  //   {
+  //     alert("Please Enter Other Value");
+  //     jQuery('#other01').focus();
+  //     return false;
+  //   }
+  // }
+  if(comme_real_estate_sector.value=="")
+  {
+    alert("Please Select Real Estate Sector");
+    comme_real_estate_sector.focus();
+    return false;
+  }
+  if(!form_data.has("committee_preference[]"))
+  {
+    alert("Please Select at Lease One Committee Preference Option");
+    jQuery('#co_events').focus();
+    return false;
+  } 
+  if(card_name.value=="")
+  {
+    alert("Please Enter Name On Card");
+    card_name.focus();
+    return false;
+  }
+  if(card_type.value=="")
+  {
+    alert("Please Select Card Type");
+    card_type.focus();
+    return false;
+  }
+  if(card_number.value=="")
+  {
+    alert("Please Enter Card Number");
+    card_number.focus();
+    return false;
+  }
+  if(card_cvc.value=="")
+  {
+    alert("Please Enter CVV Number");
+    card_cvc.focus();
+    return false;
+  }
+
+  var response = grecaptcha.getResponse();
+  if(response.length == 0)
+  {
+  alert("please verify you are humann!");
+  return false;
+  }
+  
+   var dataString = jQuery('#membership_form').serialize();
+   //alert(dataString);
+
+   jQuery('#clients_loder1').show();
+
+     jQuery.ajax({
+     type: "POST",
+     url: site_url+"/wp-content/themes/aarepdc-child/inc/operation.php?mode=membership_online",
+     data: dataString,
+     success: function(result){
+        //alert(result);
+    //var data=result;  
+    var data =  result.split('_');
+    //var result=result.replace(/\s+/g, '');  
+    if(data[0] == "success")
+    {
+      jQuery('#clients_loder1').hide();   
+      //window.location.href= site_url+"/thank-you-membership/";
+      window.location.href= site_url+"/thank-you-membership/?price="+data[1]+"&type="+data[2];
+    }
+    else if(result == "fail") 
+    { 
+      jQuery('#clients_loder1').hide(); 
+      alert("Please Try Again...");
+    }
+    else
+    {
+      jQuery('#clients_loder1').hide(); 
+      alert(result);
+    }
+     }
+     });
+     return false;
+}
+
+function sponsorhip_validation()
+{
+  var first_name=document.getElementById('first_name');
+  var last_name=document.getElementById('last_name');
+  var company_name=document.getElementById('company_name');
+  
+  //var user_name=document.getElementById('user_name');
+  //var password=document.getElementById('password');
+  //var confirm_password=document.getElementById('confirm_password');
+  var email=document.getElementById('email_address'); 
+  var company_address=document.getElementById('company_address');
+  var billing_city = document.getElementById('billing_city');
+  var billing_state = document.getElementById('billing_state');
+  var billing_postal_code=document.getElementById('billing_postal_code');
+  var comme_real_estate_sector=document.getElementById('comme_real_estate_sector');
+  var card_name=document.getElementById('card_name');
+  var card_type=document.getElementById('card_type');  
+  var card_number=document.getElementById('card_number');
+  var card_cvc=document.getElementById('card_cvc');
+  var form_data = new FormData(document.querySelector("form"));
+
+  if(first_name.value=="")
+  {
+    alert("Please Enter First Name");
+    first_name.focus();
+    return false;
+  }
+  if(last_name.value=="")
+  {
+    alert("Please Enter Last Name");
+    last_name.focus();
+    return false;
+  }
+  if(company_name.value=="")
+  {
+    alert("Please Enter Company Name");
+    company_name.focus();
+    return false;
+  } 
+  // if(user_name.value=="")
+  // {
+  //   alert("Please Enter User Name");
+  //   user_name.focus();
+  //   return false;
+  // }
+  // if(password.value=="")
+  // {
+  //   alert("Please Enter Password");
+  //   password.focus();
+  //   return false;
+  // }
+  // if(confirm_password.value=="")
+  // {
+  //   alert("Please Enter Confirm Password");
+  //   confirm_password.focus();
+  //   return false;
+  // }
+  // if(password.value != confirm_password.value)
+  // {
+  //   alert("Password does Not Match, Please Re-Enter Confirm Password");
+  //   confirm_password.focus();
+  //   return false;
+  // }
+  if(email.value=="")
+  {
+    alert("Please Enter Email Address");
+    email.focus();
+    return false;
+  }
+  else if(validateEmail(email) == false)
+  {
+    alert("Please Enter Valid Email Address");
+    email.focus();
+    return false;
+  }  
+  if(company_address.value=="")
+  {
+    alert("Please Enter Billing Address");
+    company_address.focus();
+    return false;
+  }
+
+  if(billing_city.value=="")
+  {
+    alert("Please Enter Billing City");
+    billing_city.focus();
+    return false;
+  }
+
+  if(billing_state.value=="")
+  {
+    alert("Please Enter Billing State");
+    billing_state.focus();
+    return false;
+  }
+
+  if(billing_postal_code.value=="")
+  {
+    alert("Please Enter Billing Postal Code");
+    billing_postal_code.focus();
+    return false;
+  }
+if (jQuery("#creditcard_option").prop("checked")) { 
+  if(card_name.value=="")
+  {
+    alert("Please Enter Name On Card");
+    card_name.focus();
+    return false;
+  }
+  if(card_type.value=="")
+  {
+    alert("Please Select Card Type");
+    card_type.focus();
+    return false;
+  }
+  if(card_number.value=="")
+  {
+    alert("Please Enter Card Number");
+    card_number.focus();
+    return false;
+  }
+  if(card_cvc.value=="")
+  {
+    alert("Please Enter CVV Number");
+    card_cvc.focus();
+    return false;
+  }
+}
+  var response = grecaptcha.getResponse();
+  if(response.length == 0)
+  {
+  alert("please verify you are humann!");
+  return false;
+  }
+  
+   var dataString = jQuery('#sponsorship_form').serialize();
+
+   jQuery('#clients_loder1').show();
+
+     jQuery.ajax({
+     type: "POST",
+     url: site_url+"/wp-content/themes/aarepdc-child/inc/operation.php?mode=sponsorship_online",
+     data: dataString,
+     success: function(result){
+        //alert(result);
+      var data =  result.split('_');
+      //alert(data[0]);
+      //alert(data[1]);
+      //alert(data[2]);
+    //var data=result;  
+    //var result=result.replace(/\s+/g, '');  
+    if(data[0] == "success")
+    {
+      jQuery('#clients_loder1').hide();   
+      window.location.href= site_url+"/thank-you/?price="+data[1]+"&type="+data[2];
+    }
+    else if(result == "fail") 
+    { 
+      jQuery('#clients_loder1').hide(); 
+      alert("Please Try Again...");
+    }
+    else
+    {
+      jQuery('#clients_loder1').hide(); 
+      alert(result);
+    }
+     }
+     });
+     return false;
+}
+function event_reg_validation()
+{
+  var first_name=document.getElementById('first_name');
+  var last_name=document.getElementById('last_name');
+  var email=document.getElementById('email_address'); 
+  var billing_address=document.getElementById('billing_address');
+  var billing_city = document.getElementById('billing_city');
+  var billing_state = document.getElementById('billing_state');
+  var billing_postal_code=document.getElementById('billing_postal_code');
+  var comme_real_estate_sector=document.getElementById('comme_real_estate_sector');
+
+  var member_check = document.getElementById('member_check');  
+
+  var card_name=document.getElementById('card_name');
+  var card_type=document.getElementById('card_type');  
+  var card_number=document.getElementById('card_number');
+  var card_cvc=document.getElementById('card_cvc');
+  
+  var form_data = new FormData(document.querySelector("form"));
+
+  if(first_name.value=="")
+  {
+    alert("Please Enter First Name");
+    first_name.focus();
+    return false;
+  }
+  if(last_name.value=="")
+  {
+    alert("Please Enter Last Name");
+    last_name.focus();
+    return false;
+  }
+  if(email.value=="")
+  {
+    alert("Please Enter Email Address");
+    email.focus();
+    return false;
+  }
+  else if(validateEmail(email) == false)
+  {
+    alert("Please Enter Valid Email Address");
+    email.focus();
+    return false;
+  }  
+  if(billing_address.value=="")
+  {
+    alert("Please Enter Billing Address");
+    billing_address.focus();
+    return false;
+  }
+
+  if(billing_city.value=="")
+  {
+    alert("Please Enter Billing City");
+    billing_city.focus();
+    return false;
+  }
+
+  if(billing_state.value=="")
+  {
+    alert("Please Enter Billing State");
+    billing_state.focus();
+    return false;
+  }
+
+  if(billing_postal_code.value=="")
+  {
+    alert("Please Enter Billing Postal Code");
+    billing_postal_code.focus();
+    return false;
+  }
+  if(member_check.value == "" ) {
+      if(card_name.value=="")
+      {
+        alert("Please Enter Name On Card");
+        card_name.focus();
+        return false;
+      }
+      if(card_type.value=="")
+      {
+        alert("Please Select Card Type");
+        card_type.focus();
+        return false;
+      }
+      if(card_number.value=="")
+      {
+        alert("Please Enter Card Number");
+        card_number.focus();
+        return false;
+      }
+      if(card_cvc.value=="")
+      {
+        alert("Please Enter CVV Number");
+        card_cvc.focus();
+        return false;
+      }
+  }
+
+  var response = grecaptcha.getResponse();
+  if(response.length == 0)
+  {
+  alert("please verify you are humann!");
+  return false;
+  }
+  
+   var dataString = jQuery('#event_registration_form').serialize();
+
+   jQuery('#clients_loder1').show();
+
+     jQuery.ajax({
+     type: "POST",
+     url: site_url+"/wp-content/themes/aarepdc-child/inc/operation.php?mode=event_registration",
+     data: dataString,
+     success: function(result){
+        //alert(result); 
+    //var data=result.replace(/\s+/g, '');  
+    var data =  result.split('_');
+    if(data[0] == "success")
+    {
+      jQuery('#clients_loder1').hide();   
+      window.location.href= site_url+"/thank-you-event/";
+    }
+    else
+    {
+      jQuery('#clients_loder1').hide(); 
+      alert(data);
+    }
+     }
+     });
+     return false;
+}
+function validateEmail(email)
+{
+  var re_mail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z])+$/;
+  if (!re_mail.test(email.value))
+  {
+    return false;
+  }
+  return true;
+}
+function phone_formate(e,id)
+{
+var flag=onlyNumbers_phone(e);
+if(flag==false){
+var re= /\D/;
+var re2 = /^\({1}\d{3}\)\d{3}-\d{4}/; 
+var nums=document.getElementById(id);
+var num=nums.value;
+var newNum;
+ if (num != "" && re2.test(num)!=true){
+  if (num != ""){
+   while (re.test(num)){
+   num = num.replace(re,"");
+   }
+  }
+   newNum = '(' + num.substring(0,3) + ')'+" " + num.substring(3,6) + '-' + num.substring(6,10);
+   nums.value=newNum;
+  }
+}
+}
+function onlyNumbers_phone(e) 
+{
+ var unicode=e.charCode? e.charCode : e.keyCode;
+ if (unicode!=8 && unicode!=9 && unicode!=13 && unicode!=46 && unicode!=37 && unicode!=39)
+ { 
+  if (unicode<48||unicode>59 || unicode>48||unicode<57)
+  {return false; }
+ }
+ return true;
+}
+function numbersonly(e)
+{
+ var unicode=e.charCode? e.charCode : e.keyCode;
+   if (unicode!=8 && unicode!=9 && unicode!=13 && unicode!=40 && unicode!=37 && unicode!=38 && unicode!=39 && unicode!=46)
+   { //if the key isn't the backspace key (which we should allow)
+    if (unicode<48||unicode>57) //if not a number
+    return false; //disable key press
+   }
+   return true;
+}
+function user_exists_val(){
+  var user_name = document.getElementById('user_name');
+  
+    if(user_name.value != "")
+    {
+      var loader_img = document.getElementById("loader_img");
+      loader_img.innerHTML = '<img src="https://aarepdc.org/wp-content/themes/aarepdc-child/images/loader.gif" width="20px" />';
+      jQuery.post("https://aarepdc.org/wp-content/themes/aarepdc-child/inc/operation.php?mode=check_user_exists",{ user_name:user_name.value } ,function(data) {
+          //alert(data);
+        if(data == "user_exists") {
+          jQuery('#loader_img').html('');
+          jQuery('#loader_img').html('Username Already Exists');
+          jQuery('#loader_img').addClass('alredy');
+          jQuery('#user_name').val('');
+          jQuery('#user_name').focus();
+          return false;
+        }
+        else {
+          jQuery('#loader_img').html('');
+          return true;
+        }
+      });
+    }
+}
+function email_exists_val(){
+  
+  var email_address = document.getElementById('email_address');
+  
+  if(email_address.value=="")
+  {
+    jQuery('#loader_img_email').html('');
+    //jQuery('#loader_img_email').html('Please Enter Email Address');
+   // jQuery('#loader_img_email').addClass('alredy');
+    email_address.focus();
+    return false;
+  }
+  else if(validateEmail(email_address) == false)
+  {
+    jQuery('#loader_img_email').html('');
+    jQuery('#loader_img_email').html('Please Enter Valid Email Address');
+    jQuery('#loader_img_email').addClass('alredy');
+    email_address.focus();
+    return false;
+  }
+
+    if(email_address.value != "")
+    {
+      var loader_img = document.getElementById("loader_img_email");
+      loader_img.innerHTML = '<img src="https://aarepdc.org/wp-content/themes/aarepdc-child/images/loader.gif" width="20px" />';
+      jQuery.post("https://aarepdc.org/wp-content/themes/aarepdc-child/inc/operation.php?mode=check_email_exists",{ email_address:email_address.value } ,function(data) {
+          //alert(data);
+          if(data == "email_exists"){
+            jQuery('#loader_img_email').html('');
+            jQuery('#loader_img_email').html('Email Already Exists');
+            jQuery('#loader_img_email').addClass('alredy');
+            jQuery('#email_address').val('');
+            return false
+          } else {
+            jQuery('#loader_img_email').html('');
+            return true;
+          }
+      });
+    }
+}
+
+jQuery( document ).ready(function() {
+  jQuery("#creditcard_option").click(function(){
+     jQuery('#payment_info_data').show();
+  });
+  jQuery("#check_option").click(function(){
+    jQuery('#payment_info_data').hide();
+ });
+});

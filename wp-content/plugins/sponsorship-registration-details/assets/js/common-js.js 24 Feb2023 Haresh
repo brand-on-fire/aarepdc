@@ -1,0 +1,92 @@
+function sponsorship_validate(){
+	
+  var sponsorship_type=document.getElementById('sponsorship_type');
+  var first_name=document.getElementById('first_name');
+  var last_name=document.getElementById('last_name');
+  var email=document.getElementById('email_address'); 
+  var company_address=document.getElementById('company_address');
+  var billing_city = document.getElementById('billing_city');
+  var billing_state = document.getElementById('billing_state');
+  var billing_postal_code=document.getElementById('billing_postal_code');
+  
+  
+  if(sponsorship_type.value=="")
+  {
+    alert("Please Select Sponsorship Type");
+    sponsorship_type.focus();
+    return false;
+  }
+
+  if(first_name.value=="")
+  {
+    alert("Please Enter First Name");
+    first_name.focus();
+    return false;
+  }
+  if(last_name.value=="")
+  {
+    alert("Please Enter Last Name");
+    last_name.focus();
+    return false;
+  }
+ 
+  if(email.value=="")
+  {
+    alert("Please Enter Email Address");
+    email.focus();
+    return false;
+  }
+  
+  if(company_address.value=="")
+  {
+    alert("Please Enter Billing Address");
+    company_address.focus();
+    return false;
+  }
+
+  if(billing_city.value=="")
+  {
+    alert("Please Enter Billing City");
+    billing_city.focus();
+    return false;
+  }
+
+  if(billing_state.value=="")
+  {
+    alert("Please Enter Billing State");
+    billing_state.focus();
+    return false;
+  }
+
+  if(billing_postal_code.value=="")
+  {
+    alert("Please Enter Billing Postal Code");
+    billing_postal_code.focus();
+    return false;
+  }
+
+}
+
+jQuery( document ).ready(function() {
+	
+  jQuery('#sponsorship_type').change(function() {
+    if(this.value == "Platinum Sponsorship")
+    {
+      jQuery('#finale_amount').val(15000);
+    }
+    else if(this.value == "Gold Sponsorship")
+    {
+      jQuery('#finale_amount').val(10000);
+    }
+    else if(this.value == "Silver Sponsorship")
+    {
+      jQuery('#finale_amount').val(7500);
+    }
+    else if(this.value == "Bronze Sponsorship")
+    {
+      jQuery('#finale_amount').val(5000);
+    }
+		
+	});
+   
+}); 

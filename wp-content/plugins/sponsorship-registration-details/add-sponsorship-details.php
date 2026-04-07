@@ -1,0 +1,225 @@
+<?php 
+date_default_timezone_set('US/Eastern');
+if (isset($_POST['ers_add_event'] ) && wp_verify_nonce($_POST['ers_add_event'], 'event_details' )){
+	global $wpdb;
+
+	/* Your Details */	
+	$sponsorship_type= sanitize_text_field($_POST["sponsorship_type"]);
+	$first_name= sanitize_text_field($_POST["first_name"]);
+	$last_name= sanitize_text_field($_POST["last_name"]);
+
+    $company_name= sanitize_text_field($_POST["company_name"]);	
+
+    $full_name = $first_name." ".$last_name;
+	$password= wp_generate_password();
+
+	$email_address= sanitize_text_field($_POST["email_address"]);
+	$company_address= sanitize_text_field($_POST["company_address"]);
+
+	$billing_city= sanitize_text_field($_POST["billing_city"]);
+	$billing_state= sanitize_text_field($_POST["billing_state"]);
+	$billing_postal_code= sanitize_text_field($_POST["billing_postal_code"]);
+
+	$card_type= sanitize_text_field($_POST["payment_type"]);
+    
+    $start_date = date('Y-m-d');	
+	$end_date = date('Y-m-d', strtotime('+1 year'));
+
+    $amount_deduct = $_POST['finale_amount'];
+	
+	$date_added = date('Y-m-d H:i:s');
+
+
+    $ms = $wpdb->query("insert into aal10_sponsorship_master set
+				   sponsorhip_type = '".$sponsorship_type."',
+				   first_name = '".$first_name."',
+				   last_name = '".$last_name."',
+                   company_name = '".$company_name."',
+				   email_address = '".$email_address."',
+				   billing_address = '".$company_address."',
+				   billing_city = '".$billing_city."',
+				   billing_state = '".$billing_state."',
+				   billing_postal_code = '".$billing_postal_code."',
+                   amount_deduct = '".$amount_deduct."',
+				   card_type = '".$card_type."',
+                   start_date = '".$start_date."',
+				   end_date = '".$end_date."',
+				   date_added = '".$date_added."'
+				");
+	  
+  if($ms!=false) {  
+    
+            $user_info = array(
+                "user_pass"     => $password,
+                "user_login"    => $email_address,
+                "user_nicename" => $first_name,
+                "user_email"    => $email_address,
+                "display_name"  => $full_name,
+                "first_name"    => $first_name,
+                "last_name"     => $last_name,
+                "role" 			=> 'subscriber'
+            );
+
+            $insert_user_info = wp_insert_user( $user_info );
+
+            $sponsorship_thankyou = get_field('sponsorship_email_content', 215);
+            
+			// SEND MAIL TO user	
+			$to = $email_address;
+			$from = "info@aarepdc.org";
+			$subject = "We received your order for ".$sponsorship_type."! Thank you for your purchase.";
+			$headers = "From: ".$from."\r\nContent-type: text/html\r\nMIME-Version: 1.0\r\nBounce-to:$from\r\n";
+			$msgbody = "";
+			$msgbody .= 'Dear '.ucwords($first_name)."&nbsp;".ucwords($last_name).',';
+			$msgbody .= $sponsorship_thankyou;
+            
+			// $msgbody .= '<table border="0" bordercolor="#000000" rowheight="30" width="80%" cellspacing="1" cellpadding="1" style="font-family:Arial; font-size:12px;" align="left">
+
+			// 	<tr><td>Order Confirmation from African American Real Estate Professionals - DC </td></tr>				
+			// 	<tr><td height="20"></td></tr>
+			// 	<tr><td>Dear '.ucwords($first_name)."&nbsp;".ucwords($last_name).',</td></tr>
+			// 	<tr><td height="10"></td></tr>
+			// 	<tr><td>Thank you for your '.$sponsorship_type.' for African American Real Estate Professionals-DC.<br />
+			// 	</td></tr>
+			// 	<tr><td height="10"></td></tr>
+			// 	<tr><td>1 x $'.number_format($amount_deduct).'</td></tr>
+			// 	<tr><td><strong>Total $'.number_format($amount_deduct).'</strong></td></tr>
+			// 	<tr><td><strong>Payment Method: Check</strong><br /></td></tr>
+			// 	<tr><td height="20"></td></tr>
+			// 	<tr><td>Please use the username and password below to activate your online account that will allow you to post jobs on our website.</td></tr>
+			// 	<tr><td height="20"></td></tr>
+			// 	<tr><td>Username: '.$email_address.' <br />
+			// 	Password: '.$password.' <br />	</td></tr>
+			// 	<tr><td height="20"></td></tr>
+			// 	<tr><td>You will be prompted to change your password upon initial sign in.  <br />	
+			// 	Please note that jobs will be automatically purged 90 days from the original posting date.   
+			// 	</td></tr>
+			// 	<tr><td height="20"></td></tr>
+			// 	<tr><td>Thanks your support of AAREP DC! If you need assistance or have any questions, please email us at info@aarepdc.org. We are happy to help!
+			// 	</td></tr>
+			// 	';
+			// $msgbody .= '<tr><td height="30"><br>Sincerely,<br />African American Real Estate Professionals DC <br />
+			// 1325 G Street NW Suite 500, <br />
+			// Washington, District of Columbia 20005, <br />
+			// United States
+			// </td></tr></table>';	
+			
+			mail($to, $subject, $msgbody, $headers);
+    
+    $msg = 'success'; ?>
+            <script>
+				var admin_url ='<?php echo 'admin.php?page=sponsorship-registration&msg='.$msg; ?>';
+				window.location = admin_url;
+			</script>
+  <?php
+	}	
+}
+?>
+<style>
+input[type="date"],
+input[type="datetime-local"],
+input[type="datetime"],
+input[type="email"],
+input[type="month"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="text"],
+input[type="time"],
+input[type="url"],
+input[type="week"] {
+    padding: 6px 15px !important;
+    line-height: 2;
+    min-height: 30px;
+    width: 240px;
+}
+</style>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<div class="wrap">
+    <h2>
+        <?php  _e('Add Sponsorship Details','aarepdc'); ?>
+        <a class="add-new-h2" href="admin.php?page=sponsorship-registration">Back to Main Page</a>
+    </h2>
+    <?php if($msg){ ?>
+    <?php if($msg == 'success'){ ?>
+    <div class="updated notice notice-success is-dismissible" id="message">
+        <p>Details Added successfully.</p>
+        <button class="notice-dismiss" type="button"><span class="screen-reader-text">Dismiss this
+                notice.</span></button>
+    </div>
+    <?php }?>
+    <?php }?>
+    <div class="form">
+        <form id="membership_form" method="post" action="" onSubmit="return sponsorship_validate();">
+            <table class="form-table" style="width: 850px;">
+                <tr valign="top">
+                    <td> <strong>Select Sponsorship Type*:</strong> </td>
+                    <td><select style="width: 235px;padding: 5px 15px;" name="sponsorship_type" id="sponsorship_type"
+                            class="rei_professional">
+                            <option value="">Select</option>
+                            <option value="Platinum Sponsorship">Platinum Sponsorship</option>
+                            <option value="Gold Sponsorship">Gold Sponsorship</option>
+                            <option value="Silver Sponsorship">Silver Sponsorship</option>
+                            <option value="Bronze Sponsorship">Bronze Sponsorship</option>
+                            <option value="Job Bank">Job Bank</option>
+                        </select> </td>
+                </tr>
+                <tr valign="top" class="billing_information">
+                    <td><strong style="font-size: 18px;">BILLING INFORMATION</strong></td>
+                    <td> &nbsp; </td>
+                    <td>&nbsp;</td>
+                </tr>
+                
+                <tr valign="top">
+                    <td style="width: 33%;"><input type="text" name="first_name" id="first_name"
+                            placeholder="First name*"> </td>
+                    <td style="width: 33%;"><input type="text" name="last_name" id="last_name" placeholder="Last name*">
+                    </td>
+                    <td style="width: 33%;"> <input type="text" name="company_name" id="company_name" placeholder="Company name*"> </td>
+                </tr>
+
+                <tr valign="top">
+                    <td style="width: 33%;"> <input type="email" name="email_address" id="email_address"
+                            onblur="email_exists_val();" placeholder="Email address*"> </td>
+                    <td style="width: 33%;"> <input type="text" name="company_address" value="" id="company_address" placeholder="Billing address*"> </td>
+                    <td style="width: 33%;"> <input type="text" name="billing_city" id="billing_city"
+                            placeholder="City*"> </td>
+                </tr>
+
+                <tr valign="top">
+                <td style="width: 33%;" > <input type="text" name="billing_state" id="billing_state"
+                            placeholder="State/Province*"> </td>    
+                <td style="width: 33%;" ><input maxlength="10" type="text" name="billing_postal_code" id="billing_postal_code" value="" placeholder="Postal code*"> </td>
+                </tr>
+
+                <tr valign="top" class="billing_information">
+                    <td><strong style="font-size: 18px;">PAYMENT INFORMATION</strong></td>
+                    <td> &nbsp; </td>
+                    <td>&nbsp;</td>
+                </tr>
+                 
+                <tr valign="top">
+                    <td>Select Payment Type</td>
+                    <td>
+                      <input type="radio" value="Check" id="payment_cheque" name="payment_type" checked=""><label for="payment_cheque"><strong>Check</strong></label> 
+                    </td>
+                </tr>
+
+                <tr valign="top">
+                    <th scope="row"></th>
+                    <td><input type="hidden" name="pp_event_id" id="pp_event_id" />
+                        <input type="hidden" name="finale_amount" id="finale_amount" value="15000" />
+                        <div class="g-recaptcha" data-sitekey="6LfbOj4kAAAAAHukgHhTiCc9a2NbdWgDTLkq1PUn" style="margin-bottom: 25px;" ></div>
+                        <input type="submit" name="submit" value="<?php _e('Submit','aarepdc'); ?>"
+                            class="button-primary" />
+                        <?php wp_nonce_field("event_details","ers_add_event");?>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+var plugin_url = '<?php echo PP_PLUGIN_URL;?>';
+</script>

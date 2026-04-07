@@ -1,15 +1,34 @@
-# WordPress core
-wp-config.php
+# ============================================================
+# WordPress Core — WP Engine auto-updates these, don't track
+# ============================================================
 wp-admin/
 wp-includes/
-wp-*.php
 index.php
+wp-activate.php
+wp-blog-header.php
+wp-comments-post.php
+wp-cron.php
+wp-links-opml.php
+wp-load.php
+wp-login.php
+wp-mail.php
+wp-settings.php
+wp-signup.php
+wp-trackback.php
+xmlrpc.php
 license.txt
 readme.html
-xmlrpc.php
+wp-config-sample.php
 
-# WP Engine specific
-_wpeprivate
+# ============================================================
+# Protected — credentials and sensitive data
+# ============================================================
+wp-config.php
+
+# ============================================================
+# WP Engine system files — managed by WP Engine, never edit
+# ============================================================
+_wpeprivate/
 wp-content/object-cache.php
 wp-content/mysql.sql
 wp-content/mu-plugins/mu-plugin.php
@@ -17,12 +36,21 @@ wp-content/mu-plugins/slt-force-strong-passwords.php
 wp-content/mu-plugins/wpengine-common/
 wp-content/mu-plugins/limit-login-attempts/
 
-# Uploads and media (managed outside Git)
+# ============================================================
+# Media uploads — binary files, managed by WP Engine
+# ============================================================
 wp-content/uploads/
 wp-content/blogs.dir/
 wp-content/upgrade/
 
-# Large / binary files disallowed by WP Engine
+# ============================================================
+# Zip artifacts — not needed in git
+# ============================================================
+wp-content/plugins/*.zip
+
+# ============================================================
+# WP Engine disallowed binary/media file types
+# ============================================================
 *.hqx
 *.bin
 *.exe
@@ -56,19 +84,28 @@ wp-content/upgrade/
 *.wmv
 *.avi
 
-# OS files
+# ============================================================
+# DB backups — local only, never commit (contain PII)
+# ============================================================
+db-backups/
+
+# ============================================================
+# OS / IDE
+# ============================================================
 .DS_Store
 Thumbs.db
-
-# IDE / Editor
 .vscode/
 .idea/
 *.swp
 *.swo
 
+# ============================================================
 # Node (if applicable)
+# ============================================================
 node_modules/
 
+# ============================================================
 # Logs
+# ============================================================
 *.log
 wp-content/.logs/

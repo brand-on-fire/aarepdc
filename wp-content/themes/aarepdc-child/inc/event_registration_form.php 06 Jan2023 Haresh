@@ -1,0 +1,346 @@
+<?php
+add_shortcode( 'event_reg_shrt', 'event_registration_shortcode' );
+function event_registration_shortcode(){
+ob_start(); ?>
+
+<style type="text/css">
+.memberships_shrt select {  display: block !important; }
+.memberships_shrt select + .ui-selectmenu-button.ui-button {  display: none !important; }
+.ui.red.label, .ui.red.labels .label {
+  background-color: #db2828 !important;
+  border-color: #db2828 !important;
+  color: #fff !important;
+}
+.donate-block .row {
+  display: flex !important;
+  width: 100%;
+}
+.row {
+  margin-left: 0; 
+}
+.donate-block.donate-block-fix label {
+  width: 55%;
+}
+.ui.pointing.label {
+  position: relative;
+}
+.ui.pointing.label, .ui[class*="pointing above"].label {
+  margin-top: 1em;
+}
+.ui.pointing.label::before {
+  background-color: inherit;
+  border-style: solid;
+  border-color: inherit;
+  position: absolute;
+  content: '';
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background-image: none;
+  z-index: 2;
+  width: .6666em;
+  height: .6666em;
+  -webkit-transition: background .1s ease;
+  transition: background .1s ease;
+}
+.ui.pointing.label::before, .ui[class*="pointing above"].label::before {
+  border-width: 1px 0 0 1px;
+  -webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+  -ms-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+  transform: translateX(-50%) translateY(-50%) rotate(45deg);
+  top: 0;
+  left: 50%;
+}
+.ui.form .field.error .input,
+.ui.form .field.error label,
+.ui.form .fields.error .field .input,
+.ui.form .fields.error .field label {
+  color:#9f3a38
+}
+.ui.form .field.error .corner.label,
+.ui.form .fields.error .field .corner.label {
+  border-color:#9f3a38;
+  color:#fff
+}
+.ui.form .field.error input:not([type]),
+.ui.form .field.error input[type=text],
+.ui.form .field.error input[type=email],
+.ui.form .field.error input[type=search],
+.ui.form .field.error input[type=password],
+.ui.form .field.error input[type=date],
+.ui.form .field.error input[type=datetime-local],
+.ui.form .field.error input[type=tel],
+.ui.form .field.error input[type=time],
+.ui.form .field.error input[type=url],
+.ui.form .field.error input[type=number],
+.ui.form .field.error select,
+.ui.form .field.error textarea,
+.ui.form .fields.error .field input:not([type]),
+.ui.form .fields.error .field input[type=text],
+.ui.form .fields.error .field input[type=email],
+.ui.form .fields.error .field input[type=search],
+.ui.form .fields.error .field input[type=password],
+.ui.form .fields.error .field input[type=date],
+.ui.form .fields.error .field input[type=datetime-local],
+.ui.form .fields.error .field input[type=tel],
+.ui.form .fields.error .field input[type=time],
+.ui.form .fields.error .field input[type=url],
+.ui.form .fields.error .field input[type=number],
+.ui.form .fields.error .field select,
+.ui.form .fields.error .field textarea {
+  background:#fff6f6;
+  border-color:#e0b4b4;
+  color:#9f3a38;
+  border-radius:'';
+  box-shadow:none
+}
+.ui.form .field.error input:not([type]):focus,
+.ui.form .field.error input[type=text]:focus,
+.ui.form .field.error input[type=email]:focus,
+.ui.form .field.error input[type=search]:focus,
+.ui.form .field.error input[type=password]:focus,
+.ui.form .field.error input[type=date]:focus,
+.ui.form .field.error input[type=datetime-local]:focus,
+.ui.form .field.error input[type=tel]:focus,
+.ui.form .field.error input[type=time]:focus,
+.ui.form .field.error input[type=url]:focus,
+.ui.form .field.error input[type=number]:focus,
+.ui.form .field.error select:focus,
+.ui.form .field.error textarea:focus {
+  background:#fff6f6;
+  border-color:#e0b4b4;
+  color:#9f3a38;
+  -webkit-appearance:none;
+  box-shadow:none
+}
+</style>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<?php 
+	$event_title = $_GET['event_title'];
+	$event_amount = $_GET['event_amount'];
+	$current_user = wp_get_current_user();
+	$roles = ( array ) $current_user->roles;
+	//echo '<pre />';
+	//print_r($current_user);
+?>
+<div id="clients_loder1" style="display:none; position:fixed; vertical-align:middle; z-index:1050; background-color: #b5b5b5; height: 100%; left: 0; opacity: 0.8; position: fixed; top: 0; width: 100%; z-index: 1001;" align="center"><br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <img src="<?php echo site_url('images/loader-img.gif'); ?>"></div>
+
+
+  <?php 
+	$member_fee = get_field('member_price', $event_title);
+ if(tribe_get_cost($event_title) != "") {
+  if( $member_fee == 0 ) { ?>
+  <div class="msg">Free for Members | $<?php echo tribe_get_cost($event_title); ?> for Non-Members</div>
+	<?php } else { ?>
+  <div class="msg">$<?php echo number_format( get_field('member_price', $event_title), 2 ); ?> for Members | $<?php echo tribe_get_cost($event_title); ?> for Non-Members</div>
+  <?php } 
+ } 
+  ?>
+
+  <?php if( ! is_user_logged_in() ) { ?>
+  	<div class="">Members  <a href="<?php echo esc_url( wp_login_url( site_url('/event-registration?event_title='.$event_title.'&event_amount='.$event_amount) ) ); ?>">login</a> here to register</div>
+	<?php } ?>
+
+<div class="mycontainer mycontent">
+	<form onsubmit="return false;" class="ui grid form" method="post" action="" name="event_registration_form" id="event_registration_form" style="padding-top: 0;">
+		<h2 class="text-center please_fillout">Please fill out ALL of your information.</h2>
+
+		<?php if($event_amount == 0) { ?>
+		<h2 class="text-center please_fillout" style="color: rgb(30, 68, 128);" >The event is free.</h2>
+		<?php } else if($event_amount == 'free') { ?>
+		<h2 class="text-center please_fillout" style="color: rgb(30, 68, 128);" >The event is free.</h2>
+		<?php } else { ?>
+		<h2 class="text-center please_fillout" style="color: rgb(30, 68, 128);" >The event cost is $<?php echo number_format( $event_amount, 2); ?>.</h2>	
+		<?php } ?>
+
+		<br />
+
+		<!-- =============================================================================== -->
+
+		<div class="donate-block donate-block-fix" _id="general_info_data1" >
+			<section id="student_info_data" class="myrow">
+			<div class="vc_row yd_row01 row field">
+					<div class="vc_col-sm-6">
+					 	<div class="ui input">
+							<input type="text" name="first_name" id="first_name" value="<?php echo $current_user->first_name; ?>" placeholder="First name*">
+						</div>
+					</div>
+					<div class="vc_col-sm-6">
+					<div class="ui input">
+						<input type="text" name="last_name" id="last_name" value="<?php echo $current_user->last_name; ?>" placeholder="Last name*">
+					</div>
+					</div>
+			</div>
+		
+			<div class="vc_row yd_row01 row field">
+					<div class="vc_col-sm-6">
+						<div class="ui input">
+							<input type="text" name="email_address" id="email_address" value="<?php echo $current_user->user_login; ?>" placeholder="Email address*">
+						</div>
+					</div>
+					
+					<div class="vc_col-sm-6">
+						<div class="ui input">
+							<input type="text" name="company_name" id="company_name" value="<?php echo $current_user->company_name; ?>" placeholder="Company Name*">
+						</div>
+					</div>
+			</div>
+		  </section>
+   		</div>
+		<!-- =============================================================================== -->
+		<!-- <p style="margin-top: 0;" class="full-width text-center membership_parts"><strong>COMPANY INFORMATION</strong></p>
+		<div class="donate-block donate-block-fix" id="company_info_data" >
+
+			<div class="vc_row yd_row01">
+					<div class="vc_col-sm-6"><input type="text" name="com_first_name" id="com_first_name" value="<?php echo $current_user->first_name; ?>" kl_virtual_keyboard_secure_input="on" placeholder="First name*"></div>
+					<div class="vc_col-sm-6"><input type="text" name="com_last_name" id="com_last_name" value="<?php echo $current_user->last_name; ?>" kl_virtual_keyboard_secure_input="on" placeholder="Last name*"></div>
+			</div>
+
+			<div class="vc_row ma_add_info" id="hide_comopany_info">
+					<div class="vc_col-sm-6"><input type="text" name="company_name" id="company_name" value="<?php echo $current_user->company_name; ?>" placeholder="Company Name*"></div>
+					<div class="vc_col-sm-6"><input type="text" name="com_email_address" value="<?php echo $current_user->com_email_address; ?>"  id="com_email_address"  value="" placeholder="Email*"></div>
+			</div>
+
+		</div> -->
+		<!-- =============================================================================== -->
+		<?php //if($roles[0] != 'member') { ?>
+		<?php if($event_amount != 0) { ?>	
+		<p style="margin-top: 0;" class="full-width text-center membership_parts"><strong>BILLING INFORMATION</strong></p>
+		<div class="donate-block donate-block-fix" id="billing_info_data" >
+
+			<div class="vc_row yd_row01 row field">
+					<div class="vc_col-sm-6">
+						<div class="ui input">
+							<input type="text" name="billing_address" value="<?php echo $current_user->billing_address; ?>" id="billing_address" placeholder="Billing address*">
+						</div>
+					</div>
+					<div class="vc_col-sm-6">
+						<div class="ui input">
+							<input type="text" name="billing_city" id="billing_city" value="<?php echo $current_user->billing_city; ?>" placeholder="City*">
+						</div>
+					</div>
+			</div>
+
+			<div class="vc_row ma_add_info row field" id="hide_comopany_info">
+				<div class="vc_col-sm-6">
+					<div class="ui input">
+						<input type="text" name="billing_state" id="billing_state" value="<?php echo $current_user->billing_state; ?>" placeholder="State/Province*">
+					</div>
+				</div>
+				<div class="vc_col-sm-6">
+					<div class="ui input">
+						<input maxlength="10" type="text" name="billing_postal_code" value="<?php echo $current_user->billing_postal_code; ?>"  id="billing_postal_code"  value="" placeholder="Postal code*">
+					</div>
+				</div>
+			</div>
+  
+		</div>
+		<!-- =============================================================================== -->
+				
+    <p class="full-width text-center membership_parts clear payment_section"><strong>Payment Information</strong></p>
+	  <div class="donate-block donate-block-fix payinfo fonts-fix payment_section" id="payment_info_data">
+		<div class="form_row1 row field">
+			<div class="one_half">
+				<div class="ui input">
+					<input type="text" name="card_name" id="card_name" placeholder="Name on card*" >
+				</div>
+			</div>
+			<div class="one_half last">
+				<div class="">
+					<select name="card_type" id="card_type" class="txtbox" require>
+						<option value>Card Type*</option>
+						<option value="Visa">Visa</option>
+						<option value="MasterCard">Mastercard</option>
+						<option value="American Express">American Express</option>
+						<option value="Discover">Discover</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="form_row1 row field">
+			<div class="one_half"><div class="ui input"><input type="text" maxlength="16" name="card_number" id="card_number" placeholder="Card number*" onkeypress="return numbersonly(event);"></div></div>
+			<div class="one_half last"><div class="ui select"><input type="password" maxlength="4" name="card_cvc" id="card_cvc" placeholder="CVV number*" onkeypress="return numbersonly(event);"></div></div>
+		</div>
+		<div class="form_row1 cssfix00">
+			<div class="full_row row field">
+				<label class="cce_one" style="width: auto; float: left; margin-right: 50px;">Credit Card Expiration:*</label>
+				<div class="date-combo-fix date-combo2">
+					<table width="1%" cellspacing="0" cellpadding="2" border="0" class="vmiddle-tbl m0px-fix">
+						<tbody>
+							<tr>
+								<td align="left" valign="middle">Month&nbsp;</td>
+								<td align="left" valign="middle">
+								
+                  				<select name="expiry_month" id="expiry_month" class="txtbox m0px-fix fnone-fix">
+									<option value="01">01</option>
+									<option value="02">02</option>
+									<option value="03">03</option>
+									<option value="04">04</option>
+									<option value="05">05</option>
+									<option value="06">06</option>
+									<option value="07">07</option>
+									<option value="08">08</option>
+									<option value="09">09</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+								</select></td>
+								<td align="left" valign="middle">Year&nbsp;</td>
+								<td align="left" valign="middle">
+								
+                  				<select name="expiry_year" id="expiry_year" class="txtbox m0px-fix fnone-fix">
+									<option value="21">21</option>
+									<option value="22">22</option>
+									<option value="23">23</option>
+									<option value="24">24</option>
+									<option value="25">25</option>
+									<option value="26">26</option>
+									<option value="27">27</option>
+									<option value="28">28</option>
+									<option value="29">29</option>
+									<option value="30">30</option>
+									<option value="31">31</option>
+									<option value="32">32</option>
+								</select></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+		</div>
+	  </div>
+	<?php } ?>
+
+
+	<div class="full-width submit_wrapp erf" style="flex-direction: column;">
+    <div class="one_half last">
+        <!-- <div class="g-recaptcha" data-sitekey="6LfbOj4kAAAAAHukgHhTiCc9a2NbdWgDTLkq1PUn"></div> -->
+		<!-- <span class="wpcf7-form-control-wrap recaptcha" data-name="recaptcha"><span data-sitekey="6LfbOj4kAAAAAHukgHhTiCc9a2NbdWgDTLkq1PUn" class="wpcf7-form-control wpcf7-recaptcha g-recaptcha"></span> -->
+		<div class="g-recaptcha" data-sitekey="6LfbOj4kAAAAAHukgHhTiCc9a2NbdWgDTLkq1PUn"></div>
+		<label id="google-captcha-error" class="error ui red pointing label transition" style="display: none;"></label>
+    </div>
+    <input type="hidden" name="event_id" id="event_id" value="<?php echo $event_title; ?>">
+    <input type="hidden" name="event_amount" id="event_amount" value="<?php if($event_amount == 'free') { echo '0'; } else { echo $event_amount; } ?>">
+    <input type="hidden" name="member_check" id="member_check" value="<?php if($roles[0] == "member" ) { echo "memberLoggedIn"; } ?>">
+		<input style="margin-top: 17px !important;" type="submit" value="Submit" _onclick="event_reg_validation();" name="donate" id="donate" class="donate-submit-btn dsb">
+	</div>
+
+</div>
+
+</form>
+
+<?php
+	return ob_get_clean();
+}

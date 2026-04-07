@@ -1,0 +1,80 @@
+@charset "utf-8";
+/* CSS Document */
+
+.row-mar-bottom0{margin-bottom:0;}
+.violet-heading-2{color: #9543bd !important;font: 28px/1.4 "poppinsregular";margin: 0 0 8px !important;padding: 0 !important;text-transform: capitalize;}
+
+.vc_row.locations-block a { color: #333!important;  }
+.vc_row.locations-block .icon { color: #333!important; }
+
+.vc_row.locations-block a:hover { color: #000!important; text-decoration: underline;  }
+
+/*------------ Location & Contact Us ---------------*/
+.contact-us-block form {float: none;margin: 0 auto;width: 70%;}
+.contact-us-block form textarea, .contact-us-block form input[type="text"], .contact-us-block form input[type="email"] {font-family: "poppinsregular" !important;	border-radius: 25px; text-indent: 8px;height: 46px !important;margin: 0 !important;padding-bottom: 0 !important;padding-top: 0 !important;	background: #f9f9f9;border: 1px solid #eee;color: #555;display: block;max-width: 100%;outline:  none;transition: all 0.3s ease-out 0s;}
+.contact-us-block form textarea { height: 120px !important;padding-top: 10px !important; }
+
+/*.contact-us-block form input[type="submit"] { 
+    background-color: #fc971a !important;border-radius: 25px;display: table; float: none;
+    font: 20px/100% "poppinsmedium" !important;height: 100% !important;margin: 0 auto !important;
+    padding:20px 20px 16px 20px !important;width: 126px !important; }
+    .contact-us-block form input[type="submit"]:hover{ background-color:#8E40B4 !important; }*/
+
+.contact-us-block form input[type="submit"] { margin: 0 auto !important; float: none; clear: both; display: block;  }
+.contact-us-block form .ajax-loader{  left: 0;margin: 0 auto;position: absolute;right: 0;}
+
+.border-none{border:none !important;}
+.inner-banner .vc_col-sm-12 .wpb_wrapper{position:relative;}
+
+.fts-slicker-facebook-photos .fts-jal-fb-picture{-webkit-transition: all .5s !important;
+    -moz-transition: all .5s !important;
+    -o-transition: all .5s !important;
+    transition: all .5s !important;}
+.fts-slicker-facebook-photos .fts-jal-fb-picture:hover{ -ms-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    transform: scale(1.1);}
+.fts-jal-fb-header h1, .fts-jal-fb-header .fts-jal-fb-group-header-desc{display:none;}
+
+@media(max-width:767px){
+    /*------------ Location & Contact Us ---------------*/
+    .locations-block {border-bottom: 1px dashed;padding-bottom: 40px;}
+    .locations-block iframe{margin-bottom:20px !important;margin-top: 20px;}
+    .contact-us-block form { width: 100%;}	
+}
+
+
+
+/*Haresh*/
+
+
+
+div.msg_div::before {
+    content: " ";
+    font-family: 'FontAwesome';
+}
+div.msg_div {
+    clear: both;
+    border: 2px solid #FF0000 !important;
+    color: #FF0000 !important;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+div#login_error::before {
+    content: " ";
+    font-family: 'FontAwesome';
+}
+div#login_error {
+    clear: both;
+    border: 2px solid #FF0000 !important;
+    color: #FF0000 !important;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+	margin: 15px auto;
+	width: 300px;
+}
+
