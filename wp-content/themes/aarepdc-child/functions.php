@@ -260,8 +260,9 @@ add_action( 'wp_head', function() {
         rs-layer#slider_layer_id1 { display:none!important; }
         #hb_mobile_text_row {
             position:absolute!important;
-            bottom:20px!important;
+            top:50%!important;
             left:0!important; right:0!important;
+            transform:translateY(-50%)!important;
             z-index:100!important;
             display:block!important;
             text-align:center!important;
@@ -271,7 +272,9 @@ add_action( 'wp_head', function() {
         #hb_mobile_text_row .ld-row,
         #hb_mobile_text_row .wpb_column,
         #hb_mobile_text_row .vc_column-inner,
-        #hb_mobile_text_row .wpb_wrapper {
+        #hb_mobile_text_row .wpb_wrapper,
+        #hb_mobile_text,
+        #hb_mobile_text .ld-fh-element {
             padding:0!important; margin:0!important;
         }
         #hb_mobile_text_row,
