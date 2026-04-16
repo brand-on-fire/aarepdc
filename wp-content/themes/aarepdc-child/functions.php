@@ -234,13 +234,10 @@ add_action( 'wp_head', function() {
     <style>
     #sb_instagram, .sbi { padding-top:20px!important; padding-bottom:20px!important; }
     .wpcf7-response-output[aria-hidden="true"]:empty { display:none!important; }
-
+    section.fucus_mobile_image { display:none!important; }
     @media (max-width: 991px) {
-        #slider_wrapper_id1 { display:none!important; }
-        section#home_top_banner rs-module rs-layer#slider_layer_id1 { display:none!important; }
-    }
-    @media (max-width: 767px) {
-        section.fucus_mobile_image#fucus_mobile_image { display:none!important; }
+        #slider_wrapper_id1,
+        rs-layer#slider_layer_id1 { display:none!important; }
     }
     </style>
     <?php
@@ -256,14 +253,31 @@ add_action( 'wp_footer', function() {
         var wrap = document.getElementById("rev_slider_1_1_wrapper");
         if (!wrap) return;
         var mod = wrap.querySelector("rs-module");
-
         var savedH = 0;
+
         new MutationObserver(function() {
             var h = parseInt(wrap.style.height);
             if (h > 100) savedH = h;
         }).observe(wrap, {attributes: true, attributeFilter: ["style"]});
 
         if (window.innerWidth >= 992) {
+            var ticking = false;
+            window.addEventListener("scroll", function() {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(function() {
+                    ticking = false;
+                    if (window.scrollY < 50 && savedH > 100) {
+                        var curH = parseInt(wrap.style.height);
+                        if (curH < 100) {
+                            wrap.style.height = savedH + "px";
+                            if (mod) mod.style.height = savedH + "px";
+                            if (window.revapi1 && typeof revapi1.revredraw === "function") revapi1.revredraw();
+                        }
+                    }
+                });
+            }, {passive: true});
+
             document.addEventListener("lqd-header-sticky-change", function(e) {
                 if (e.detail && !e.detail.stuck && savedH > 100) {
                     requestAnimationFrame(function() {
@@ -272,6 +286,7 @@ add_action( 'wp_footer', function() {
                             if (curH < 100) {
                                 wrap.style.height = savedH + "px";
                                 if (mod) mod.style.height = savedH + "px";
+                                if (window.revapi1 && typeof revapi1.revredraw === "function") revapi1.revredraw();
                             }
                         });
                     });
