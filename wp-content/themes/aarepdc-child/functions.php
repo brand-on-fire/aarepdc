@@ -225,10 +225,23 @@ function my_login_redirect( $redirect_to, $request, $user ) {
 add_filter( 'login_redirect', 'my_login_redirect', 10, 3 );
 
 add_action( 'wp_head', function() {
-    ?>
+    if ( ! is_front_page() ) { ?>
     <style>
     #sb_instagram, .sbi { padding-top:20px!important; padding-bottom:20px!important; }
     .wpcf7-response-output[aria-hidden="true"]:empty { display:none!important; }
+    </style>
+    <?php return; } ?>
+    <style>
+    #sb_instagram, .sbi { padding-top:20px!important; padding-bottom:20px!important; }
+    .wpcf7-response-output[aria-hidden="true"]:empty { display:none!important; }
+
+    @media (max-width: 991px) {
+        #slider_wrapper_id1 { display:none!important; }
+        section#home_top_banner rs-module rs-layer#slider_layer_id1 { display:none!important; }
+    }
+    @media (max-width: 767px) {
+        section.fucus_mobile_image#fucus_mobile_image { display:none!important; }
+    }
     </style>
     <?php
 }, 99 );
@@ -240,23 +253,30 @@ add_action( 'wp_footer', function() {
         var el = document.getElementById("current_year");
         if (el) el.textContent = new Date().getFullYear();
 
-        if (window.innerWidth < 992) return;
-        document.addEventListener("lqd-header-sticky-change", function(e) {
-            if (e.detail && !e.detail.stuck) {
-                var w = document.getElementById("rev_slider_1_1_wrapper");
-                if (w && w._savedH) {
-                    w.style.height = w._savedH + "px";
-                    var m = w.querySelector("rs-module");
-                    if (m) m.style.height = w._savedH + "px";
-                }
-            }
-        });
         var wrap = document.getElementById("rev_slider_1_1_wrapper");
-        if (wrap) {
-            new MutationObserver(function() {
-                var h = parseInt(wrap.style.height);
-                if (h > 100) wrap._savedH = h;
-            }).observe(wrap, {attributes: true, attributeFilter: ["style"]});
+        if (!wrap) return;
+        var mod = wrap.querySelector("rs-module");
+
+        var savedH = 0;
+        new MutationObserver(function() {
+            var h = parseInt(wrap.style.height);
+            if (h > 100) savedH = h;
+        }).observe(wrap, {attributes: true, attributeFilter: ["style"]});
+
+        if (window.innerWidth >= 992) {
+            document.addEventListener("lqd-header-sticky-change", function(e) {
+                if (e.detail && !e.detail.stuck && savedH > 100) {
+                    requestAnimationFrame(function() {
+                        requestAnimationFrame(function() {
+                            var curH = parseInt(wrap.style.height);
+                            if (curH < 100) {
+                                wrap.style.height = savedH + "px";
+                                if (mod) mod.style.height = savedH + "px";
+                            }
+                        });
+                    });
+                }
+            });
         }
     })();
     </script>
