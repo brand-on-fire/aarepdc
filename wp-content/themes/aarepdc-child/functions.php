@@ -255,13 +255,19 @@ add_action( 'wp_head', function() {
         rs-layer#slider_layer_id1 { display:none!important; }
         #hb_mobile_text_row {
             position:absolute!important;
-            top:50%!important;
+            bottom:15px!important;
             left:0!important; right:0!important;
-            transform:translateY(-50%)!important;
             z-index:100!important;
             display:block!important;
             text-align:center!important;
-            margin:0!important; padding:0 20px!important;
+            margin:0!important; padding:0!important;
+        }
+        #hb_mobile_text_row .ld-container,
+        #hb_mobile_text_row .ld-row,
+        #hb_mobile_text_row .wpb_column,
+        #hb_mobile_text_row .vc_column-inner,
+        #hb_mobile_text_row .wpb_wrapper {
+            padding:0!important; margin:0!important;
         }
         #hb_mobile_text_row,
         #hb_mobile_text_row * {
