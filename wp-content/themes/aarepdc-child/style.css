@@ -200,6 +200,7 @@ div#platinum_carousel .wpb_single_image, div#platinum_carousel .wpb_single_image
 .uppercase { text-transform: uppercase;  }
 .btn>span:not(.btn-icon):not(.btn-txt) { padding: 0; }
 header#header { position: absolute; left: 0;   top: 0;  width: 100%; }
+#home_top_banner .rs-module-wrap { min-height: 80vh; }
 
 /*------------------------------------------------------*/
 a { color: var(--theme-blue-color3); /*#05adee*/  }
@@ -615,6 +616,7 @@ div#webhost_wrapp > div {
 .home .webhost_wrapp {  
     display: none!important;
 }
+#sb_instagram, .sbi { padding-top: 20px; padding-bottom: 20px; }
 
 form label {
     display: block;
