@@ -255,13 +255,20 @@ add_action( 'wp_footer', function() {
         if (el) el.textContent = new Date().getFullYear();
 
         var wrap = document.getElementById("rev_slider_1_1_wrapper");
+        // #region agent log
+        fetch('http://127.0.0.1:7452/ingest/3b23a79b-2f96-425c-8f78-4e12ac3d8f2a',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'181fbb'},body:JSON.stringify({sessionId:'181fbb',location:'functions.php:footer',message:'wrap-found',data:{wrapExists:!!wrap,modExists:wrap?!!wrap.querySelector("rs-module"):false,wrapStyle:wrap?wrap.getAttribute("style"):"N/A"},timestamp:Date.now(),hypothesisId:'H1'})}).catch(function(){});
+        // #endregion
         if (!wrap) return;
         var mod = wrap.querySelector("rs-module");
         var savedH = 0;
+        var logCount = 0;
         function protect() {
             var h = mod ? parseInt(mod.style.height) : 0;
             if (h > 100) savedH = h;
             if (h < 100 && savedH > 100) {
+                // #region agent log
+                if (logCount < 5) { logCount++; fetch('http://127.0.0.1:7452/ingest/3b23a79b-2f96-425c-8f78-4e12ac3d8f2a',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'181fbb'},body:JSON.stringify({sessionId:'181fbb',location:'functions.php:protect',message:'height-restored',data:{collapsedH:h,restoredH:savedH,scrollY:window.scrollY,wrapVis:wrap.style.visibility},timestamp:Date.now(),hypothesisId:'H3'})}).catch(function(){}); }
+                // #endregion
                 mod.style.height = savedH + "px";
                 wrap.style.height = savedH + "px";
             }
@@ -270,12 +277,26 @@ add_action( 'wp_footer', function() {
         var obs = new MutationObserver(protect);
         if (mod) obs.observe(mod, {attributes:true, attributeFilter:["style"]});
         obs.observe(wrap, {attributes:true, attributeFilter:["style"]});
+
+        var scrollLogCount = 0;
         window.addEventListener("scroll", function() {
+            // #region agent log
+            if (scrollLogCount < 3 && window.scrollY < 10) { scrollLogCount++; fetch('http://127.0.0.1:7452/ingest/3b23a79b-2f96-425c-8f78-4e12ac3d8f2a',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'181fbb'},body:JSON.stringify({sessionId:'181fbb',location:'functions.php:scroll',message:'near-top',data:{scrollY:window.scrollY,wrapH:wrap.style.height,modH:mod?mod.style.height:"N/A",wrapVis:wrap.style.visibility,savedH:savedH,hasRevapi:!!window.revapi1},timestamp:Date.now(),hypothesisId:'H4'})}).catch(function(){}); }
+            // #endregion
             if (window.scrollY < 10) {
                 protect();
                 if (window.revapi1 && typeof revapi1.revredraw === "function") revapi1.revredraw();
             }
         });
+
+        // #region agent log
+        setTimeout(function(){
+            var computedH = wrap.offsetHeight;
+            var modComputedH = mod ? mod.offsetHeight : 0;
+            var headerEl = document.getElementById("header");
+            fetch('http://127.0.0.1:7452/ingest/3b23a79b-2f96-425c-8f78-4e12ac3d8f2a',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'181fbb'},body:JSON.stringify({sessionId:'181fbb',location:'functions.php:after2s',message:'state-after-load',data:{wrapOffsetH:computedH,modOffsetH:modComputedH,wrapInlineH:wrap.style.height,modInlineH:mod?mod.style.height:"N/A",wrapVis:wrap.style.visibility,headerPos:headerEl?getComputedStyle(headerEl).position:"N/A",savedH:savedH},timestamp:Date.now(),hypothesisId:'H2'})}).catch(function(){});
+        }, 2000);
+        // #endregion
     })();
     </script>
     <?php
