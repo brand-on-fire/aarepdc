@@ -243,8 +243,7 @@ add_action( 'wp_head', function() {
     .wpcf7-response-output[aria-hidden="true"]:empty { display:none!important; }
     section.fucus_mobile_image { display:none!important; }
     @media (min-width: 992px) {
-        #rev_slider_1_1_wrapper,
-        #rev_slider_1_1_wrapper rs-module { min-height:43vw!important; }
+        section#home_top_banner { min-height:43vw!important; }
     }
     @media (max-width: 991px) {
         #slider_wrapper_id1,
