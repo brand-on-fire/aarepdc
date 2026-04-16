@@ -225,12 +225,8 @@ function my_login_redirect( $redirect_to, $request, $user ) {
 add_filter( 'login_redirect', 'my_login_redirect', 10, 3 );
 
 add_action( 'wp_head', function() {
-    if ( ! is_front_page() ) return;
     ?>
     <style>
-    section#home_top_banner { position:relative; z-index:1; }
-    #rev_slider_1_1_wrapper { visibility:visible!important; }
-    section#home_row1 { position:relative; z-index:2; }
     #sb_instagram, .sbi { padding-top:20px!important; padding-bottom:20px!important; }
     .wpcf7-response-output[aria-hidden="true"]:empty { display:none!important; }
     </style>
@@ -243,32 +239,6 @@ add_action( 'wp_footer', function() {
     (function(){
         var el = document.getElementById("current_year");
         if (el) el.textContent = new Date().getFullYear();
-
-        var wrap = document.getElementById("rev_slider_1_1_wrapper");
-        if (!wrap) return;
-        var mod = wrap.querySelector("rs-module");
-        var savedH = 0;
-        function protect() {
-            var h = mod ? parseInt(mod.style.height) : 0;
-            if (h > 100) {
-                savedH = h;
-                wrap.style.visibility = "visible";
-            }
-            if (h < 100 && savedH > 100) {
-                mod.style.height = savedH + "px";
-                wrap.style.height = savedH + "px";
-                wrap.style.visibility = "visible";
-            }
-        }
-        var obs = new MutationObserver(protect);
-        if (mod) obs.observe(mod, {attributes: true, attributeFilter: ["style"]});
-        obs.observe(wrap, {attributes: true, attributeFilter: ["style"]});
-        window.addEventListener("scroll", function() {
-            if (window.scrollY < 10) {
-                protect();
-                if (window.revapi1 && typeof revapi1.revredraw === "function") revapi1.revredraw();
-            }
-        });
     })();
     </script>
     <?php
