@@ -224,12 +224,6 @@ function my_login_redirect( $redirect_to, $request, $user ) {
 }
 add_filter( 'login_redirect', 'my_login_redirect', 10, 3 );
 
-add_action( 'send_headers', function() {
-    header( 'Cache-Control: no-cache, no-store, must-revalidate' );
-    header( 'Pragma: no-cache' );
-    header( 'Expires: 0' );
-    header( 'X-Accel-Expires: 0' );
-}, 1 );
 
 add_action( 'wp_head', function() {
     if ( ! is_front_page() ) { ?>
