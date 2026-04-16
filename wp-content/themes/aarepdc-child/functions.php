@@ -242,10 +242,10 @@ add_action( 'wp_head', function() {
     #sb_instagram, .sbi { padding-top:20px!important; padding-bottom:20px!important; }
     .wpcf7-response-output[aria-hidden="true"]:empty { display:none!important; }
     section.fucus_mobile_image { display:none!important; }
-    @media (min-width: 992px) {
+    @media (min-width: 1200px) {
         section#home_top_banner { min-height:43vw!important; }
     }
-    @media (max-width: 991px) {
+    @media (max-width: 1199px) {
         section#home_top_banner {
             position:relative!important;
             overflow:hidden!important;
@@ -281,6 +281,8 @@ add_action( 'wp_head', function() {
         #hb_mobile_text_row * {
             opacity:1!important;
             visibility:visible!important;
+            animation:none!important;
+            transition:none!important;
         }
         #hb_mobile_text .ld-fh-element,
         #hb_mobile_text .st_01,
@@ -290,6 +292,12 @@ add_action( 'wp_head', function() {
             color:#fff!important;
             text-shadow:0 2px 8px rgba(0,0,0,0.6)!important;
         }
+    }
+    @media (min-width: 992px) and (max-width: 1199px) {
+        #hb_mobile_text .st_01,
+        #hb_mobile_text .st_03,
+        #hb_mobile_text .st_04 { font-size:48px!important; line-height:1.2!important; }
+        #hb_mobile_text .st_02 { font-size:40px!important; line-height:1.2!important; }
     }
     @media (min-width: 768px) and (max-width: 991px) {
         #hb_mobile_text .st_01,
