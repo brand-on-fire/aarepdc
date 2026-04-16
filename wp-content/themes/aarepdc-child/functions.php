@@ -285,33 +285,37 @@ add_action( 'wp_head', function() {
             transition:none!important;
         }
         #hb_mobile_text .ld-fh-element,
-        #hb_mobile_text .st_01,
-        #hb_mobile_text .st_02,
-        #hb_mobile_text .st_03,
-        #hb_mobile_text .st_04 {
+        #hb_mobile_text span.st_01,
+        #hb_mobile_text span.st_02,
+        #hb_mobile_text span.st_03,
+        #hb_mobile_text span.st_04 {
             color:#fff!important;
             text-shadow:0 2px 8px rgba(0,0,0,0.6)!important;
         }
+        #hb_mobile_text span.st_02 {
+            padding-bottom:4px!important;
+            margin-bottom:4px!important;
+        }
     }
     @media (min-width: 992px) and (max-width: 1199px) {
-        #hb_mobile_text .st_01,
-        #hb_mobile_text .st_03,
-        #hb_mobile_text .st_04 { font-size:48px!important; line-height:1.2!important; }
-        #hb_mobile_text .st_02 { font-size:40px!important; line-height:1.2!important; }
+        #hb_mobile_text span.st_01,
+        #hb_mobile_text span.st_03,
+        #hb_mobile_text span.st_04 { font-size:48px!important; line-height:1!important; }
+        #hb_mobile_text span.st_02 { font-size:42px!important; line-height:1!important; }
     }
     @media (min-width: 768px) and (max-width: 991px) {
-        #hb_mobile_text .st_01,
-        #hb_mobile_text .st_03,
-        #hb_mobile_text .st_04 { font-size:36px!important; line-height:1.2!important; }
-        #hb_mobile_text .st_02 { font-size:30px!important; line-height:1.2!important; }
+        #hb_mobile_text span.st_01,
+        #hb_mobile_text span.st_03,
+        #hb_mobile_text span.st_04 { font-size:36px!important; line-height:1!important; }
+        #hb_mobile_text span.st_02 { font-size:32px!important; line-height:1!important; }
     }
     @media (max-width: 767px) {
         section#home_top_banner { height:45vw!important; }
-        #hb_mobile_text .ld-fh-element { line-height:1!important; }
-        #hb_mobile_text .st_01,
-        #hb_mobile_text .st_03,
-        #hb_mobile_text .st_04 { font-size:4.5vw!important; line-height:1.15!important; }
-        #hb_mobile_text .st_02 { font-size:3.5vw!important; line-height:1.15!important; }
+        #hb_mobile_text span.st_01,
+        #hb_mobile_text span.st_03,
+        #hb_mobile_text span.st_04 { font-size:7vw!important; line-height:1!important; }
+        #hb_mobile_text span.st_02 { font-size:5.5vw!important; line-height:1!important; padding-bottom:1vw!important; margin-bottom:0!important; }
+        #hb_mobile_text span.st_02:before { height:2vw!important; background-size:50% auto!important; bottom:-1vw!important; }
     }
     </style>
     <?php
