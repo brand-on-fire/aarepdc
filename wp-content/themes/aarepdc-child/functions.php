@@ -223,3 +223,18 @@ function my_login_redirect( $redirect_to, $request, $user ) {
     }
 }
 add_filter( 'login_redirect', 'my_login_redirect', 10, 3 );
+
+add_action( 'wp_footer', function() {
+    ?>
+    <script>
+    (function(){
+        var el = document.getElementById("current_year");
+        if (el) el.textContent = new Date().getFullYear();
+    })();
+    </script>
+    <?php
+}, 99 );
+
+add_action( 'wp_enqueue_scripts', function() {
+    wp_enqueue_style( 'fa6-free', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css', array(), '6.5.1' );
+}, 100 );
