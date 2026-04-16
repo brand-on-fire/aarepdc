@@ -229,9 +229,9 @@ add_action( 'wp_head', function() {
     ?>
     <style>
     section#home_top_banner { position:relative; z-index:1; }
-    #rev_slider_1_1_wrapper { visibility:visible!important; }
     section#home_row1 { position:relative; z-index:2; }
     #sb_instagram, .sbi { padding-top:20px!important; padding-bottom:20px!important; }
+    .wpcf7-response-output[aria-hidden="true"]:empty { display:none!important; }
     </style>
     <?php
 }, 99 );
@@ -253,15 +253,18 @@ add_action( 'wp_footer', function() {
         var logCount = 0;
         function protect() {
             var h = mod ? parseInt(mod.style.height) : 0;
-            if (h > 100) savedH = h;
+            if (h > 100) {
+                savedH = h;
+                wrap.style.visibility = "visible";
+            }
             if (h < 100 && savedH > 100) {
                 // #region agent log
                 if (logCount < 5) { logCount++; fetch('http://127.0.0.1:7452/ingest/3b23a79b-2f96-425c-8f78-4e12ac3d8f2a',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'181fbb'},body:JSON.stringify({sessionId:'181fbb',location:'functions.php:protect',message:'height-restored',data:{collapsedH:h,restoredH:savedH,scrollY:window.scrollY,wrapVis:wrap.style.visibility},timestamp:Date.now(),hypothesisId:'H3'})}).catch(function(){}); }
                 // #endregion
                 mod.style.height = savedH + "px";
                 wrap.style.height = savedH + "px";
+                wrap.style.visibility = "visible";
             }
-            wrap.style.visibility = "visible";
         }
         var obs = new MutationObserver(protect);
         if (mod) obs.observe(mod, {attributes:true, attributeFilter:["style"]});
