@@ -249,19 +249,24 @@ add_action( 'wp_head', function() {
         section#home_top_banner {
             position:relative!important;
             overflow:hidden!important;
-            min-height:40vw!important;
+            height:40vw!important;
         }
         #slider_wrapper_id1,
         rs-layer#slider_layer_id1 { display:none!important; }
         #hb_mobile_text_row {
             position:absolute!important;
-            top:0!important; bottom:0!important;
+            top:50%!important;
             left:0!important; right:0!important;
-            z-index:10!important;
-            display:flex!important;
-            align-items:center!important;
-            justify-content:center!important;
+            transform:translateY(-50%)!important;
+            z-index:100!important;
+            display:block!important;
+            text-align:center!important;
             margin:0!important; padding:0 20px!important;
+        }
+        #hb_mobile_text_row,
+        #hb_mobile_text_row * {
+            opacity:1!important;
+            visibility:visible!important;
         }
         #hb_mobile_text .ld-fh-element,
         #hb_mobile_text .st_01,
@@ -273,11 +278,11 @@ add_action( 'wp_head', function() {
         }
     }
     @media (max-width: 767px) {
-        section#home_top_banner { min-height:45vw!important; }
+        section#home_top_banner { height:45vw!important; }
         #hb_mobile_text .st_01,
         #hb_mobile_text .st_03,
-        #hb_mobile_text .st_04 { font-size:24px!important; line-height:1.3!important; }
-        #hb_mobile_text .st_02 { font-size:20px!important; line-height:1.3!important; }
+        #hb_mobile_text .st_04 { font-size:22px!important; line-height:1.2!important; }
+        #hb_mobile_text .st_02 { font-size:18px!important; line-height:1.2!important; }
     }
     </style>
     <?php
