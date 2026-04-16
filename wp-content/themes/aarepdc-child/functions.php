@@ -228,21 +228,10 @@ add_action( 'wp_head', function() {
     if ( ! is_front_page() ) return;
     ?>
     <style>
-    section#home_top_banner { position:relative; z-index:1; min-height:80vh; overflow:hidden; }
-    #rev_slider_1_1_wrapper { visibility:visible!important; min-height:80vh!important; }
-    #rev_slider_1_1_wrapper rs-module { min-height:80vh!important; }
+    section#home_top_banner { position:relative; z-index:1; }
+    #rev_slider_1_1_wrapper { visibility:visible!important; }
     section#home_row1 { position:relative; z-index:2; }
     #sb_instagram, .sbi { padding-top:20px!important; padding-bottom:20px!important; }
-    @media(max-width:991px){
-        section#home_top_banner{min-height:50vh}
-        #rev_slider_1_1_wrapper{min-height:50vh!important}
-        #rev_slider_1_1_wrapper rs-module{min-height:50vh!important}
-    }
-    @media(max-width:767px){
-        section#home_top_banner{min-height:40vh}
-        #rev_slider_1_1_wrapper{min-height:40vh!important}
-        #rev_slider_1_1_wrapper rs-module{min-height:40vh!important}
-    }
     </style>
     <?php
 }, 99 );
