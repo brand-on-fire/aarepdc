@@ -245,7 +245,11 @@ add_action( 'wp_head', function() {
     @media (min-width: 992px) {
         section#home_top_banner { min-height:43vw!important; }
     }
-    @media (max-width: 991px) {
+    @media (min-width: 768px) and (max-width: 991px) {
+        section#home_top_banner { min-height:40vw!important; }
+        #hb_mobile_text_row { display:none!important; }
+    }
+    @media (max-width: 767px) {
         #slider_wrapper_id1,
         rs-layer#slider_layer_id1 { display:none!important; }
     }
