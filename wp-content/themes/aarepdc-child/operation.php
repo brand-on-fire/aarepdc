@@ -3,7 +3,7 @@ require_once("../../../../wp-load.php");
 date_default_timezone_set('US/Eastern');
 require_once('stripe/init.php');
 
-$mode=$_GET["mode"];
+$mode = isset($_GET["mode"]) ? sanitize_text_field($_GET["mode"]) : '';
 $ApiKey = get_field('stripe_live_key', 850);
 //\Stripe\Stripe::setApiKey("sk_live_biniRdoKAlQ4wRr5IBeOwMYn"); // Client Live Account Key
 //\Stripe\Stripe::setApiKey($ApiKey); // Client Live Account Key

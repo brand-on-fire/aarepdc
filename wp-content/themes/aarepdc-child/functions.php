@@ -17,14 +17,15 @@ function liquid_child_theme_style(){
     wp_enqueue_style( 'child-hub-style', get_stylesheet_directory_uri() . '/style.css' );	
     wp_enqueue_style( 'child-hub-style2', get_stylesheet_directory_uri() . '/style2.css' ); 
     wp_enqueue_style( 'child-hub-resp1', get_stylesheet_directory_uri() . '/responsive.css' );
-    wp_enqueue_script('customjs', get_stylesheet_directory_uri().'/js/custom.js', array(), null, '');
-
-    //wp_enqueue_script( 'jquery-ui-datepicker' );
-    //You need styling for the datepicker. For simplicity I've linked to the jQuery UI CSS on a CDN.
-    //wp_register_style( 'jquery-ui', 'https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css' );
-    //wp_enqueue_style( 'jquery-ui' ); 
+    wp_enqueue_script('customjs', get_stylesheet_directory_uri().'/js/custom.js', array(), null, true);
 
 }
+
+add_action( 'wp_head', function() {
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>' . "\n";
+    echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+    echo '<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>' . "\n";
+}, 1 );
 
 add_action('admin_enqueue_scripts', 'ds_admin_theme_style');
 add_action('login_enqueue_scripts', 'ds_admin_theme_style');
@@ -38,7 +39,7 @@ function ds_admin_theme_style() {
 # Remove query string (version) from static files
 ---------------------------------------------------------------------------------------------------------------------------*/
 function remove_cssjs_ver( $src ) {
- if( strpos( $src, '?ver=' ) )
+ if( strpos( $src, '?ver=' ) !== false )
  $src = remove_query_arg( 'ver', $src );
  return $src;
 }
@@ -71,31 +72,17 @@ require_once('inc/sponsorship_levels_shrt.php');
 require_once('inc/membership_application.php');
 require_once('inc/event_registration_form.php');
 
-@ini_set( 'upload_max_size' , '256M' );
-@ini_set( 'post_max_size', '256M');
-@ini_set( 'max_execution_time', '300' );
+ini_set( 'upload_max_filesize', '256M' );
+ini_set( 'post_max_size', '256M' );
+ini_set( 'max_execution_time', '300' );
 
 
-// ======================================================================================================
-// =============================================================================================
 function el_custom_javascript() { ?>
-    
     <script>
-    
             const tv = document.querySelector("#home_row2");
-            //let tvbg = tv.dataset.row-bg;
-
             const plant = document.getElementById('footer');
-            plant.setAttribute('background-image','bgimg');
-
-            var a = 2;
-            console.log(a);
-            console.log(tv);
-           // console.log(tvbg);
-
+            if (plant) plant.setAttribute('background-image','bgimg');
     </script>
-
-
     <script type="text/javascript">
         jQuery('*[data-background-image]').each(function() {
             jQuery(this).css({
@@ -103,38 +90,14 @@ function el_custom_javascript() { ?>
             });
         });
     </script>
-
 <?php }
 add_action('wp_footer', 'el_custom_javascript');
 
-// ======================================================================================================
-// =============================================================================================
-function my_custom_function(){
-    ?>
-    <script>       
-
-        // var list = document.getElementsByClassName('.content_bottom_banner');
-        // var src = list.getAttribute('data-row-bg');
-        // elem.getAttribute( "checked" )
-
-        // $( "#content_bottom_banner" ).attr( "alt", "Beijing Brush Seller" );
-
-        // list.style.backgroundImage="url('" + src + "')";
-        // console.log('Hello World!');
-        
-        // Your function here
-        // jQuery(window).load(function(){
-        //     console.log('Hello World!');
-        // });
-    </script>
-    <?php
-}
-add_action('wp_footer', 'my_custom_function');
-
-// Sponsorship Page Shortcode
 add_shortcode( 'sponsorship_thankyou', 'sponsorship_thankyou_shortcode' );
-function sponsorship_thankyou_shortcode() { ob_start(); ?>
-    We received your African American Real Estate Professionals DC order for <strong><?php echo $_GET['type']; ?>!</strong> <br />
+function sponsorship_thankyou_shortcode() { ob_start();
+    $type = isset( $_GET['type'] ) ? esc_html( sanitize_text_field( $_GET['type'] ) ) : '';
+    ?>
+    We received your African American Real Estate Professionals DC order for <strong><?php echo $type; ?>!</strong> <br />
     If you need assistance or have any questions, please email us at <a href="mailto:info@aarepdc.org">info@aarepdc.org</a>.<br />
     Thank you for your purchase.
 
@@ -142,10 +105,11 @@ function sponsorship_thankyou_shortcode() { ob_start(); ?>
     return ob_get_clean();
 }
 
-// Membership Page Shortcode
 add_shortcode( 'membership_thankyou', 'membership_thankyou_shortcode' );
-function membership_thankyou_shortcode() { ob_start(); ?>
-    We received your African American Real Estate Professionals DC order for <strong><?php echo $_GET['type']; ?>!</strong> <br />
+function membership_thankyou_shortcode() { ob_start();
+    $type = isset( $_GET['type'] ) ? esc_html( sanitize_text_field( $_GET['type'] ) ) : '';
+    ?>
+    We received your African American Real Estate Professionals DC order for <strong><?php echo $type; ?>!</strong> <br />
     If you need assistance or have any questions, please email us at <a href="mailto:info@aarepdc.org">info@aarepdc.org</a>.<br />
     Thank you for your purchase.
 

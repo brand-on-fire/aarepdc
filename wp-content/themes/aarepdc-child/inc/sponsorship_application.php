@@ -21,8 +21,8 @@ ob_start(); ?>
 		<h2 class="text-center please_fillout">Please fill out ALL of your information.</h2>
 		<!-- =============================================================================== -->
 <?php 
-	$price = $_GET['price'];
-	$type = $_GET['type'];
+	$price = isset($_GET['price']) ? sanitize_text_field($_GET['price']) : '';
+	$type = isset($_GET['type']) ? sanitize_text_field($_GET['type']) : '';
 ?>
 		<p style="margin-top: 0;" class="full-width text-center membership_parts"><strong>BILLING INFORMATION</strong></p>
 		<div class="donate-block donate-block-fix" id="billing_info_data" >

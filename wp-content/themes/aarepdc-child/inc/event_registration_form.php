@@ -116,8 +116,8 @@ ob_start(); ?>
 </style>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <?php 
-	$event_id = $_GET['event_title'];
-	$event_amount = $_GET['event_amount'];
+	$event_id = isset($_GET['event_title']) ? sanitize_text_field($_GET['event_title']) : '';
+	$event_amount = isset($_GET['event_amount']) ? sanitize_text_field($_GET['event_amount']) : '';
 	$current_user = wp_get_current_user();
 	$roles = ( array ) $current_user->roles;
 	//echo '<pre />';
@@ -333,7 +333,7 @@ ob_start(); ?>
     </div>
     <input type="hidden" name="event_id" id="event_id" value="<?php echo $event_id; ?>">
     <input type="hidden" name="event_amount" id="event_amount" value="<?php if($event_amount == 'free') { echo '0'; } else { echo $event_amount; } ?>">
-    <input type="hidden" name="member_check" id="member_check" value="<?php if($roles[0] == "member" ) { echo "memberLoggedIn"; } ?>">
+    <input type="hidden" name="member_check" id="member_check" value="<?php if( !empty($roles) && $roles[0] === "member" ) { echo "memberLoggedIn"; } ?>">
 		<input style="margin-top: 17px !important;" type="submit" value="Submit" _onclick="event_reg_validation();" name="donate" id="donate" class="donate-submit-btn dsb">
 	</div>
 

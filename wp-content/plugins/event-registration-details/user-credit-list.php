@@ -1,7 +1,9 @@
 <?php
+$id = '';
+$username = '';
 if(isset($_POST['user_submit'])){
-	$id = $_POST['pp_user_id'];
-	$username = $_POST['pp_user_credit_name'];
+	$id = isset($_POST['pp_user_id']) ? sanitize_text_field($_POST['pp_user_id']) : '';
+	$username = isset($_POST['pp_user_credit_name']) ? sanitize_text_field($_POST['pp_user_credit_name']) : '';
 }
 if( ! class_exists( 'WP_List_Table' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
@@ -58,7 +60,7 @@ class User_Credit_List extends WP_List_Table {
 			//Parameters that are going to be used to order the result
 			$orderby = !empty($_GET["orderby"]) ? ($_GET["orderby"]) : 'c.id';
 			$order = !empty($_GET["order"]) ? ($_GET["order"]) : 'DESC';
-			if(!empty($orderby) & !empty($order)){ $query.=' ORDER BY '.$orderby.' '.$order; }
+			if(!empty($orderby) && !empty($order)){ $query.=' ORDER BY '.$orderby.' '.$order; }
 	
 		/* -- Pagination parameters -- */
 			//Number of elements in your table?
@@ -66,7 +68,7 @@ class User_Credit_List extends WP_List_Table {
 			//How many to display per page?
 			$perpage = 20;
 			//Which page is this?
-			$paged = !empty($_GET["paged"]) ? mysql_real_escape_string($_GET["paged"]) : '';
+			$paged = !empty($_GET["paged"]) ? (int) $_GET["paged"] : '';
 			//Page Number
 			if(empty($paged) || !is_numeric($paged) || $paged<=0 ){ $paged=1; }
 			//How many pages do we have in total?
@@ -131,8 +133,8 @@ $wp_list_table->prepare_items();
             <?php _e('User Name:','photofolio'); ?>
           </label></th>
         <td><input type="text" name="user_credit_id" id="user_credit_id"  placeholder="<?php _e('User Name','photofolio'); ?>" autocomplete="off" value="<?php echo $username;?>" />
-          <input type="hidden" name="pp_user_id" id="pp_user_id" value="<?php echo @$id;?>" />
-          <input type="hidden" name="pp_user_credit_name" id="pp_user_credit_name" value="<?php echo @$username;?>" />
+          <input type="hidden" name="pp_user_id" id="pp_user_id" value="<?php echo esc_attr($id);?>" />
+          <input type="hidden" name="pp_user_credit_name" id="pp_user_credit_name" value="<?php echo esc_attr($username);?>" />
           <input type="submit" name="user_submit" value="<?php _e('Search','photofolio'); ?>" class="button-primary" />
           <input type="hidden" name="mode" value="find_user_records" />
           <?php wp_nonce_field("user_credit_find","pp_user_credit_list");?>
@@ -142,7 +144,7 @@ $wp_list_table->prepare_items();
   </form>
   <div class="form">
     <form method="post">
-      <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
+      <input type="hidden" name="page" value="<?php echo isset($_REQUEST['page']) ? esc_attr($_REQUEST['page']) : ''; ?>" />
       <?php $wp_list_table->search_box( 'search', 'search_id' );?>
       <?php $wp_list_table->display() ?>
     </form>

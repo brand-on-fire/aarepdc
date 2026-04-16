@@ -2,20 +2,22 @@
 global $wpdb;
 $table = 'aal10_membership_master';
 
-if($_REQUEST['action']=='delete' || $_REQUEST['action2']=='delete')
+$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : '';
+$action2 = isset($_REQUEST['action2']) ? sanitize_text_field($_REQUEST['action2']) : '';
+
+if($action === 'delete' || $action2 === 'delete')
 {
-	if(isset($_REQUEST['membership_ids']) && $_REQUEST['_wpnonce']!='')
+	if(isset($_REQUEST['membership_ids']) && !empty($_REQUEST['_wpnonce']))
 	{
 		foreach($_REQUEST['membership_ids'] as $item)
 		{	
-			$wpdb->delete($table, array('membership_id'=>$item));
+			$wpdb->delete($table, array('membership_id'=> (int) $item));
 			$_GET['msg']="delete";
 		}
 	}
-	else if($_REQUEST['membership_id'])
+	else if(isset($_REQUEST['membership_id']) && $_REQUEST['membership_id'])
 	{	
-		$wpdb->delete($table, array('membership_id'=>$_REQUEST['membership_id']));
-	    //$_GET['msg']="delete";
+		$wpdb->delete($table, array('membership_id'=> (int) $_REQUEST['membership_id']));
 		wp_redirect( 'admin.php?page=membership-registration&msg=delete' );
 	}
 }
@@ -23,7 +25,7 @@ if($_REQUEST['action']=='delete' || $_REQUEST['action2']=='delete')
 
 <div class="wrap">
         <h2><?php  _e($headline,'photofolio'); ?><a class="add-new-h2" href="admin.php?page=add-membership-details">Add New</a></h2>
-		<?php if($_GET['msg'] == 'success'){ ?>
+		<?php if(isset($_GET['msg']) && $_GET['msg'] === 'success'){ ?>
     <div class="updated notice notice-success is-dismissible" id="message">
         <p>Details Added successfully.</p>
         <button class="notice-dismiss" type="button"><span class="screen-reader-text">Dismiss this
@@ -321,16 +323,16 @@ if($_REQUEST['action']=='delete' || $_REQUEST['action2']=='delete')
 	<div class="wrap">
 	<h2>Membership Information</h2>
 	  <div id="response-message">
-	   <?php if($_GET['msg']){ ?>
+	   <?php if(isset($_GET['msg']) && $_GET['msg']){ ?>
        <div class="notice notice-success">
-		<?php if($_GET['msg'] == 'delete'){ ?>
+		<?php if($_GET['msg'] === 'delete'){ ?>
         	<p>Record successfully deleted.</p><?php 
 		}?>
         </div>
 		<?php }?>
        </div>
 	  <form method="post">
-		<input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
+		<input type="hidden" name="page" value="<?php echo isset($_REQUEST['page']) ? esc_attr($_REQUEST['page']) : ''; ?>" />
 		<?php $wp_list_table->search_box( 'search', 'search_id' );?>
 		<?php $wp_list_table->display() ?>
 	  </form>

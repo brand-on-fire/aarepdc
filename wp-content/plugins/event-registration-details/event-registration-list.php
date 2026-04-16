@@ -2,22 +2,22 @@
 global $wpdb;
 $table = 'aal10_event_registration_master';
 
-if($_REQUEST['action']=='delete' || $_REQUEST['action2']=='delete')
+$action = isset($_REQUEST['action']) ? sanitize_text_field($_REQUEST['action']) : '';
+$action2 = isset($_REQUEST['action2']) ? sanitize_text_field($_REQUEST['action2']) : '';
+
+if($action === 'delete' || $action2 === 'delete')
 {
-	// echo "Action Delete";
-	// die;
-	if(isset($_REQUEST['event_IDs']) && $_REQUEST['_wpnonce']!='')
+	if(isset($_REQUEST['event_IDs']) && !empty($_REQUEST['_wpnonce']))
 	{
 		foreach($_REQUEST['event_IDs'] as $item)
 		{	
-			$wpdb->delete($table, array('event_registration_id'=>$item));
+			$wpdb->delete($table, array('event_registration_id'=> (int) $item));
 			$_GET['msg']="delete";
 		}
 	}
-	else if($_REQUEST['event_ID'])
+	else if(isset($_REQUEST['event_ID']) && $_REQUEST['event_ID'])
 	{	
-		$wpdb->delete($table, array('event_registration_id'=>$_REQUEST['event_ID']));
-	    //$_GET['msg']="delete";
+		$wpdb->delete($table, array('event_registration_id'=> (int) $_REQUEST['event_ID']));
 		wp_redirect( 'admin.php?page=event-registration&msg=delete' );
 	}
 }
@@ -272,16 +272,16 @@ if($_REQUEST['action']=='delete' || $_REQUEST['action2']=='delete')
 	<div class="wrap">
 	<h2>Event Information</h2>
 	  <div id="response-message">
-	   <?php if($_GET['msg']){ ?>
+	   <?php if(isset($_GET['msg']) && $_GET['msg']){ ?>
        <div class="notice notice-success">
-		<?php if($_GET['msg'] == 'delete'){ ?>
+		<?php if($_GET['msg'] === 'delete'){ ?>
         	<p>Record successfully deleted.</p><?php 
 		}?>
         </div>
 		<?php }?>
        </div>
 	  <form method="post">
-		<input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
+		<input type="hidden" name="page" value="<?php echo isset($_REQUEST['page']) ? esc_attr($_REQUEST['page']) : ''; ?>" />
 		<?php $wp_list_table->search_box( 'search', 'search_id' );?>
 		<?php $wp_list_table->display() ?>
 	  </form>
