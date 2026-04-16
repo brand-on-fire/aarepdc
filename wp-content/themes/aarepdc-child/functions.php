@@ -224,6 +224,13 @@ function my_login_redirect( $redirect_to, $request, $user ) {
 }
 add_filter( 'login_redirect', 'my_login_redirect', 10, 3 );
 
+add_action( 'send_headers', function() {
+    header( 'Cache-Control: no-cache, no-store, must-revalidate' );
+    header( 'Pragma: no-cache' );
+    header( 'Expires: 0' );
+    header( 'X-Accel-Expires: 0' );
+}, 1 );
+
 add_action( 'wp_head', function() {
     if ( ! is_front_page() ) { ?>
     <style>
@@ -235,6 +242,10 @@ add_action( 'wp_head', function() {
     #sb_instagram, .sbi { padding-top:20px!important; padding-bottom:20px!important; }
     .wpcf7-response-output[aria-hidden="true"]:empty { display:none!important; }
     section.fucus_mobile_image { display:none!important; }
+    @media (min-width: 992px) {
+        #rev_slider_1_1_wrapper,
+        #rev_slider_1_1_wrapper rs-module { min-height:43vw!important; }
+    }
     @media (max-width: 991px) {
         #slider_wrapper_id1,
         rs-layer#slider_layer_id1 { display:none!important; }
@@ -253,45 +264,27 @@ add_action( 'wp_footer', function() {
         var wrap = document.getElementById("rev_slider_1_1_wrapper");
         if (!wrap) return;
         var mod = wrap.querySelector("rs-module");
-        var savedH = 0;
-
-        new MutationObserver(function() {
-            var h = parseInt(wrap.style.height);
-            if (h > 100) savedH = h;
-        }).observe(wrap, {attributes: true, attributeFilter: ["style"]});
+        var savedH = 0, restoring = false;
 
         if (window.innerWidth >= 992) {
-            var ticking = false;
-            window.addEventListener("scroll", function() {
-                if (ticking) return;
-                ticking = true;
-                requestAnimationFrame(function() {
-                    ticking = false;
-                    if (window.scrollY < 50 && savedH > 100) {
-                        var curH = parseInt(wrap.style.height);
-                        if (curH < 100) {
-                            wrap.style.height = savedH + "px";
-                            if (mod) mod.style.height = savedH + "px";
-                            if (window.revapi1 && typeof revapi1.revredraw === "function") revapi1.revredraw();
-                        }
-                    }
-                });
-            }, {passive: true});
-
-            document.addEventListener("lqd-header-sticky-change", function(e) {
-                if (e.detail && !e.detail.stuck && savedH > 100) {
-                    requestAnimationFrame(function() {
-                        requestAnimationFrame(function() {
-                            var curH = parseInt(wrap.style.height);
-                            if (curH < 100) {
-                                wrap.style.height = savedH + "px";
-                                if (mod) mod.style.height = savedH + "px";
-                                if (window.revapi1 && typeof revapi1.revredraw === "function") revapi1.revredraw();
-                            }
-                        });
-                    });
+            new MutationObserver(function() {
+                if (restoring) return;
+                var h = parseInt(wrap.style.height);
+                if (h > 100) {
+                    savedH = h;
+                } else if (savedH > 100 && window.scrollY < 300) {
+                    restoring = true;
+                    wrap.style.height = savedH + "px";
+                    if (mod) mod.style.height = savedH + "px";
+                    if (window.revapi1 && typeof revapi1.revredraw === "function") revapi1.revredraw();
+                    setTimeout(function() { restoring = false; }, 1000);
                 }
-            });
+            }).observe(wrap, {attributes: true, attributeFilter: ["style"]});
+        } else {
+            new MutationObserver(function() {
+                var h = parseInt(wrap.style.height);
+                if (h > 100) savedH = h;
+            }).observe(wrap, {attributes: true, attributeFilter: ["style"]});
         }
     })();
     </script>
