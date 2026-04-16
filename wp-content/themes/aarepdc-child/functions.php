@@ -229,6 +229,7 @@ add_action( 'wp_head', function() {
     ?>
     <style>
     section#home_top_banner { position:relative; z-index:1; }
+    #rev_slider_1_1_wrapper { visibility:visible!important; }
     section#home_row1 { position:relative; z-index:2; }
     #sb_instagram, .sbi { padding-top:20px!important; padding-bottom:20px!important; }
     .wpcf7-response-output[aria-hidden="true"]:empty { display:none!important; }
