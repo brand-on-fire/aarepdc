@@ -298,11 +298,12 @@ add_action( 'wp_head', function() {
         #hb_mobile_text .st_02 { font-size:30px!important; line-height:1.2!important; }
     }
     @media (max-width: 767px) {
-        section#home_top_banner { height:50vw!important; }
+        section#home_top_banner { height:55vw!important; }
+        #hb_mobile_text .ld-fh-element { line-height:1!important; }
         #hb_mobile_text .st_01,
         #hb_mobile_text .st_03,
-        #hb_mobile_text .st_04 { font-size:18px!important; line-height:1.15!important; }
-        #hb_mobile_text .st_02 { font-size:14px!important; line-height:1.15!important; }
+        #hb_mobile_text .st_04 { font-size:18px!important; line-height:1.1!important; }
+        #hb_mobile_text .st_02 { font-size:14px!important; line-height:1.1!important; }
     }
     </style>
     <?php
