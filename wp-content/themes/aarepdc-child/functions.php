@@ -230,22 +230,6 @@ add_action( 'wp_footer', function() {
     (function(){
         var el = document.getElementById("current_year");
         if (el) el.textContent = new Date().getFullYear();
-
-        var sliderWrap = document.getElementById("rev_slider_1_1_wrapper");
-        if (sliderWrap) {
-            var lastTop = window.scrollY;
-            window.addEventListener("scroll", function() {
-                if (window.scrollY === 0 && lastTop > 100) {
-                    var mod = sliderWrap.querySelector("rs-module");
-                    if (mod && parseInt(mod.style.height) < 100) {
-                        mod.style.height = "";
-                        sliderWrap.style.height = "";
-                        if (window.revapi1) revapi1.revredraw();
-                    }
-                }
-                lastTop = window.scrollY;
-            });
-        }
     })();
     </script>
     <?php

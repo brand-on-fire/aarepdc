@@ -200,10 +200,9 @@ div#platinum_carousel .wpb_single_image, div#platinum_carousel .wpb_single_image
 .uppercase { text-transform: uppercase;  }
 .btn>span:not(.btn-icon):not(.btn-txt) { padding: 0; }
 header#header { position: absolute; left: 0;   top: 0;  width: 100%; }
-#home_top_banner .rs-module-wrap,
-#home_top_banner rs-module-wrap { min-height: 80vh !important; }
-#home_top_banner rs-module { min-height: 80vh !important; }
-section#home_top_banner { min-height: 80vh; overflow: hidden; }
+section#home_top_banner { position: relative; z-index: 1; min-height: 600px; }
+#rev_slider_1_1_wrapper { visibility: visible !important; min-height: 600px !important; }
+#rev_slider_1_1_wrapper rs-module { min-height: 600px !important; }
 
 /*------------------------------------------------------*/
 a { color: var(--theme-blue-color3); /*#05adee*/  }
