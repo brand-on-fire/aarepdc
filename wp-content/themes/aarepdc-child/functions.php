@@ -239,6 +239,25 @@ add_action( 'wp_footer', function() {
     (function(){
         var el = document.getElementById("current_year");
         if (el) el.textContent = new Date().getFullYear();
+
+        if (window.innerWidth < 992) return;
+        document.addEventListener("lqd-header-sticky-change", function(e) {
+            if (e.detail && !e.detail.stuck) {
+                var w = document.getElementById("rev_slider_1_1_wrapper");
+                if (w && w._savedH) {
+                    w.style.height = w._savedH + "px";
+                    var m = w.querySelector("rs-module");
+                    if (m) m.style.height = w._savedH + "px";
+                }
+            }
+        });
+        var wrap = document.getElementById("rev_slider_1_1_wrapper");
+        if (wrap) {
+            new MutationObserver(function() {
+                var h = parseInt(wrap.style.height);
+                if (h > 100) wrap._savedH = h;
+            }).observe(wrap, {attributes: true, attributeFilter: ["style"]});
+        }
     })();
     </script>
     <?php

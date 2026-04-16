@@ -103,6 +103,10 @@ Thumbs.db
 # Node (if applicable)
 # ============================================================
 node_modules/
+package.json
+package-lock.json
+qa-loop.sh
+qa-capture.js
 
 # ============================================================
 # Logs
