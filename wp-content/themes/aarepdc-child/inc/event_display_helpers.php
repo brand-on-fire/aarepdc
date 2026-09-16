@@ -214,10 +214,20 @@ function aarepdc_events_coming_soon() {
 		. '</section>';
 }
 
-/** The retired local checkout must not remain reachable from an old bookmark. */
+/** The retired local checkout must not remain reachable from an old bookmark.
+ *
+ * Default OFF. Event registration is a separate, still-live flow on production
+ * (aal10_event_registration_master was written to as recently as 2026-09-12), and this
+ * membership launch is membership-only. Retiring the local event checkout is a distinct
+ * decision for AAREP to make once events have genuinely moved to Eventbrite, so it is
+ * gated exactly like the membership cutover rather than riding along with it.
+ */
 add_action( 'template_redirect', 'aarepdc_redirect_legacy_event_registration', 5 );
 function aarepdc_redirect_legacy_event_registration() {
 	if ( is_admin() || ! is_page( array( 'events-registration', 'event-registration' ) ) ) {
+		return;
+	}
+	if ( '1' !== (string) get_option( 'aarepdc_retire_local_event_checkout', '0' ) ) {
 		return;
 	}
 
