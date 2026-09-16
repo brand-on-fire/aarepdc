@@ -16,6 +16,9 @@ wp-settings.php
 wp-signup.php
 wp-trackback.php
 xmlrpc.php
+# ...but PMPro ships its own includes/xmlrpc.php and require_once()s it, so the bare
+# filename rule above would fatal the plugin on activation. Keep that one tracked.
+!wp-content/plugins/paid-memberships-pro/includes/xmlrpc.php
 license.txt
 readme.html
 wp-config-sample.php
