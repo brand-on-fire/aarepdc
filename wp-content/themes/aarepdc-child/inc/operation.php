@@ -1,17 +1,61 @@
 <?php
 require_once("../../../../wp-load.php");
 date_default_timezone_set('US/Eastern');
-require_once('stripe/init.php');
 
 $mode = isset($_GET["mode"]) ? sanitize_text_field($_GET["mode"]) : '';
 
+/*
+ * Safety boundary for the legacy forms on the configured WP Engine staging
+ * site. This must run before Stripe is loaded or configured so no request can
+ * reach the legacy live-key payment code from staging.
+ */
+$aarepdc_home_host = strtolower( (string) wp_parse_url( home_url( '/' ), PHP_URL_HOST ) );
+
+if ( 'aarepstg.wpengine.com' === $aarepdc_home_host ) {
+	if ( ! headers_sent() ) {
+		status_header( 403 );
+		nocache_headers();
+		header( 'Content-Type: text/plain; charset=utf-8' );
+	}
+	echo 'This legacy endpoint is disabled on staging. Nothing was submitted.';
+	exit;
+}
+
+/* During the final member snapshot and migration, pause only membership registration. This
+ * default-off gate runs before Stripe loads and leaves sponsorship/event modes untouched. */
+if ( 'membership_online' === $mode && '1' === (string) get_option( 'aarepdc_membership_freeze_enabled', '0' ) ) {
+	if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+		define( 'DONOTCACHEPAGE', true );
+	}
+	if ( ! headers_sent() ) {
+		status_header( 503 );
+		nocache_headers();
+		header( 'Retry-After: 600' );
+		header( 'Content-Type: text/plain; charset=utf-8' );
+	}
+	echo 'Membership registration is briefly paused while AAREP DC completes the portal update. Please try again shortly.';
+	exit;
+}
+
+/* Production membership cutover is controlled by the same default-off option as the portal UI.
+ * Block only the legacy membership mode, before Stripe loads. Sponsor and event modes are left
+ * untouched because this launch is membership-only. */
+if ( 'membership_online' === $mode && '1' === (string) get_option( 'aarepdc_membership_cutover_enabled', '0' ) ) {
+	if ( ! headers_sent() ) {
+		status_header( 403 );
+		nocache_headers();
+		header( 'Content-Type: text/plain; charset=utf-8' );
+	}
+	echo 'Membership registration has moved to the AAREP DC member portal.';
+	exit;
+}
+
+unset( $aarepdc_home_host );
+
+require_once('stripe/init.php');
+
 $ApiKey = get_field('stripe_live_key', 850);
-//\Stripe\Stripe::setApiKey("sk_live_biniRdoKAlQ4wRr5IBeOwMYn"); // Client Live Account Key
 \Stripe\Stripe::setApiKey($ApiKey); // Client Live Account Key
-
-//\Stripe\Stripe::setApiKey("sk_test_wut0Wn0alw6Q2euwaMzvtzOr00t5L8bf8g"); // Haresh Test Account Key
-
-//\Stripe\Stripe::setApiKey("sk_live_kzaDNS0Y1nn6kNjju7Hh6xUk"); // Jigar Sir Live Account Key
 
 if($mode=="membership_online")
 {	
@@ -435,7 +479,7 @@ if($mode=="membership_online")
 			$msgbody .= '</table>';
 		
 		    //mail($to, $subject, $msgbody, $headers);
-		    mail( $to, $subject, $msgbody, $headers );
+		    wp_mail( $to, $subject, $msgbody, $headers );
 
 
 		    // // SEND MAIL TO user	
@@ -516,7 +560,7 @@ if($mode=="membership_online")
 			// United States
 			// </td></tr></table>';	
 			
-			mail($to, $subject, $msgbody, $headers);
+			wp_mail($to, $subject, $msgbody, $headers);
 
 			//echo "success";
 			echo "success_".$_POST['finale_amount']."_".$_POST["membership_type"]."";
@@ -752,7 +796,7 @@ else if($mode=="sponsorship_online")
 			$msgbody .= '</table>';
 		
 		    //mail($to, $subject, $msgbody, $headers);
-		    mail( $to, $subject, $msgbody, $headers );
+		    wp_mail( $to, $subject, $msgbody, $headers );
 
 
 		    // // SEND MAIL TO user	
@@ -845,7 +889,7 @@ else if($mode=="sponsorship_online")
 			// United States
 			// </td></tr></table>';	
 			
-			mail($to, $subject, $msgbody, $headers);
+			wp_mail($to, $subject, $msgbody, $headers);
 
 			echo "success_".$_POST['finale_amount']."_".$_POST["sponsorship_type"]."";
 			exit;
@@ -973,7 +1017,7 @@ else if($mode=="sponsorship_online")
 			$msgbody .= '</table>';
 		
 		    //mail($to, $subject, $msgbody, $headers);
-		    mail( $to, $subject, $msgbody, $headers );
+		    wp_mail( $to, $subject, $msgbody, $headers );
 
 
 		    // // SEND MAIL TO user	
@@ -1064,7 +1108,7 @@ else if($mode=="sponsorship_online")
 			// United States
 			// </td></tr></table>';	
 			
-			mail($to, $subject, $msgbody, $headers);
+			wp_mail($to, $subject, $msgbody, $headers);
 
 			echo "success_".$_POST['finale_amount']."_".$_POST["sponsorship_type"]."";
 			exit;
@@ -1313,7 +1357,7 @@ else if($mode=="event_registration")
 			$msgbody .= '</table>';
 		
 		    //mail($to, $subject, $msgbody, $headers);
-		    mail( $to, $subject, $msgbody, $headers );
+		    wp_mail( $to, $subject, $msgbody, $headers );
 
 			$event_thankyou = get_field('event_email_content', 13);	
 
@@ -1339,7 +1383,7 @@ else if($mode=="event_registration")
 			// </td></tr></table>';	
 			//mail($to, $subject, $msgbody, $headers);
 			
-			mail($to, $subject, $msgbody, $headers);
+			wp_mail($to, $subject, $msgbody, $headers);
 
 			echo "success_".$_POST['event_amount']."";
 			exit;
@@ -1450,7 +1494,7 @@ else if($mode=="event_registration")
 			$msgbody .= '</table>';
 		
 		    //mail($to, $subject, $msgbody, $headers);
-		    mail( $to, $subject, $msgbody, $headers );
+		    wp_mail( $to, $subject, $msgbody, $headers );
 
 			$event_thankyou = get_field('event_email_content', 13);	
 
@@ -1476,7 +1520,7 @@ else if($mode=="event_registration")
 			// </td></tr></table>';	
 			//mail($to, $subject, $msgbody, $headers);
 			
-			mail($to, $subject, $msgbody, $headers);
+			wp_mail($to, $subject, $msgbody, $headers);
 
 			echo "success_".$_POST['event_amount']."";
 			exit;

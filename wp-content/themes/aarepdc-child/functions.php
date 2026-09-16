@@ -14,10 +14,18 @@ function liquid_child_theme_style(){
     wp_enqueue_style( 'custom-fonts-style', get_stylesheet_directory_uri() . '/fonts.css' );
     wp_enqueue_style( 'custom-fonts-style2', get_stylesheet_directory_uri() . '/fonts2.css' );
 
-    wp_enqueue_style( 'child-hub-style', get_stylesheet_directory_uri() . '/style.css' );	
+    wp_enqueue_style( 'child-hub-style', get_stylesheet_directory_uri() . '/style.css?c=' . ( @filemtime( get_stylesheet_directory() . '/style.css' ) ?: '1' ) );
     wp_enqueue_style( 'child-hub-style2', get_stylesheet_directory_uri() . '/style2.css' ); 
     wp_enqueue_style( 'child-hub-resp1', get_stylesheet_directory_uri() . '/responsive.css' );
-    wp_enqueue_script('customjs', get_stylesheet_directory_uri().'/js/custom.js', array(), null, true);
+    wp_enqueue_style( 'aarepdc-membership', get_stylesheet_directory_uri() . '/aarepdc-membership.css?c=' . ( @filemtime( get_stylesheet_directory() . '/aarepdc-membership.css' ) ?: '4' ), array( 'child-hub-style' ), null );
+    $custom_js_path = get_stylesheet_directory() . '/js/custom.js';
+    wp_enqueue_script(
+        'customjs',
+        get_stylesheet_directory_uri() . '/js/custom.js',
+        array(),
+        file_exists( $custom_js_path ) ? (string) filemtime( $custom_js_path ) : null,
+        true
+    );
 
 }
 
@@ -53,24 +61,30 @@ add_role('member', __(
 );
 
 /*---------------------------------------------------------------------------------------------------------------------------*/
-# Include Custom Files
+# Include Custom Files (defensive load — tolerate unreadable inc/ from WPE deploy quirk)
 /*---------------------------------------------------------------------------------------------------------------------------*/
-require_once('inc/board_members_post_type.php');
-
-/*---------------------------------------------------------------------------------------------------------------------------
-# Shortcodes ============================================
----------------------------------------------------------------------------------------------------------------------------*/
-require_once('inc/home_bod_section_shrt.php');
-require_once('inc/events_page_shrt.php');
-require_once('inc/news_page_shrt.php');
-require_once('inc/sponshership_info_table_shrt.php');
-require_once('inc/sponsorship_application.php');
-require_once('inc/board_member_shrt.php');
-require_once('inc/home_event_section_shrt.php');
-require_once('inc/sponsorship-post-type.php');
-require_once('inc/sponsorship_levels_shrt.php');
-require_once('inc/membership_application.php');
-require_once('inc/event_registration_form.php');
+$aarepdc_inc_files = array(
+    'board_members_post_type.php',
+    'home_bod_section_shrt.php',
+    'event_display_helpers.php',
+    'events_page_shrt.php',
+    'news_page_shrt.php',
+    'sponshership_info_table_shrt.php',
+    'sponsorship_application.php',
+    'board_member_shrt.php',
+    'home_event_section_shrt.php',
+    'sponsorship-post-type.php',
+    'sponsorship_levels_shrt.php',
+    'membership_application.php',
+    'event_registration_form.php',
+);
+foreach ( $aarepdc_inc_files as $aarepdc_inc_f ) {
+    $aarepdc_inc_path = __DIR__ . '/inc/' . $aarepdc_inc_f;
+    if ( @is_readable( $aarepdc_inc_path ) ) {
+        require_once $aarepdc_inc_path;
+    }
+}
+unset( $aarepdc_inc_files, $aarepdc_inc_f, $aarepdc_inc_path );
 
 ini_set( 'upload_max_filesize', '256M' );
 ini_set( 'post_max_size', '256M' );
@@ -319,3 +333,47 @@ add_action( 'wp_footer', function() {
 add_action( 'wp_enqueue_scripts', function() {
     wp_enqueue_style( 'fa6-free', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css', array(), '6.5.1' );
 }, 100 );
+
+/* Logged-in member submenu under "Membership" (child items tagged .aarepdc-member-only:
+ * Membership / Member Directory / My Account / Log Out). Hide them when logged out so the
+ * dropdown only appears for members, and resolve the Log Out item to a fresh nonce'd URL.
+ * Replaces the old top-level nav logout — logout now lives in this submenu + the account page. */
+add_filter( 'wp_nav_menu_objects', 'aarepdc_member_submenu', 10, 2 );
+function aarepdc_member_submenu( $items, $args ) {
+    $logged_in = is_user_logged_in();
+
+    // Audience filtering:
+    //   .aarepdc-member-only  => signed-in members only (Directory, Member Portal, Log Out)
+    //   .aarepdc-guest-only   => signed-out visitors only (Member Account, which routes to login)
+    foreach ( $items as $key => $item ) {
+        if ( false !== strpos( (string) $item->url, 'aarepdc-logout' ) ) {
+            $item->url = wp_logout_url( home_url() );
+        }
+        $classes = (array) $item->classes;
+        $drop    = ( ! $logged_in && in_array( 'aarepdc-member-only', $classes, true ) )
+                || (   $logged_in && in_array( 'aarepdc-guest-only',  $classes, true ) );
+        if ( $drop ) {
+            unset( $items[ $key ] );
+        }
+    }
+
+    // Recompute the dropdown arrow from what actually survived. A parent keeps
+    // menu-item-has-children only while it still has at least one visible child, so
+    // "Membership" keeps its arrow for guests (Member Account) and for members.
+    $parents_with_children = array();
+    foreach ( $items as $item ) {
+        if ( (int) $item->menu_item_parent ) {
+            $parents_with_children[ (int) $item->menu_item_parent ] = true;
+        }
+    }
+    foreach ( $items as $item ) {
+        $has = isset( $parents_with_children[ (int) $item->ID ] );
+        $classes = array_values( array_diff( (array) $item->classes, array( 'menu-item-has-children' ) ) );
+        if ( $has ) {
+            $classes[] = 'menu-item-has-children';
+        }
+        $item->classes = $classes;
+    }
+
+    return $items;
+}

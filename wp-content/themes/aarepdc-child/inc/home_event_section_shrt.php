@@ -1,126 +1,73 @@
-<?php 
-add_shortcode( 'home_event_section_shrt', 'home_event_section_shrt_section' );
-global $post;
-function home_event_section_shrt_section ($atts) { ob_start(); 
-	$args = array(  
-		'post_type' => 'tribe_events',
-		'post_status' => 'publish',
-		'posts_per_page' => 1,
-		'meta_key'       => '_EventStartDate',
-		'orderby' => 'event_date',
-		'order' => 'asc',
-		'id'=> '',
-		'meta_query' => array(
-			array(
-				 'key' => '_EventStartDate',
-				 'value' => current_time( 'Y-m-d H:i:s' ), //value of "order-date" custom field
-				 'compare' => '>=', //show events greater than or equal to today
-				 'type'    => 'DATETIME',
-				)
-			)	
-	);
-	$event_data_Query = new WP_Query( $args );
-	
-     if( $event_data_Query->have_posts() ) { ?>
-
-		<div class="hes_box vc_row">
-		<?php while( $event_data_Query->have_posts() ) { $event_data_Query->the_post(); 
-		     		$thumbnail_url = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full', true ); ?>
-
-			<div class="hes_box_left vc_col-md-6" style="background-image: url(<?php echo $thumbnail_url[0]; ?>">
-				<div class="hes_event_title" style="display: none;">
-					<h3>Join AAREP DC for</h3>
-					<h1><?php the_title(); ?></h1>
-				</div>
-				
-				<!-- <h1>THANK YOU FOR COMMEMORATING WOMEN’S HISTORY MONTH WITH US!</h1>
-				<h2>Kadida Development and H2 Design Build</h2>
-				<p>Topics include Lessons Learned, Accessing Capital, & Scaling Year over Year</p> -->
-			</div>	
-			<?php $events = tribe_get_events(); ?>
-			<div class="hes_box_right vc_col-md-6">		
-				<h1 style="margin-bottom: 15px!important; padding-bottom: 0!important; color: rgb(30, 68, 128);">Upcoming Events</h1>
-				<h2 id="<?php echo get_the_ID(); ?>" style="margin-top: 0!important; padding-top: 0!important; color: rgb(30, 68, 128);"><?php echo get_field('event_main_heading'); ?></h2>
-				<div class="hes_box_right_contnt" style="margin-bottom: 35px;">
-				<!-- <h3 style="color:rgb(91, 129, 189);"> --><p class="event_big_text1"><?php the_title(); ?>:</p><!-- </h3> -->
-					<?php the_excerpt(); ?>
-				</div>
-
-				<div class="hes_event_date" style="margin-bottom: 35px;">
-					<div class="event_icons_wapp"><i class="fa fa-calendar-check-o" aria-hidden="true"></i></div>	
-					<p class="event_big_text1"><?php echo tribe_get_start_date( $event, false, 'l, F j, Y' );?></p>
-					<p><?php echo tribe_get_start_time().' - '.tribe_get_end_time(); ?> </p>
-				</div>
-				<?php $venue_details = tribe_get_venue_details(); 
-				if ( tribe_has_venue() ) { ?>
-				<div class="hes_event_location" style="margin-bottom: 35px;">
-					<div class="event_icons_wapp"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
-					
-					<p class="event_big_text1"><?php echo $venue_details['linked_name']; ?></p>
-					<p><?php echo $venue_details['address']; ?></p>			
-				</div>
-				<?php } ?>				
-				
-				<?php
-				$member_fee = get_field('member_price', get_the_ID());
-				
-				if(tribe_get_cost( $post->ID ) != "") {
-				if($member_fee == 0) {	
-					?>
-				<div class="hes_event_members_info" style="margin-bottom: 35px;">
-					<p class="event_big_text1">Free for Members | $<?php echo tribe_get_cost( $post->ID ) ?> Non Members</p>
-				</div>	
-				<?php } else { ?>
-				<div class="hes_event_members_info" style="margin-bottom: 35px;">
-					<p class="event_big_text1">$<?php echo number_format( get_field('member_price', get_the_ID()), 2 ); ?> for Members | $<?php echo number_format( tribe_get_cost( $post->ID ), 2 ); ?> Non Members</p>
-				</div>
-				<?php } 
-				}
-				?>
-
-				<!-- <?php if(tribe_get_cost()) { ?>	
-				<div class="event_block_btn_wrapp"><a href="<?php echo site_url(); ?>/event-registration?event_title=<?php echo get_the_ID(); ?>&event_amount=<?php echo tribe_get_cost(); ?>" class="site_button">Register</a></div>
-				<?php } else { ?>
-					<div class="event_block_btn_wrapp"><a href="<?php the_permalink(); ?>" class="site_button">Learn More</a></div>
-				<?php } ?>	 -->
-
-				<!-- <div class="event_block_btn_wrapp"><a href="<?php echo site_url(); ?>/event-registration?event_title=<?php echo get_the_ID(); ?>&event_amount=<?php echo tribe_get_cost(); ?>" class="site_button">Register</a></div> -->
-
-					
-					
-
-
-				<?php //if(tribe_get_cost()) { 
-				$user = wp_get_current_user();
-
-				$member_fee = get_field('price_for_member', get_the_ID());	
-
-				//if ( in_array( 'member', (array) $user->roles ) ) { 
-					if( is_user_logged_in() ) { ?>	
-
-					<div class="event_block_btn_wrapp">
-
-						<a href="<?php echo site_url(); ?>/events-registration?event_title=<?php echo get_the_ID(); ?>&event_amount=<?php echo get_field('member_price', get_the_ID()); ?>" class="site_button">Register</a>
-
-					</div>	
-
-				<?php } else { ?>
-
-					<div class="event_block_btn_wrapp">
-
-						<a href="<?php echo site_url(); ?>/events-registration?event_title=<?php echo get_the_ID(); ?>&event_amount=<?php if(tribe_get_cost($post->ID)) { echo tribe_get_cost($post->ID); } else { echo 'free'; } ?>" class="site_button">Register</a>
-
-					</div>
-
-				<?php } ?>		
-				<?php //} ?>	
-			</div>	
-
-			<?php } ?>
-		</div>
-
 <?php
- } 
- wp_reset_query();
- return ob_get_clean();
+add_shortcode( 'home_event_section_shrt', 'home_event_section_shrt_section' );
+
+/** Render the next genuine event on the homepage, or the Eventbrite fallback. */
+function home_event_section_shrt_section( $atts ) {
+	unset( $atts );
+	ob_start();
+
+	$events = aarepdc_upcoming_event_query( 1 );
+	if ( ! $events->have_posts() ) {
+		echo aarepdc_events_coming_soon(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		wp_reset_postdata();
+		return ob_get_clean();
+	}
+
+	while ( $events->have_posts() ) :
+		$events->the_post();
+		$event_id      = get_the_ID();
+		$thumbnail_url = wp_get_attachment_image_url( get_post_thumbnail_id( $event_id ), 'full' );
+		$venue_details = tribe_get_venue_details( $event_id );
+		$member_fee    = get_post_meta( $event_id, 'member_price', true );
+		$event_cost    = tribe_get_cost( $event_id );
+		$is_restricted = (bool) get_post_meta( $event_id, '_aarepdc_members_only', true );
+		?>
+		<div class="hes_box vc_row">
+			<div class="hes_box_left vc_col-md-6"<?php echo $thumbnail_url ? ' style="background-image:url(' . esc_url( $thumbnail_url ) . ');"' : ''; ?>></div>
+			<div class="hes_box_right vc_col-md-6">
+				<h1 style="margin-bottom:15px!important;padding-bottom:0!important;color:rgb(30,68,128);">Upcoming Events</h1>
+				<?php if ( $is_restricted ) : ?>
+					<span class="aarepdc-event-badge">Members Only</span>
+				<?php endif; ?>
+				<div class="hes_box_right_contnt" style="margin-bottom:35px;">
+					<p class="event_big_text1"><a href="<?php echo esc_url( get_permalink( $event_id ) ); ?>"><?php echo esc_html( get_the_title( $event_id ) ); ?></a></p>
+					<?php if ( $is_restricted && ! is_user_logged_in() ) : ?>
+						<p>Available to current AAREP DC members.</p>
+					<?php else : ?>
+						<?php echo wp_kses_post( wpautop( get_the_excerpt( $event_id ) ) ); ?>
+					<?php endif; ?>
+				</div>
+
+				<div class="hes_event_date" style="margin-bottom:35px;">
+					<div class="event_icons_wapp"><i class="fa fa-calendar-check-o" aria-hidden="true"></i></div>
+					<p class="event_big_text1"><?php echo esc_html( tribe_get_start_date( $event_id, false, 'l, F j, Y' ) ); ?></p>
+					<p><?php echo esc_html( tribe_get_start_time( $event_id ) . ' - ' . tribe_get_end_time( $event_id ) ); ?></p>
+				</div>
+
+				<?php if ( tribe_has_venue( $event_id ) ) : ?>
+					<div class="hes_event_location" style="margin-bottom:35px;">
+						<div class="event_icons_wapp"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+						<p class="event_big_text1"><?php echo wp_kses_post( $venue_details['linked_name'] ); ?></p>
+						<p><?php echo esc_html( $venue_details['address'] ); ?></p>
+					</div>
+				<?php endif; ?>
+
+				<?php if ( '' !== (string) $event_cost ) : ?>
+					<div class="hes_event_members_info" style="margin-bottom:35px;">
+						<?php if ( '' === (string) $member_fee || 0.0 === (float) $member_fee ) : ?>
+							<p class="event_big_text1">Free for Members | <?php echo esc_html( $event_cost ); ?> for Non-Members</p>
+						<?php else : ?>
+							<p class="event_big_text1">$<?php echo esc_html( number_format_i18n( (float) $member_fee, 2 ) ); ?> for Members | <?php echo esc_html( $event_cost ); ?> for Non-Members</p>
+						<?php endif; ?>
+					</div>
+				<?php endif; ?>
+
+				<?php echo aarepdc_event_actions( $event_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			</div>
+		</div>
+		<?php
+	endwhile;
+
+	wp_reset_postdata();
+	return ob_get_clean();
 }

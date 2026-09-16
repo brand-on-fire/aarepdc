@@ -113,3 +113,11 @@ qa-capture.js
 # ============================================================
 *.log
 wp-content/.logs/
+
+# Dated developer backups (any extension). These were served as text/plain and
+# leaked live Stripe keys; never track them again.
+*[0-9] Haresh*
+* Haresh
+* Haresh *
+* tejas
+*.sql

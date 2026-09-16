@@ -1,4 +1,5 @@
 <?php 
+// Sponsorship stays on the legacy flow during the membership-only portal cutover.
 add_shortcode( 'sponsorship_corporate_levels_shrt', 'sponsorship_corporate_levels_shrt_section' );
 function sponsorship_corporate_levels_shrt_section ($atts) { ob_start(); 
 	$args = array(  

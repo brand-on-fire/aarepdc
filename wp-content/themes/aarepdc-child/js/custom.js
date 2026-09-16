@@ -1,6 +1,89 @@
-var site_url = "https://aarepdc.org";
+var aarepdc_legacy_staging_host =
+  window.location.hostname.toLowerCase() === "aarepstg.wpengine.com";
+var site_url = aarepdc_legacy_staging_host
+  ? window.location.origin
+  : "https://aarepdc.org";
+
+function aarepdc_block_legacy_payment_on_staging(show_notice) {
+  if (!aarepdc_legacy_staging_host) {
+    return false;
+  }
+
+  if (show_notice !== false) {
+    window.alert(
+      "This legacy payment form is disabled on the staging site. No payment or registration was submitted."
+    );
+  }
+
+  return true;
+}
+
+document.addEventListener(
+  "submit",
+  function (event) {
+    var form = event.target;
+    var blocked_form_ids = [
+      "membership_form",
+      "sponsorship_form",
+      "event_registration_form",
+    ];
+
+    if (
+      aarepdc_legacy_staging_host &&
+      form &&
+      blocked_form_ids.indexOf(form.id) !== -1
+    ) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      aarepdc_block_legacy_payment_on_staging();
+    }
+
+    if (
+      aarepdc_legacy_staging_host &&
+      form &&
+      form.querySelector('input[name="_wpcf7"][value="123"]')
+    ) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      window.alert("Mailing list signup is disabled on this preview site.");
+    }
+  },
+  true
+);
+
+function aarepdc_disable_staging_footer_signup() {
+  if (!aarepdc_legacy_staging_host) {
+    return;
+  }
+
+  document.querySelectorAll(".wpcf7-form").forEach(function (form) {
+    var formId = form.querySelector('input[name="_wpcf7"]');
+    if (!formId || formId.value !== "123") {
+      return;
+    }
+
+    form.setAttribute("aria-disabled", "true");
+    form.innerHTML =
+      '<p class="aarepdc-staging-form-notice">Mailing list signup is disabled on this preview site.</p>';
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+      window.setTimeout(aarepdc_disable_staging_footer_signup, 0);
+    }
+  );
+} else {
+  window.setTimeout(aarepdc_disable_staging_footer_signup, 0);
+}
 
 function membership_validation() {
+  if (aarepdc_block_legacy_payment_on_staging()) {
+    return false;
+  }
+
   //var mem_quantity=document.getElementById('mem_quantity');
   //var business_name=document.getElementById('business_name');
   var first_name = document.getElementById("first_name");
@@ -266,11 +349,22 @@ function membership_validation() {
         alert(result);
       }
     },
+    error: function (xhr) {
+      jQuery("#clients_loder1").hide();
+      var message = xhr && xhr.status === 503 && xhr.responseText
+        ? String(xhr.responseText).replace(/<[^>]*>/g, "").trim()
+        : "Membership registration is temporarily unavailable. Please try again shortly.";
+      alert(message || "Membership registration is temporarily unavailable. Please try again shortly.");
+    },
   });
   return false;
 }
 
 function sponsorhip_validation() {
+  if (aarepdc_block_legacy_payment_on_staging()) {
+    return false;
+  }
+
   var first_name = document.getElementById("first_name");
   var last_name = document.getElementById("last_name");
   var company_name = document.getElementById("company_name");
@@ -426,6 +520,10 @@ function sponsorhip_validation() {
 }
 
 function event_reg_validation() {
+  if (aarepdc_block_legacy_payment_on_staging()) {
+    return false;
+  }
+
   var first_name = document.getElementById("first_name");
   var last_name = document.getElementById("last_name");
   var email = document.getElementById("email_address");
@@ -645,6 +743,10 @@ function numbersonly(e) {
   return true;
 }
 function user_exists_val() {
+  if (aarepdc_block_legacy_payment_on_staging(false)) {
+    return false;
+  }
+
   var user_name = document.getElementById("user_name");
 
   if (user_name.value != "") {
@@ -652,7 +754,8 @@ function user_exists_val() {
     loader_img.innerHTML =
       '<img src="https://aarepdc.org/wp-content/themes/aarepdc-child/images/loader.gif" width="20px" />';
     jQuery.post(
-      "https://aarepdc.org/wp-content/themes/aarepdc-child/inc/operation.php?mode=check_user_exists",
+      site_url +
+        "/wp-content/themes/aarepdc-child/inc/operation.php?mode=check_user_exists",
       { user_name: user_name.value },
       function (data) {
         //alert(data);
@@ -672,6 +775,10 @@ function user_exists_val() {
   }
 }
 function email_exists_val() {
+  if (aarepdc_block_legacy_payment_on_staging(false)) {
+    return false;
+  }
+
   var email_address = document.getElementById("email_address");
 
   if (email_address.value == "") {
@@ -693,7 +800,8 @@ function email_exists_val() {
     loader_img.innerHTML =
       '<img src="https://aarepdc.org/wp-content/themes/aarepdc-child/images/loader.gif" width="20px" />';
     jQuery.post(
-      "https://aarepdc.org/wp-content/themes/aarepdc-child/inc/operation.php?mode=check_email_exists",
+      site_url +
+        "/wp-content/themes/aarepdc-child/inc/operation.php?mode=check_email_exists",
       { email_address: email_address.value },
       function (data) {
         //alert(data);

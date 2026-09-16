@@ -1,134 +1,49 @@
-<?php 
-add_shortcode('events_page_shrt','events_page_shrt_sction');
-function events_page_shrt_sction ($atts) { ob_start();  ?>
-<style>
-	.no-events.H111 { font-size: 25px; font-weight: bold; text-align: center; }
-</style>
 <?php
-	$args = array(  
-		'post_type' => 'tribe_events',
-		'post_status' => 'publish',
-		'posts_per_page' => -1,
-		'meta_key'       => '_EventStartDate',
-		'orderby' => 'event_date',
-		'order' => 'asc',
-		'id'=> '',
-		'meta_query' => array(
-			array(
-				 'key' => '_EventStartDate',
-				 'value' => current_time( 'Y-m-d H:i:s' ), //value of "order-date" custom field
-				 'compare' => '>=', //show events greater than or equal to today
-				 'type'    => 'DATETIME',
-				)
-			)	
-	);
-	 $event_data_Query = new WP_Query( $args );
-     if( $event_data_Query->have_posts() ) {
-     	while( $event_data_Query->have_posts() ) : $event_data_Query->the_post(); 
-     		$thumbnail_url = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full', true );
-?>
+add_shortcode( 'events_page_shrt', 'events_page_shrt_sction' );
 
-	<div class="vc_row event_block H11188">
-		<div class="vc_col-sm-4">
-			<div class="event_block_image" style="background-image: url(<?php echo $thumbnail_url[0]; ?>);" ></div>
-		</div>
-		<div class="vc_col-sm-8">
-			<div class="event_block_title"><?php the_title();?></div>
-            <div class="hes_event_date" style="margin-bottom: 35px;">
-					<div class="event_icons_wapp"><i class="fa fa-calendar-check-o" aria-hidden="true"></i></div>	
-					<p class="event_big_text1"><?php echo tribe_get_start_date( $event, false, 'l, F j, Y' );?></p>
-					<p><?php echo tribe_get_start_time().' - '.tribe_get_end_time(); ?> </p>
-				</div>
-				<?php $venue_details = tribe_get_venue_details(); 
-				if ( tribe_has_venue() ) { ?>
-				<div class="hes_event_location" style="margin-bottom: 35px;">
-					<div class="event_icons_wapp"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
-					
-					<p class="event_big_text1"><?php echo $venue_details['linked_name']; ?></p>
-					<p><?php echo $venue_details['address']; ?></p>			
-				</div>
-				<?php } ?>	
-			
+/** Render genuine upcoming events; internal QA events are excluded by the shared query. */
+function events_page_shrt_sction( $atts ) {
+	unset( $atts );
+	ob_start();
 
-			<?php if( ! is_user_logged_in() ) { ?>	
-				<div class="event_block_btn_wrapp"><a href="<?php echo site_url(); ?>/events-registration?event_title=<?php echo get_the_ID(); ?>&event_amount=<?php echo tribe_get_cost(); ?>" class="site_button">Register</a></div>
-				<div id="calender_btn01" class="calender_btn_css"><add-to-calendar-button
-							name="[Reminder] <?php the_title();?>"
-							startDate="<?php echo tribe_get_start_date( $event, false, 'Y-m-d' );?>"
-							startTime="<?php echo date("H:i", strtotime($starttime)); ?>"
-							endTime="<?php echo date("H:i", strtotime($endtime)); ?>"
-							timeZone="US/Eastern"
-							location="<?php echo tribe_get_venue(); ?>"
-							options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-							lightMode="bodyScheme"
-							></add-to-calendar-button></div>
-			<?php } else { ?>
-				<div class="event_block_btn_wrapp"><a href="<?php echo site_url(); ?>/events-registration?event_title=<?php echo get_the_ID(); ?>&event_amount=<?php echo get_field('member_price', get_the_ID()); ?>" class="site_button">Register</a></div>
-				<div id="calender_btn01" class="calender_btn_css"><add-to-calendar-button
-							name="[Reminder] <?php the_title();?>"
-							startDate="<?php echo tribe_get_start_date( $event, false, 'Y-m-d' );?>"
-							startTime="<?php echo date("H:i", strtotime($starttime)); ?>"
-							endTime="<?php echo date("H:i", strtotime($endtime)); ?>"
-							timeZone="US/Eastern"
-							location="<?php echo tribe_get_venue(); ?>"
-							options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-							lightMode="bodyScheme"
-							></add-to-calendar-button></div>	
-			<?php } ?>	
-			
-		<?php /*	<?php	
-			// $user = wp_get_current_user();
-			// $starttime = tribe_get_start_time();
-			// $endtime = tribe_get_end_time();
-			
-				if ( in_array( 'member', (array) $user->roles ) ) { ?>	
-					<div class="event_block_btn_wrapp">
-						<?php if(get_the_ID() == "1165") { ?>
-							<a href="<?php echo get_field('event_registration_link', 1165); ?>" class="site_button">Register</a>
-						<?php } else { ?>
-						<a href="<?php echo site_url(); ?>/event-registration?event_title=<?php echo get_the_ID(); ?>&event_amount=<?php if(tribe_get_cost($post->ID) == "") { echo 'free'; } else { echo get_field('price_for_member', 13); } ?>" class="site_button">Register</a>
-						<?php } ?>
-
-							<div id="calender_btn01" class="calender_btn_css"><add-to-calendar-button
-							name="[Reminder] <?php the_title();?>"
-							startDate="<?php echo tribe_get_start_date( $event, false, 'Y-m-d' );?>"
-							startTime="<?php echo date("H:i", strtotime($starttime)); ?>"
-							endTime="<?php echo date("H:i", strtotime($endtime)); ?>"
-							timeZone="US/Eastern"
-							location="<?php echo tribe_get_venue(); ?>"
-							options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-							lightMode="bodyScheme"
-							></add-to-calendar-button></div>
-
-				</div>	
-				<?php } else { ?>
-					<div class="event_block_btn_wrapp H111">
-						
-					<?php if(get_the_ID() == "1165") { ?>
-					<a href="<?php echo get_field('event_registration_link', 1165); ?>" class="site_button">Register</a>
-						<?php } else { ?>
-						<a href="<?php echo site_url(); ?>/event-registration?event_title=<?php echo get_the_ID(); ?>&event_amount=<?php  if(tribe_get_cost($post->ID)) { echo tribe_get_cost($post->ID); } else { echo 'free'; } ?>" class="site_button">Register</a>
-					<?php } ?>
-
-					<div id="calender_btn02"  class="calender_btn_css"><add-to-calendar-button
-  name="[Reminder] <?php the_title();?>"
-  startDate="<?php echo tribe_get_start_date( $event, false, 'Y-m-d' );?>"
-  startTime="<?php echo date("H:i", strtotime($starttime)); ?>"
-  endTime="<?php echo date("H:i", strtotime($endtime)); ?>"
-  timeZone="US/Eastern"
-  location="<?php echo tribe_get_venue(); ?>"
-  options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-  lightMode="bodyScheme"
-></add-to-calendar-button></div>
-				</div>
-				<?php } ?>	*/ ?>
-		</div>
-	</div>
-	
-<?php endwhile;
-	} else {
-		echo '<div class="no-events H111">No Upcoming Events</div>';
+	$events = aarepdc_upcoming_event_query( -1 );
+	if ( ! $events->have_posts() ) {
+		echo aarepdc_events_coming_soon(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		wp_reset_postdata();
+		return ob_get_clean();
 	}
-	wp_reset_query();
+
+	while ( $events->have_posts() ) :
+		$events->the_post();
+		$event_id      = get_the_ID();
+		$thumbnail_url = wp_get_attachment_image_url( get_post_thumbnail_id( $event_id ), 'full' );
+		$venue_details = tribe_get_venue_details( $event_id );
+		?>
+		<div class="vc_row event_block H11188">
+			<div class="vc_col-sm-4">
+				<div class="event_block_image"<?php echo $thumbnail_url ? ' style="background-image:url(' . esc_url( $thumbnail_url ) . ');"' : ''; ?>></div>
+			</div>
+			<div class="vc_col-sm-8">
+				<div class="event_block_title"><a href="<?php echo esc_url( get_permalink( $event_id ) ); ?>"><?php echo esc_html( get_the_title( $event_id ) ); ?></a></div>
+				<div class="hes_event_date" style="margin-bottom:35px;">
+					<div class="event_icons_wapp"><i class="fa fa-calendar-check-o" aria-hidden="true"></i></div>
+					<p class="event_big_text1"><?php echo esc_html( tribe_get_start_date( $event_id, false, 'l, F j, Y' ) ); ?></p>
+					<p><?php echo esc_html( tribe_get_start_time( $event_id ) . ' - ' . tribe_get_end_time( $event_id ) ); ?></p>
+				</div>
+				<?php if ( tribe_has_venue( $event_id ) ) : ?>
+					<div class="hes_event_location" style="margin-bottom:35px;">
+						<div class="event_icons_wapp"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+						<p class="event_big_text1"><?php echo wp_kses_post( $venue_details['linked_name'] ); ?></p>
+						<p><?php echo esc_html( $venue_details['address'] ); ?></p>
+					</div>
+				<?php endif; ?>
+
+				<?php echo aarepdc_event_actions( $event_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			</div>
+		</div>
+		<?php
+	endwhile;
+
+	wp_reset_postdata();
 	return ob_get_clean();
 }

@@ -6,6 +6,214 @@ Version: 1.0
 Text Domain: aarepdc child
 */
 
+/*=========================================================================================================
+  AAREP DC — Audit Fix 2 (2026-04-28): subpage header + PMP form readability
+  Problem: header is position:absolute with white nav text. On home/event/post/job pages the header
+  sits over a hero banner so the white text is visible. New member pages (/join, /member-login,
+  /member-account, /member-directory, /members-resources, /my-employees, /membership-checkout, etc.)
+  have no hero banner — the absolute white header lands on a white body, making nav invisible.
+  Fix: detect "no-hero" body classes and (1) give header a solid brand-blue background, (2) push
+  page content down so it doesn't slide behind the header.
+==========================================================================================================*/
+body.aarepdc-no-hero header#header,
+body.page.aarepdc-no-hero header#header {
+    background-color: var(--theme-blue-color1) !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+body.aarepdc-no-hero #wrap > main,
+body.aarepdc-no-hero #wrap > main > .lqd-post-cover,
+body.aarepdc-no-hero .pmpro_pages-checkout,
+body.aarepdc-no-hero .pmpro_pages-account,
+body.aarepdc-no-hero .pmpro_pages-levels {
+    padding-top: 176px;
+}
+@media (max-width: 1629px) {
+    body.aarepdc-no-hero #wrap > main,
+    body.aarepdc-no-hero #wrap > main > .lqd-post-cover {
+        padding-top: 150px;
+    }
+}
+@media (max-width: 991px) {
+    body.aarepdc-no-hero #wrap > main,
+    body.aarepdc-no-hero #wrap > main > .lqd-post-cover {
+        padding-top: 118px;
+    }
+}
+/* Admins still see the WP toolbar, which shifts the header down ~32px; add clearance for them.
+   (Members no longer see the toolbar — see show_admin_bar.) */
+body.aarepdc-no-hero.admin-bar #wrap > main,
+body.aarepdc-no-hero.admin-bar #wrap > main > .lqd-post-cover {
+    padding-top: 184px;
+}
+@media (max-width: 991px) {
+    body.aarepdc-no-hero.admin-bar #wrap > main,
+    body.aarepdc-no-hero.admin-bar #wrap > main > .lqd-post-cover {
+        padding-top: 150px;
+    }
+}
+/* Keep order/account/confirmation content (and its bottom buttons) clear of the footer. */
+body.aarepdc-no-hero #wrap > main {
+    padding-bottom: 72px;
+}
+
+/* The parent theme hides direct page paragraphs because its builder normally wraps page copy.
+   Our portal pages intentionally use standard Gutenberg paragraphs, so keep that authored copy visible. */
+body.aarepdc-no-hero #lqd-contents-wrap > p {
+    display: block;
+}
+
+/* PMP form readability — make checkout/account/login forms easy on the eye on plain page background.
+   audit-fix-3 (2026-04-28): widen the checkout container (was 720px, looked too narrow / left-pushed
+   on /membership-checkout/ — CEO directive: match aarepdc.org/become-a-member shorter/wider feel),
+   center-align overall, apply a 2-column grid on the checkout form. */
+.pmpro_form,
+.pmpro_account,
+.pmpro_login_wrap {
+    max-width: 960px;
+    margin: 0 auto 60px;
+    padding: 36px 40px 48px;
+    background: #fafafa;
+    border-radius: 8px;
+    color: #333;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+}
+.pmpro_login_wrap {
+    max-width: 480px;
+}
+/* 2-column grid for billing-style fields on the checkout form (wider screens only) */
+@media (min-width: 768px) {
+    body.pmpro_pages-checkout .pmpro_checkout {
+        max-width: 960px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    body.pmpro_pages-checkout .pmpro_form_field-bfirstname,
+    body.pmpro_pages-checkout .pmpro_form_field-blastname,
+    body.pmpro_pages-checkout .pmpro_form_field-baddress1,
+    body.pmpro_pages-checkout .pmpro_form_field-baddress2,
+    body.pmpro_pages-checkout .pmpro_form_field-bcity,
+    body.pmpro_pages-checkout .pmpro_form_field-bstate,
+    body.pmpro_pages-checkout .pmpro_form_field-bzipcode,
+    body.pmpro_pages-checkout .pmpro_form_field-bcountry,
+    body.pmpro_pages-checkout .pmpro_form_field-bphone,
+    body.pmpro_pages-checkout .pmpro_form_field-bemail,
+    body.pmpro_pages-checkout .pmpro_form_field-aarepdc_phone_number,
+    body.pmpro_pages-checkout .pmpro_form_field-aarepdc_phone_type,
+    body.pmpro_pages-checkout .pmpro_form_field-aarepdc_company_name,
+    body.pmpro_pages-checkout .pmpro_form_field-aarepdc_real_estate_sector,
+    body.pmpro_pages-checkout .pmpro_form_field-aarepdc_professional_level,
+    body.pmpro_pages-checkout .pmpro_form_field-aarepdc_experience_real_estate {
+        display: inline-block;
+        width: calc(50% - 12px);
+        vertical-align: top;
+        margin-right: 0;
+    }
+    body.pmpro_pages-checkout .pmpro_form_field-bfirstname,
+    body.pmpro_pages-checkout .pmpro_form_field-bcity,
+    body.pmpro_pages-checkout .pmpro_form_field-bzipcode,
+    body.pmpro_pages-checkout .pmpro_form_field-bphone,
+    body.pmpro_pages-checkout .pmpro_form_field-aarepdc_phone_number,
+    body.pmpro_pages-checkout .pmpro_form_field-aarepdc_company_name,
+    body.pmpro_pages-checkout .pmpro_form_field-aarepdc_professional_level {
+        margin-right: 16px;
+    }
+}
+/* Submit button styling on checkout */
+body.pmpro_pages-checkout .pmpro_submit,
+body.pmpro_pages-checkout .pmpro_btn-submit-checkout-wrap {
+    text-align: center;
+    margin-top: 24px;
+}
+body.pmpro_pages-checkout .pmpro_btn-submit-checkout,
+body.pmpro_pages-checkout input.pmpro_btn-submit-checkout {
+    background-color: var(--theme-blue-color1) !important;
+    color: #fff !important;
+    padding: 12px 36px !important;
+    border-radius: 28px !important;
+    font-family: 'Helvetica Neue', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    border: 0 !important;
+    margin: 16px auto !important;
+    display: inline-block !important;
+}
+body.pmpro_pages-checkout .pmpro_btn-submit-checkout:hover {
+    background-color: #333 !important;
+}
+.pmpro_form label,
+.pmpro_login_wrap label,
+.pmpro_account label {
+    color: var(--theme-blue-color1);
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: block;
+}
+.pmpro_form .pmpro_form_field input[type=text],
+.pmpro_form .pmpro_form_field input[type=email],
+.pmpro_form .pmpro_form_field input[type=tel],
+.pmpro_form .pmpro_form_field input[type=password],
+.pmpro_form .pmpro_form_field select,
+.pmpro_form .pmpro_form_field textarea,
+.pmpro_login_wrap input[type=text],
+.pmpro_login_wrap input[type=password] {
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    padding: 8px 10px !important;
+    line-height: 1.4 !important;
+    background: #fff !important;
+    width: 100% !important;
+    margin-bottom: 12px !important;
+    font-size: 16px !important;
+}
+.pmpro_form .pmpro_form_field-radio,
+.pmpro_form .pmpro_form_field-checkbox {
+    margin-bottom: 12px;
+}
+.pmpro_form .pmpro_section_toggle h3,
+.pmpro_form fieldset legend,
+.pmpro_form fieldset h3 {
+    color: var(--theme-blue-color1) !important;
+    font-size: 22px !important;
+    margin: 18px 0 12px !important;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+}
+.pmpro_levels-table {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    margin-bottom: 40px;
+}
+.pmpro_levels-table th,
+.pmpro_levels-table td {
+    padding: 14px 16px !important;
+    color: #333 !important;
+}
+.pmpro_levels-table .pmpro_btn-select {
+    background-color: var(--theme-blue-color1) !important;
+    color: #fff !important;
+    padding: 8px 24px !important;
+    border-radius: 23px !important;
+    font-family: 'Helvetica Neue', sans-serif !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+}
+.pmpro_levels-table .pmpro_btn-select:hover {
+    background-color: #333 !important;
+}
+
+/* Member directory readability */
+.pmpro_member_directory,
+.pmpro_member_list {
+    max-width: 1200px;
+    margin: 0 auto 60px;
+}
+/*=========================================================================================================*/
+
+
 :root {
 
     --color-primary: #1e4480; 

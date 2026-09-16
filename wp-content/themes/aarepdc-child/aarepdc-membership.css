@@ -1,0 +1,856 @@
+/* =====================================================================
+ * AAREP DC — Membership feature styles
+ * Loaded AFTER style.css (which ends in an unclosed /* comment banner,
+ * so new rules must NOT be appended there). Keep all membership UI here.
+ * WS1: welcome block, member card, profile preview, logout, buttons.
+ * ===================================================================== */
+
+.aarepdc-welcome,
+.aarepdc-profile-preview {
+    margin: 0 0 1.75em;
+    padding: 1.5em 1.75em;
+    border: 1px solid #e2e6ee;
+    border-left: 5px solid #1e4480;
+    border-radius: 8px;
+    background: #f7f9fc;
+}
+
+.aarepdc-welcome-title,
+.aarepdc-preview-title {
+    margin: 0 0 .25em;
+    color: #1e4480;
+    font-size: 1.6em;
+    line-height: 1.2;
+}
+
+.aarepdc-preview-note {
+    margin: 0 0 1em;
+    color: #555;
+    font-size: .95em;
+}
+
+.aarepdc-member-card-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.aarepdc-member-card-list li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .25em 1em;
+    padding: .55em 0;
+    border-bottom: 1px solid #e8ebf2;
+}
+
+.aarepdc-member-card-list li:last-child {
+    border-bottom: 0;
+}
+
+.aarepdc-card-label {
+    flex: 0 0 210px;
+    font-weight: 600;
+    color: #2a2a2a;
+}
+
+.aarepdc-card-value {
+    color: #333;
+}
+
+.aarepdc-empty {
+    color: #9aa1ad;
+    font-style: italic;
+}
+
+.aarepdc-card-actions {
+    margin: 1.1em 0 0;
+}
+
+.aarepdc-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: #1e4480;
+    color: #fff !important;
+    border: 0;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    line-height: 1.3;
+    cursor: pointer;
+    transition: background .2s, transform .15s, box-shadow .2s;
+}
+
+.aarepdc-btn:hover,
+.aarepdc-btn:focus {
+    background: #163461;
+    color: #fff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(30, 68, 128, .28);
+}
+
+.aarepdc-btn--lg {
+    padding: 16px 46px;
+    font-size: 1.1em;
+    border-radius: 8px;
+}
+
+.aarepdc-logout-item a {
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    .aarepdc-card-label {
+        flex-basis: 100%;
+    }
+}
+
+/* ===== WS2/WS3/WS5 — Membership page, pricing table, renew, sponsors, banner ===== */
+.aarepdc-urgency {
+    margin: 0 0 1.75em;
+    padding: 1.1em 1.5em;
+    background: #1e4480;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 1.05em;
+    text-align: center;
+}
+.aarepdc-urgency strong { color: #ffd34e; }
+
+/* Join prompt above the pricing table. Matches the plan cards' width and gutter so the
+   two blocks read as one unit on desktop and stack cleanly on phones. */
+.aarepdc-join-banner {
+    /* 1160 minus the pricing grid's 24px gutters, so the banner edge lines up with the cards. */
+    max-width: 1112px;
+    margin: 1.5em auto 0;
+    padding: 1.4em 1.6em;
+    box-sizing: border-box;
+    border: 1px solid #dbe4f2;
+    border-left: 5px solid #1e4480;
+    border-radius: 8px;
+    background: #f4f7fc;
+    color: #24324a;
+}
+.aarepdc-join-banner-lead {
+    margin: 0 0 .6em;
+    color: #1e4480;
+    font-size: 1.15em;
+    font-weight: 700;
+    line-height: 1.3;
+}
+.aarepdc-join-banner-list {
+    margin: 0 0 .7em;
+    padding-left: 1.2em;
+    list-style: disc;
+}
+.aarepdc-join-banner-list li { margin: 0 0 .3em; }
+.aarepdc-join-banner-note {
+    margin: 0;
+    font-size: .92em;
+    color: #4a5a72;
+}
+@media (max-width: 782px) {
+    .aarepdc-join-banner { margin-left: 16px; margin-right: 16px; padding: 1.1em 1.2em; }
+}
+
+.aarepdc-pricing {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25em;
+    margin: 1.5em auto;
+    max-width: 1160px;
+    padding: 0 24px;
+    box-sizing: border-box;
+    align-items: stretch;
+}
+/* Legacy membership form on the Membership page is replaced by the pricing table above. */
+#memberships_shrt_row { display: none !important; }
+.aarepdc-plan {
+    flex: 1 1 280px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e2e6ee;
+    border-top: 5px solid #1e4480;
+    border-radius: 8px;
+    padding: 1.5em;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(30,68,128,.06);
+}
+.aarepdc-plan-name { margin: 0 0 .25em; color: #1e4480; font-size: 1.3em; }
+.aarepdc-plan-price { font-size: 2em; font-weight: 700; color: #1a1a1a; line-height: 1.1; }
+.aarepdc-plan-per { font-size: .45em; font-weight: 400; color: #666; }
+.aarepdc-plan-desc { margin: .9em 0 1.25em; color: #444; font-size: .95em; flex: 1 1 auto; }
+.aarepdc-plan-btn { margin-top: auto; text-align: center; }
+
+.aarepdc-renew {
+    max-width: 640px;
+    margin: 1.5em auto;
+    padding: 2em;
+    border: 1px solid #e2e6ee;
+    border-left: 5px solid #1e4480;
+    border-radius: 8px;
+    background: #f7f9fc;
+    text-align: center;
+}
+.aarepdc-renew h2 { color: #1e4480; margin-top: 0; }
+.aarepdc-renew-note { color: #666; font-size: .9em; margin-top: 1em; }
+
+/* ===== Sponsor logo marquee (self-contained CSS infinite scroll) ===== */
+.aarepdc-sponsors-section { margin: 2.75em 0 1.5em; text-align: center; }
+.aarepdc-sponsors-heading {
+    color: #1e4480;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.5em;
+    margin-bottom: 1.1em;
+}
+.aarepdc-marquee {
+    overflow: hidden;
+    width: 100%;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.aarepdc-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: aarepdc-marquee-scroll 38s linear infinite;
+}
+.aarepdc-marquee:hover .aarepdc-marquee-track { animation-play-state: paused; }
+.aarepdc-marquee-logo {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    padding: 0 34px;
+}
+.aarepdc-marquee-logo img {
+    height: 64px;
+    width: auto;
+    max-width: none;
+    object-fit: contain;
+}
+@keyframes aarepdc-marquee-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+/* NOTE: intentionally NOT disabled under prefers-reduced-motion. The homepage sponsor marquee
+ * is JS (Flickity) and scrolls regardless of that OS setting; honoring it here made this strip
+ * sit static while the homepage kept rotating (looked broken). Kept always-on to match. */
+
+/* =====================================================================
+ * Inner-page professional polish (2026-06-17)
+ * Loaded after style.css — unifies buttons, form focus, cards, sections
+ * across all PMPro member/registration pages.
+ * ===================================================================== */
+
+/* ---- Unify PMPro buttons with .aarepdc-btn (one consistent look) ---- */
+body.pmpro_pages-checkout .pmpro_btn-submit-checkout,
+body.pmpro_pages-checkout input.pmpro_btn-submit-checkout,
+.pmpro_btn-select,
+.pmpro_btn.pmpro_btn-select,
+.pmpro_checkout .pmpro_btn,
+.pmpro_account .pmpro_btn,
+.pmpro_directory_search input[type="submit"] {
+    background-color: #1e4480 !important;
+    color: #fff !important;
+    border: 0 !important;
+    border-radius: 6px !important;
+    padding: 13px 34px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    line-height: 1.3 !important;
+    transition: background .2s, transform .15s, box-shadow .2s !important;
+}
+body.pmpro_pages-checkout .pmpro_btn-submit-checkout:hover,
+.pmpro_btn-select:hover,
+.pmpro_checkout .pmpro_btn:hover,
+.pmpro_account .pmpro_btn:hover {
+    background-color: #163461 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(30, 68, 128, .28) !important;
+}
+
+/* ---- Form field focus states + required markers (all PMPro forms) ---- */
+.pmpro_form input[type="text"]:focus,
+.pmpro_form input[type="email"]:focus,
+.pmpro_form input[type="tel"]:focus,
+.pmpro_form input[type="password"]:focus,
+.pmpro_form select:focus,
+.pmpro_form textarea:focus,
+.pmpro_login_wrap input:focus {
+    border-color: #1e4480 !important;
+    box-shadow: 0 0 0 3px rgba(30, 68, 128, .12) !important;
+    outline: 0 !important;
+}
+.pmpro_form .pmpro_form_field-required label::after,
+.pmpro_form label .pmpro_asterisk,
+.pmpro_required > label::after {
+    color: #d32f2f;
+}
+
+/* ---- Card spacing consistency ---- */
+.aarepdc-welcome,
+.aarepdc-profile-preview {
+    padding: 2em 2.25em;
+}
+.aarepdc-card-actions {
+    margin: 1.6em 0 0;
+    padding-top: 1.25em;
+    border-top: 1px solid #e2e6ee;
+}
+.aarepdc-card-label { text-align: left; }
+@media (min-width: 601px) {
+    .aarepdc-member-card-list li { gap: .25em 1.5em; }
+}
+
+/* ---- Account page: style the [pmpro_account] block as matching cards ---- */
+.pmpro_account-membership,
+.pmpro_account-profile,
+.pmpro_account-invoices,
+.pmpro_account-links,
+.pmpro_account > div,
+.pmpro_account .pmpro_card {
+    background: #fff;
+    border: 1px solid #e2e6ee;
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(30, 68, 128, .05);
+}
+.pmpro_account h2,
+.pmpro_account h3 { color: #1e4480; margin-top: 0; }
+
+/* ---- Login page ---- */
+.pmpro_login_wrap {
+    max-width: 520px !important;
+    border-top: 5px solid #1e4480;
+}
+.pmpro_login_wrap .pmpro_form { box-shadow: none; }
+
+/* ---- Profile edit: tie preview to the form ---- */
+.aarepdc-preview-title { font-size: 1.35em; }
+
+/* ---- Renew page: prominent CTA ---- */
+.aarepdc-renew .aarepdc-btn {
+    padding: 16px 46px;
+    font-size: 1.1em;
+    border-radius: 8px;
+    margin-top: .5em;
+}
+
+/* ---- Confirmation: success card (filter wraps notice in .aarepdc-confirm-term) ---- */
+.aarepdc-confirm-term {
+    margin: 1.5em 0;
+    padding: 1.25em 1.5em 1.25em 1.6em;
+    background: #eaf6ec;
+    border: 1px solid #cfe8d4;
+    border-left: 5px solid #2e7d44;
+    border-radius: 8px;
+    color: #244c2f;
+}
+.aarepdc-confirm-term strong { color: #1d6b34; }
+
+/* ---- Member directory table ---- */
+.pmpro_member_directory table,
+.pmpro_member_list table {
+    width: 100% !important;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(30, 68, 128, .06);
+}
+.pmpro_member_directory th,
+.pmpro_member_list th {
+    background: #1e4480;
+    color: #fff;
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 600;
+}
+.pmpro_member_directory td,
+.pmpro_member_list td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eef1f6;
+}
+.pmpro_member_directory tr:nth-child(even) td,
+.pmpro_member_list tr:nth-child(even) td { background: #f7f9fc; }
+.pmpro_member_directory tr:hover td,
+.pmpro_member_list tr:hover td { background: #eef2fa; }
+
+/* ---- Mobile refinements ---- */
+@media (max-width: 600px) {
+    .aarepdc-welcome,
+    .aarepdc-profile-preview { padding: 1.5em 1.35em; }
+    .aarepdc-member-card-list li { flex-direction: column; gap: .15em; }
+    .aarepdc-pricing { padding: 0 14px; }
+    .pmpro_form,
+    .pmpro_account { padding: 24px 20px 32px !important; }
+}
+
+/* =====================================================================
+ * Member Directory — professional card grid (2026-06-17)
+ * ===================================================================== */
+.pmpro_member_directory-div {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
+    gap: 24px;
+    margin: 1.25em 0 2em;
+    list-style: none;
+    padding: 0;
+}
+.pmpro_member_directory-item.pmpro_card {
+    background: #fff;
+    border: 1px solid #e2e6ee;
+    border-radius: 12px;
+    padding: 30px 22px 24px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(30, 68, 128, .06);
+    transition: transform .15s ease, box-shadow .2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pmpro_member_directory-item.pmpro_card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(30, 68, 128, .14);
+}
+.pmpro_member_directory-item .pmpro_member_profile_field-avatar { margin-bottom: 14px; }
+.pmpro_member_directory-item .pmpro_member_profile_field-avatar img.avatar {
+    width: 104px !important;
+    height: 104px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #eef2fa;
+    box-shadow: 0 2px 8px rgba(30, 68, 128, .12);
+    margin: 0 auto;
+    display: inline-block;
+}
+.pmpro_member_directory-item .pmpro_member_profile_field-display_name {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: #1e4480;
+    margin: 2px 0;
+}
+.pmpro_member_directory-item .pmpro_member_profile_field-membership_name { margin: 4px 0 14px; }
+.pmpro_member_directory-item .pmpro_member_profile_field-membership_name .pmpro_member_profile_field_data {
+    display: inline-block;
+    background: #eef2fa;
+    color: #1e4480;
+    font-size: .78em;
+    font-weight: 600;
+    padding: 3px 13px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+}
+.pmpro_member_directory-item .pmpro_member_profile_field {
+    margin: 5px 0;
+    font-size: .92em;
+    width: 100%;
+}
+.pmpro_member_directory-item .pmpro_member_profile_field_label { color: #98a2b3; font-weight: 600; margin-right: 5px; }
+.pmpro_member_directory-item .pmpro_member_profile_field_data { color: #344054; }
+.pmpro_member_directory-item .pmpro_member_profile_field-display_name .pmpro_member_profile_field_label,
+.pmpro_member_directory-item .pmpro_member_profile_field-membership_name .pmpro_member_profile_field_label { display: none; }
+
+/* Directory search — undo the big form-card styling, make a clean search bar */
+.pmpro_member_directory_search,
+form.pmpro_form.pmpro_member_directory_search {
+    max-width: 460px;
+    margin: 0 auto 30px !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    display: flex;
+    gap: 10px;
+}
+.pmpro_member_directory_search .pmpro_form_fields { flex: 1 1 auto; width: 100%; }
+.pmpro_member_directory_search input[type="search"] {
+    width: 100% !important;
+    border: 1px solid #ccc !important;
+    border-radius: 6px !important;
+    padding: 11px 14px !important;
+    font-size: 15px !important;
+    margin: 0 !important;
+}
+.pmpro_member_directory_search input[type="search"]:focus {
+    border-color: #1e4480 !important;
+    box-shadow: 0 0 0 3px rgba(30, 68, 128, .12) !important;
+    outline: 0 !important;
+}
+@media (max-width: 600px) {
+    .pmpro_member_directory-div { grid-template-columns: 1fr 1fr; gap: 14px; }
+    .pmpro_member_directory-item.pmpro_card { padding: 20px 12px 16px; }
+    .pmpro_member_directory-item .pmpro_member_profile_field-avatar img.avatar { width: 76px !important; height: 76px !important; }
+}
+
+/* ===== Member card avatar (welcome + preview) + members-only gate message ===== */
+.aarepdc-card-avatar { text-align: center; margin: 0 0 16px; }
+.aarepdc-card-avatar img.avatar {
+    width: 92px; height: 92px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 10px rgba(30, 68, 128, .18);
+    display: inline-block;
+}
+.aarepdc-members-only {
+    max-width: 560px;
+    margin: 1.5em auto;
+    padding: 1.25em 1.6em;
+    background: #f7f9fc;
+    border: 1px solid #e2e6ee;
+    border-left: 5px solid #1e4480;
+    border-radius: 8px;
+    text-align: center;
+    color: #344054;
+}
+/* committee checkbox group — clean multi-column layout */
+.pmpro_form_field-checkbox-grouped { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 4px; }
+.pmpro_form_field-checkbox-grouped-item { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; }
+.pmpro_form_field-checkbox-grouped-item input { width: auto !important; margin: 0 !important; }
+
+/* ===== Account welcome card: secondary (ghost) action buttons + email line ===== */
+.aarepdc-account-email { margin: 1em 0 0; color: #475467; }
+.aarepdc-card-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.aarepdc-btn-ghost {
+    background: #fff !important;
+    color: #1e4480 !important;
+    border: 1px solid #1e4480 !important;
+}
+.aarepdc-btn-ghost:hover { background: #eef2fa !important; color: #163461 !important; }
+
+/* ===== Account welcome-card actions ===== */
+.aarepdc-card-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.aarepdc-account-email { margin: .9em 0 0; color: #475467; overflow-wrap: anywhere; }
+.aarepdc-btn-ghost {
+    background: #fff !important;
+    color: #1e4480 !important;
+    border: 2px solid #1e4480 !important;
+    padding: 10px 24px;
+}
+.aarepdc-btn-ghost:hover,
+.aarepdc-btn-ghost:focus { background: #1e4480 !important; color: #fff !important; }
+
+/* ===== Member Resources: clean launch-safe empty state ===== */
+.aarepdc-resource-page {
+    max-width: 1100px;
+    margin: 32px auto 80px;
+}
+.aarepdc-resource-page .aarepdc-directory-title {
+    margin: 0 0 8px;
+    text-align: center;
+    color: #1e4480;
+    font-size: 36px;
+}
+.aarepdc-resource-intro {
+    margin: 0 0 32px;
+    text-align: center;
+    color: #475467;
+    font-size: 16px;
+}
+.aarepdc-resource-empty {
+    padding: 32px;
+    border: 1px solid #dbe4f2;
+    border-radius: 12px;
+    background: #f4f7fc;
+    text-align: center;
+}
+.aarepdc-resource-empty h2 {
+    margin: 0 0 10px;
+    color: #1e4480;
+    font-size: 24px;
+}
+.aarepdc-resource-empty p {
+    max-width: 700px;
+    margin: 0 auto;
+    color: #475467;
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+@media (max-width: 767px) {
+    .aarepdc-resource-page { margin: 24px auto 56px; }
+    .aarepdc-resource-page .aarepdc-directory-title { font-size: 30px; }
+    .aarepdc-resource-empty { padding: 24px 18px; }
+}
+
+/* =====================================================================
+ * Member Messages — two-pane inbox (Messages-for-Mac feel), 2026-07-21
+ * ===================================================================== */
+.aarepdc-msg-badge {
+    display: inline-block; min-width: 18px; padding: 0 6px; margin-left: 6px;
+    background: #d64545; color: #fff; border-radius: 9px;
+    font-size: 12px; line-height: 18px; font-weight: 700; text-align: center;
+}
+.aarepdc-msg-alert { margin: 0 0 14px; padding: 10px 14px; border-radius: 8px; font-size: 14px; }
+.aarepdc-msg-alert-ok  { background: #eaf6ec; border: 1px solid #bcdfc4; color: #24603a; }
+.aarepdc-msg-alert-err { background: #fdecec; border: 1px solid #f2c2c2; color: #932c2c; }
+
+.aarepdc-msg-wrap {
+    display: grid; grid-template-columns: 300px 1fr; gap: 0;
+    border: 1px solid #e2e7f0; border-radius: 12px; overflow: hidden;
+    background: #fff; min-height: 460px;
+}
+.aarepdc-msg-list { border-right: 1px solid #eef1f6; background: #fafbfd; overflow-y: auto; max-height: 620px; }
+.aarepdc-msg-empty { padding: 22px 18px; color: #6a7180; font-size: 14px; line-height: 1.6; }
+.aarepdc-msg-item {
+    position: relative; display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px; border-bottom: 1px solid #eef1f6;
+    text-decoration: none; color: #33384a;
+}
+.aarepdc-msg-item:hover { background: #f2f5fa; }
+.aarepdc-msg-item.is-active { background: #e9eff9; }
+.aarepdc-msg-item img { border-radius: 50%; display: block; }
+.aarepdc-msg-meta { flex: 1 1 auto; min-width: 0; }
+.aarepdc-msg-name { display: block; font-weight: 600; font-size: 14px; color: #1e4480; }
+.aarepdc-msg-snippet {
+    display: block; font-size: 13px; color: #6a7180;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.aarepdc-msg-item.is-unread .aarepdc-msg-snippet { color: #33384a; font-weight: 600; }
+.aarepdc-msg-when { flex: 0 0 auto; font-size: 11px; color: #98a0ae; }
+.aarepdc-msg-dot {
+    position: absolute; right: 8px; bottom: 10px;
+    width: 8px; height: 8px; border-radius: 50%; background: #1e4480;
+}
+
+.aarepdc-msg-thread { display: flex; flex-direction: column; min-width: 0; }
+.aarepdc-msg-placeholder { margin: auto; padding: 40px; color: #98a0ae; font-size: 15px; }
+.aarepdc-msg-thread-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 18px; border-bottom: 1px solid #eef1f6;
+    font-weight: 600; color: #1e4480; font-size: 15px;
+}
+.aarepdc-msg-back { display: none; color: #1e4480; text-decoration: none; font-size: 18px; }
+.aarepdc-msg-bubbles {
+    flex: 1 1 auto; overflow-y: auto; max-height: 420px;
+    padding: 18px; display: flex; flex-direction: column; gap: 10px;
+}
+.aarepdc-msg-bubble { max-width: 74%; align-self: flex-start; }
+.aarepdc-msg-bubble .aarepdc-msg-body {
+    background: #eef1f6; color: #33384a; padding: 10px 14px;
+    border-radius: 14px 14px 14px 4px; font-size: 14px; line-height: 1.55;
+}
+.aarepdc-msg-bubble .aarepdc-msg-body p { margin: 0 0 6px; }
+.aarepdc-msg-bubble .aarepdc-msg-body p:last-child { margin: 0; }
+.aarepdc-msg-bubble time { display: block; margin-top: 3px; font-size: 11px; color: #98a0ae; }
+.aarepdc-msg-bubble.is-mine { align-self: flex-end; }
+.aarepdc-msg-bubble.is-mine .aarepdc-msg-body {
+    background: #1e4480; color: #fff; border-radius: 14px 14px 4px 14px;
+}
+.aarepdc-msg-bubble.is-mine time { text-align: right; }
+
+.aarepdc-msg-form {
+    display: flex; gap: 10px; align-items: flex-end;
+    padding: 12px 14px; border-top: 1px solid #eef1f6; background: #fafbfd;
+}
+.aarepdc-msg-form .aarepdc-btn { flex: 0 0 auto; width: auto; }
+.aarepdc-msg-form textarea {
+    flex: 1 1 auto; resize: vertical; min-height: 42px; padding: 10px 12px;
+    border: 1px solid #dbe1ea; border-radius: 10px; font-size: 14px; font-family: inherit;
+}
+.aarepdc-msg-form textarea:focus { border-color: #1e4480; box-shadow: 0 0 0 3px rgba(30,68,128,.12); outline: 0; }
+.aarepdc-msg-foot { margin: 14px 0 0; font-size: 13px; color: #6a7180; line-height: 1.6; }
+
+@media (max-width: 780px) {
+    .aarepdc-msg-wrap { grid-template-columns: 1fr; min-height: 0; }
+    .aarepdc-msg-list { border-right: 0; max-height: none; }
+    .aarepdc-msg-back { display: inline-block; }
+    /* Mobile drill-down: show the list OR the thread, never both. */
+    .aarepdc-msg-wrap.has-thread .aarepdc-msg-list { display: none; }
+    .aarepdc-msg-wrap:not(.has-thread) .aarepdc-msg-thread { display: none; }
+    .aarepdc-msg-bubble { max-width: 88%; }
+}
+
+@media (max-width: 480px) {
+    .aarepdc-msg-form { flex-direction: column; align-items: stretch; }
+    .aarepdc-msg-form textarea { box-sizing: border-box; width: 100%; min-height: 96px; }
+    .aarepdc-msg-form .aarepdc-btn { width: 100%; }
+}
+
+/* =====================================================================
+ * Board chip + Member Feed (client round 2026-07-30)
+ * ===================================================================== */
+.aarepdc-board-chip {
+    display: inline-block; vertical-align: middle; margin-left: 8px;
+    padding: 2px 10px; border-radius: 10px;
+    background: #1e4480; color: #fff;
+    font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+    line-height: 1.6;
+}
+
+/* Directory card contact fields read as tidy label/value rows already; just brand the links. */
+.pmpro_member_profile_field-user_email a,
+.pmpro_member_profile_field-aarepdc_linkedin_url a,
+.pmpro_member_profile_field-aarepdc_phone_number a { color: #1e4480; font-weight: 600; }
+
+/* ---- Feed ---- */
+.aarepdc-feed { max-width: 760px; margin: 0 auto; }
+.aarepdc-feed-composer {
+    background: #fff; border: 1px solid #e2e7f0; border-radius: 12px;
+    padding: 16px 18px; margin: 0 0 22px;
+}
+.aarepdc-feed-composer-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.aarepdc-feed-composer-head img { border-radius: 50%; }
+.aarepdc-feed-composer-head select {
+    padding: 8px 12px; border: 1px solid #dbe1ea; border-radius: 8px; font-size: 14px;
+}
+.aarepdc-feed-composer textarea {
+    width: 100%; resize: vertical; min-height: 74px; padding: 12px 14px; box-sizing: border-box;
+    border: 1px solid #dbe1ea; border-radius: 10px; font-size: 15px; font-family: inherit;
+}
+.aarepdc-feed-composer textarea:focus { border-color: #1e4480; box-shadow: 0 0 0 3px rgba(30,68,128,.12); outline: 0; }
+.aarepdc-feed-composer-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; }
+.aarepdc-feed-note { font-size: 13px; color: #6a7180; }
+
+.aarepdc-feed-item {
+    background: #fff; border: 1px solid #e2e7f0; border-radius: 12px;
+    padding: 16px 18px; margin: 0 0 14px;
+}
+.aarepdc-feed-item.is-pending { background: #fffdf5; border-color: #f0d9a8; }
+.aarepdc-feed-item header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.aarepdc-feed-avatar img { border-radius: 50%; display: block; }
+.aarepdc-feed-who { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.aarepdc-feed-name { font-weight: 600; color: #1e4480; font-size: 15px; }
+.aarepdc-feed-who time { font-size: 12px; color: #98a0ae; }
+.aarepdc-feed-chips { flex: 0 0 auto; }
+.aarepdc-feed-chip {
+    display: inline-block; padding: 3px 12px; border-radius: 11px;
+    font-size: 12px; font-weight: 700;
+}
+.aarepdc-feed-chip-deal        { background: #e7f4ec; color: #1f6b3a; }
+.aarepdc-feed-chip-opportunity { background: #e9f0fb; color: #1e4480; }
+.aarepdc-feed-chip-idea        { background: #f3ecfb; color: #5b3a8e; }
+.aarepdc-feed-chip-request     { background: #fdeee7; color: #9a4a1f; }
+.aarepdc-feed-chip-update      { background: #eef1f6; color: #475467; }
+.aarepdc-feed-chip-pending     { background: #fff3d6; color: #7a5b1a; }
+.aarepdc-feed-body { color: #33384a; font-size: 15px; line-height: 1.6; }
+.aarepdc-feed-body p { margin: 0 0 8px; }
+.aarepdc-feed-body p:last-child { margin: 0; }
+.aarepdc-feed-del { margin: 6px 0 0; text-align: right; }
+.aarepdc-feed-del button {
+    background: none; border: 0; padding: 0; cursor: pointer;
+    color: #98a0ae; font-size: 12px; text-decoration: underline;
+}
+.aarepdc-feed-del button:hover { color: #932c2c; }
+.aarepdc-feed-empty { color: #6a7180; text-align: center; padding: 26px 0; }
+.aarepdc-feed-more { text-align: center; }
+
+@media (max-width: 600px) {
+    .aarepdc-feed-item header { flex-wrap: wrap; }
+    .aarepdc-feed-chips { order: 3; width: 100%; margin-top: 4px; }
+}
+
+/* =====================================================================
+ * Launch-safe Events + Eventbrite registration
+ * ===================================================================== */
+.aarepdc-events-empty {
+    box-sizing: border-box;
+    width: calc(100% - 30px);
+    max-width: 900px;
+    margin: 24px auto 36px;
+    padding: clamp(34px, 6vw, 64px) clamp(22px, 6vw, 64px);
+    border: 1px solid #dce4ef;
+    border-radius: 16px;
+    background: linear-gradient(145deg, #f7f9fc 0%, #eef3fa 100%);
+    box-shadow: 0 16px 40px rgba(30, 68, 128, .08);
+    text-align: center;
+}
+.aarepdc-events-empty .aarepdc-events-eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    color: #b6831e;
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+.aarepdc-events-empty h2 {
+    margin: 0 0 14px !important;
+    color: #1e4480;
+    font-family: "Montserrat", sans-serif;
+    font-size: clamp(28px, 4vw, 42px) !important;
+    line-height: 1.15;
+}
+.aarepdc-events-empty p {
+    max-width: 620px;
+    margin: 0 auto 24px;
+    color: #4e596a;
+    font-size: 17px;
+    line-height: 1.65;
+}
+.aarepdc-eventbrite-button {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: auto !important;
+    min-height: 46px;
+    padding: 12px 22px !important;
+    border-radius: 6px;
+    text-decoration: none !important;
+}
+.aarepdc-eventbrite-button span { transition: transform .2s ease; }
+.aarepdc-eventbrite-button:hover span,
+.aarepdc-eventbrite-button:focus span { transform: translateX(3px); }
+.aarepdc-event-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-top: 6px;
+}
+.aarepdc-event-actions .event_block_btn_wrapp,
+.aarepdc-event-actions .aarepdc-calendar-button { margin: 0 !important; }
+.aarepdc-event-registration-note {
+    margin: 10px 0 0;
+    color: #687386;
+    font-size: 13px;
+}
+.aarepdc-event-badge {
+    display: inline-block;
+    align-self: flex-start;
+    margin: 0 0 12px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: #b6831e;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+.event_block_title a,
+.hes_box_right_contnt .event_big_text1 a {
+    color: inherit;
+    text-decoration: none;
+}
+.event_block_title a:hover,
+.event_block_title a:focus,
+.hes_box_right_contnt .event_big_text1 a:hover,
+.hes_box_right_contnt .event_big_text1 a:focus { text-decoration: underline; }
+.aarepdc-tribe-single-event .aarepdc-event-actions {
+    max-width: 900px;
+    margin: 26px auto 8px;
+}
+.aarepdc-tribe-single-event .aarepdc-event-registration-note {
+    max-width: 900px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (max-width: 600px) {
+    .aarepdc-events-empty { width: calc(100% - 20px); margin-top: 14px; }
+    .aarepdc-events-empty .aarepdc-eventbrite-button {
+        padding-right: 12px !important;
+        padding-left: 12px !important;
+        font-size: 14px;
+        line-height: 1.35;
+    }
+    .aarepdc-event-actions { align-items: stretch; flex-direction: column; }
+    .aarepdc-event-actions .event_block_btn_wrapp,
+    .aarepdc-event-actions .aarepdc-eventbrite-button,
+    .aarepdc-event-actions .aarepdc-calendar-button { width: 100% !important; }
+}
