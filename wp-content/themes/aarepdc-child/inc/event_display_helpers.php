@@ -63,17 +63,48 @@ function aarepdc_eventbrite_event_url( $event_id ) {
 	return '';
 }
 
-/** Resolve the honest registration destination and label for an event. */
+/**
+ * Resolve the honest registration destination and label for an event.
+ *
+ * Staff can set `_aarepdc_registration_status` on an event:
+ *   coming_soon  no link yet, shows "Registration coming soon"
+ *   open         registration hosted elsewhere (a partner site), uses `_aarepdc_registration_url`
+ * With no status the original Eventbrite behaviour applies unchanged.
+ */
 function aarepdc_event_registration_cta( $event_id ) {
+	$event_id = (int) $event_id;
+	$status   = (string) get_post_meta( $event_id, '_aarepdc_registration_status', true );
+
+	if ( 'coming_soon' === $status ) {
+		return array(
+			'state' => 'coming_soon',
+			'url'   => '',
+			'label' => 'Registration coming soon',
+		);
+	}
+
+	if ( 'open' === $status ) {
+		$url = esc_url_raw( trim( (string) get_post_meta( $event_id, '_aarepdc_registration_url', true ) ), array( 'https', 'http' ) );
+		if ( '' !== $url ) {
+			return array(
+				'state' => 'external',
+				'url'   => $url,
+				'label' => 'Register now',
+			);
+		}
+	}
+
 	$event_url = aarepdc_eventbrite_event_url( $event_id );
 	if ( '' !== $event_url ) {
 		return array(
+			'state' => 'eventbrite',
 			'url'   => $event_url,
 			'label' => 'Register on Eventbrite',
 		);
 	}
 
 	return array(
+		'state' => 'eventbrite',
 		'url'   => aarepdc_eventbrite_organizer_url(),
 		'label' => 'View AAREP DC on Eventbrite',
 	);
@@ -116,7 +147,7 @@ function aarepdc_upcoming_event_query( $limit = -1 ) {
 			'no_found_rows'       => true,
 			'meta_query'          => array(
 				array(
-					'key'     => '_EventStartDate',
+					'key'     => '_EventEndDate',
 					'value'   => current_time( 'mysql' ),
 					'compare' => '>=',
 					'type'    => 'DATETIME',
@@ -130,6 +161,10 @@ function aarepdc_upcoming_event_query( $limit = -1 ) {
 function aarepdc_eventbrite_button( $event_id, $class = 'site_button' ) {
 	$cta   = aarepdc_event_registration_cta( $event_id );
 	$title = get_the_title( $event_id );
+
+	if ( 'coming_soon' === $cta['state'] ) {
+		return '<span class="aarepdc-registration-soon">' . esc_html( $cta['label'] ) . '</span>';
+	}
 
 	return sprintf(
 		'<a class="%1$s aarepdc-eventbrite-button" href="%2$s" target="_blank" rel="noopener noreferrer" aria-label="%3$s">%4$s <span aria-hidden="true">&rarr;</span></a>',
@@ -174,12 +209,38 @@ function aarepdc_add_to_calendar_button( $event_id ) {
 	);
 }
 
-/** Render the Eventbrite registration and calendar actions together. */
+/** Render an "Event details" link when staff have set `_aarepdc_details_url`. */
+function aarepdc_event_details_link( $event_id ) {
+	$url = esc_url_raw( trim( (string) get_post_meta( (int) $event_id, '_aarepdc_details_url', true ) ), array( 'https', 'http' ) );
+	if ( '' === $url ) {
+		return '';
+	}
+
+	return sprintf(
+		'<a class="aarepdc-event-details-link" href="%1$s" target="_blank" rel="noopener noreferrer" aria-label="%2$s">Event details <span aria-hidden="true">&rarr;</span></a>',
+		esc_url( $url ),
+		esc_attr( 'Event details: ' . get_the_title( $event_id ) . ' (opens in a new tab)' )
+	);
+}
+
+/** Render the registration, details and calendar actions together. */
 function aarepdc_event_actions( $event_id ) {
+	$cta     = aarepdc_event_registration_cta( $event_id );
+	$partner = trim( (string) get_post_meta( (int) $event_id, '_aarepdc_registration_partner', true ) );
+
+	if ( 'coming_soon' === $cta['state'] ) {
+		$note = 'Registration details will be posted here soon.';
+	} elseif ( 'external' === $cta['state'] ) {
+		$note = '' !== $partner ? 'Registration is hosted by ' . $partner . '.' : 'Registration is hosted by our event partner.';
+	} else {
+		$note = 'Registration is handled on Eventbrite.';
+	}
+
 	return '<div class="aarepdc-event-actions">'
 		. '<div class="event_block_btn_wrapp">' . aarepdc_eventbrite_button( $event_id ) . '</div>'
+		. aarepdc_event_details_link( $event_id )
 		. aarepdc_add_to_calendar_button( $event_id )
-		. '</div><p class="aarepdc-event-registration-note">Registration is handled on Eventbrite.</p>';
+		. '</div><p class="aarepdc-event-registration-note">' . esc_html( $note ) . '</p>';
 }
 
 /** Add the same launch actions to genuine upcoming event detail pages. */

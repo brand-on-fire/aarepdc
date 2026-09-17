@@ -20,10 +20,12 @@ function events_page_shrt_sction( $atts ) {
 		$venue_details = tribe_get_venue_details( $event_id );
 		?>
 		<div class="vc_row event_block H11188">
+			<?php if ( $thumbnail_url ) : ?>
 			<div class="vc_col-sm-4">
-				<div class="event_block_image"<?php echo $thumbnail_url ? ' style="background-image:url(' . esc_url( $thumbnail_url ) . ');"' : ''; ?>></div>
+				<div class="event_block_image" style="background-image:url(<?php echo esc_url( $thumbnail_url ); ?>);"></div>
 			</div>
-			<div class="vc_col-sm-8">
+			<?php endif; ?>
+			<div class="<?php echo $thumbnail_url ? 'vc_col-sm-8' : 'vc_col-sm-12'; ?>">
 				<div class="event_block_title"><a href="<?php echo esc_url( get_permalink( $event_id ) ); ?>"><?php echo esc_html( get_the_title( $event_id ) ); ?></a></div>
 				<div class="hes_event_date" style="margin-bottom:35px;">
 					<div class="event_icons_wapp"><i class="fa fa-calendar-check-o" aria-hidden="true"></i></div>

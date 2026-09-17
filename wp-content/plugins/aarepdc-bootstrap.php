@@ -411,6 +411,7 @@ function aarepdc_no_hero_body_class( $classes ) {
 		'whats-new',
 		'member-feed',
 		'renew',
+		'aarep-national-network',
 	);
 	if ( in_array( $post->post_name, $no_hero_slugs, true ) ) {
 		$classes[] = 'aarepdc-no-hero';
@@ -1539,6 +1540,55 @@ function aarepdc_pricing_table_shortcode( $atts ) {
 	}
 	$out .= '</div>';
 	return $out;
+}
+
+/* ---------- AAREP National Network ----------
+ * Chapter directory for /aarep-national-network/. Chapters live here rather than in page
+ * content because this theme's shortcode optimizer rewrites post content on save; add or
+ * reorder a chapter by editing this list (or the aarepdc_national_network_chapters filter).
+ */
+function aarepdc_national_network_chapters() {
+	return (array) apply_filters(
+		'aarepdc_national_network_chapters',
+		array(
+			array( 'name' => 'AAREP LA',           'region' => 'Los Angeles, CA',          'url' => 'https://www.aarepla.org/' ),
+			array( 'name' => 'AAREP Philadelphia', 'region' => 'Philadelphia, PA',         'url' => 'https://www.aarepphl.org/' ),
+			array( 'name' => 'AAREP DFW',          'region' => 'Dallas-Fort Worth, TX',    'url' => 'https://aarepdfw.org/' ),
+			array( 'name' => 'AAREP Chicago',      'region' => 'Chicago, IL',              'url' => 'https://aarepchicago.org/' ),
+			array( 'name' => 'AAREP Bay Area',     'region' => 'San Francisco Bay Area, CA', 'url' => 'https://www.aarepba.org/' ),
+			array( 'name' => 'AAREP NYC',          'region' => 'New York, NY',             'url' => 'https://aarepny.com/' ),
+			array( 'name' => 'AAREP Detroit',      'region' => 'Detroit, MI',              'url' => 'https://aarepdet.org/' ),
+		)
+	);
+}
+
+add_shortcode( 'aarepdc_national_network', 'aarepdc_national_network_shortcode' );
+function aarepdc_national_network_shortcode() {
+	$cards = '';
+	foreach ( aarepdc_national_network_chapters() as $chapter ) {
+		$url = esc_url( isset( $chapter['url'] ) ? $chapter['url'] : '' );
+		if ( '' === $url || empty( $chapter['name'] ) ) {
+			continue;
+		}
+		$host   = preg_replace( '/^www\./', '', (string) wp_parse_url( $url, PHP_URL_HOST ) );
+		$cards .= '<li class="aarepdc-network-card">'
+			. '<a href="' . $url . '" target="_blank" rel="noopener noreferrer" aria-label="' . esc_attr( 'Visit ' . $chapter['name'] . ' (opens in a new tab)' ) . '">'
+			. '<span class="aarepdc-network-name">' . esc_html( $chapter['name'] ) . '</span>'
+			. ( ! empty( $chapter['region'] ) ? '<span class="aarepdc-network-region">' . esc_html( $chapter['region'] ) . '</span>' : '' )
+			. '<span class="aarepdc-network-host">' . esc_html( $host ) . '</span>'
+			. '<span class="aarepdc-network-cta">Visit chapter <span aria-hidden="true">&rarr;</span></span>'
+			. '</a></li>';
+	}
+	if ( '' === $cards ) {
+		return '';
+	}
+
+	return '<section class="aarepdc-network" aria-labelledby="aarepdc-network-title">'
+		. '<span class="aarepdc-network-eyebrow">A national network</span>'
+		. '<h1 id="aarepdc-network-title" class="aarepdc-network-title">AAREP National Network</h1>'
+		. '<p class="aarepdc-network-intro">AAREP DC is one of several African American Real Estate Professionals chapters across the country. Connect with a chapter in your city.</p>'
+		. '<ul class="aarepdc-network-grid">' . $cards . '</ul>'
+		. '</section>';
 }
 
 /* Sponsor logo strip placeholder (real homepage banner to be confirmed by AAREP). */

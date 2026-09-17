@@ -854,3 +854,137 @@ form.pmpro_form.pmpro_member_directory_search {
     .aarepdc-event-actions .aarepdc-eventbrite-button,
     .aarepdc-event-actions .aarepdc-calendar-button { width: 100% !important; }
 }
+
+/* =====================================================================
+ * Events: homepage block retired, registration states on the Events page
+ * ===================================================================== */
+/* Upcoming events are listed on the Events page only. */
+#home_new_event_section,
+.home_new_event_section { display: none !important; }
+
+/* Not-yet-open registration: a status pill, not a dead button. */
+.aarepdc-registration-soon {
+    display: inline-flex;
+    align-items: center;
+    min-height: 46px;
+    padding: 0 22px;
+    border: 1px dashed #b6831e;
+    border-radius: 23px;
+    background: #fbf6ec;
+    color: #8a6214;
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: .02em;
+}
+.aarepdc-event-details-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 46px;
+    padding: 0 6px;
+    color: #1e4480 !important;
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none !important;
+}
+.aarepdc-event-details-link span { transition: transform .2s ease; }
+.aarepdc-event-details-link:hover,
+.aarepdc-event-details-link:focus { text-decoration: underline !important; }
+.aarepdc-event-details-link:hover span,
+.aarepdc-event-details-link:focus span { transform: translateX(3px); }
+
+@media (max-width: 600px) {
+    .aarepdc-registration-soon { justify-content: center; width: 100%; box-sizing: border-box; }
+    .aarepdc-event-details-link { justify-content: center; }
+}
+
+/* =====================================================================
+ * AAREP National Network
+ * ===================================================================== */
+.aarepdc-network {
+    box-sizing: border-box;
+    max-width: 1112px;
+    margin: 32px auto 56px;
+    padding: 0 24px;
+}
+.aarepdc-network-eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    color: #b6831e;
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+.aarepdc-network-title {
+    margin: 0 0 12px !important;
+    padding: 0 !important;
+    color: #1e4480;
+    font-family: "Montserrat", sans-serif;
+    font-size: clamp(30px, 4vw, 44px) !important;
+    line-height: 1.15;
+}
+.aarepdc-network-intro {
+    max-width: 680px;
+    margin: 0 0 30px;
+    color: #4e596a;
+    font-size: 17px;
+    line-height: 1.65;
+}
+.aarepdc-network-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.aarepdc-network-card { margin: 0; padding: 0; }
+.aarepdc-network-card a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 22px 22px 20px;
+    border: 1px solid #e2e6ee;
+    border-top: 5px solid #1e4480;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(30, 68, 128, .06);
+    color: inherit;
+    text-decoration: none !important;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.aarepdc-network-card a:hover,
+.aarepdc-network-card a:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(30, 68, 128, .12);
+}
+.aarepdc-network-card a:focus-visible { outline: 3px solid #b6831e; outline-offset: 2px; }
+.aarepdc-network-name {
+    color: #1e4480;
+    font-family: "Montserrat", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+.aarepdc-network-region { margin-top: 4px; color: #4e596a; font-size: 15px; }
+.aarepdc-network-host { margin-top: 12px; color: #687386; font-size: 13px; word-break: break-word; }
+.aarepdc-network-cta {
+    margin-top: auto;
+    padding-top: 16px;
+    color: #1e4480;
+    font-size: 14px;
+    font-weight: 600;
+}
+.aarepdc-network-cta span { display: inline-block; transition: transform .2s ease; }
+.aarepdc-network-card a:hover .aarepdc-network-cta span,
+.aarepdc-network-card a:focus .aarepdc-network-cta span { transform: translateX(3px); }
+
+@media (max-width: 600px) {
+    .aarepdc-network { margin-top: 18px; padding: 0 16px; }
+    .aarepdc-network-grid { grid-template-columns: 1fr; gap: 14px; }
+}
