@@ -942,7 +942,17 @@ form.pmpro_form.pmpro_member_directory_search {
     padding: 0;
     list-style: none;
 }
-.aarepdc-network-card { margin: 0; padding: 0; }
+/* The theme draws its own bullet with li::before and indents list items; cancel both here. */
+.aarepdc-network-grid > li.aarepdc-network-card {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+.aarepdc-network-grid > li.aarepdc-network-card::before,
+.aarepdc-network-grid > li.aarepdc-network-card::marker {
+    content: none !important;
+    display: none !important;
+}
 .aarepdc-network-card a {
     display: flex;
     flex-direction: column;
