@@ -77,6 +77,7 @@ $aarepdc_inc_files = array(
     'sponsorship_levels_shrt.php',
     'membership_application.php',
     'event_registration_form.php',
+    'gallery_lightbox.php',
 );
 foreach ( $aarepdc_inc_files as $aarepdc_inc_f ) {
     $aarepdc_inc_path = __DIR__ . '/inc/' . $aarepdc_inc_f;
