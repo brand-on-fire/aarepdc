@@ -351,7 +351,15 @@ function aarepdc_legacy_redirects() {
 			array( 'response' => 503 )
 		);
 	}
+	/* These two redirects flip direction the instant the cutover option changes, so they must
+	 * never be cached. Without this, Varnish and the WP Engine edge hold a 302 for its 600s
+	 * max-age and visitors bounce between /become-a-member/ and /join/ in a loop until it
+	 * expires. The freeze branch above already does this; these did not. */
 	if ( aarepdc_membership_cutover_enabled() && $is_legacy_signup ) {
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+			define( 'DONOTCACHEPAGE', true );
+		}
+		nocache_headers();
 		wp_safe_redirect( home_url( '/join/' ), 302 );
 		exit;
 	}
@@ -359,6 +367,10 @@ function aarepdc_legacy_redirects() {
 		$method        = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( (string) $_SERVER['REQUEST_METHOD'] ) : 'GET';
 		$admin_preview = current_user_can( 'manage_options' ) && 'GET' === $method;
 		if ( ! $admin_preview ) {
+			if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+				define( 'DONOTCACHEPAGE', true );
+			}
+			nocache_headers();
 			wp_safe_redirect( home_url( '/become-a-member/' ), 302 );
 			exit;
 		}
