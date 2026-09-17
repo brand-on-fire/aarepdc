@@ -1030,7 +1030,8 @@ form.pmpro_form.pmpro_member_directory_search {
     display: block;
     position: relative;
     overflow: hidden;
-    aspect-ratio: 3 / 2;
+    /* 16:9 keeps whole groups in the wide event photos; 3:2 cropped people off the ends. */
+    aspect-ratio: 16 / 9;
     border-radius: 8px;
     background: #eef3fa;
     box-shadow: 0 2px 10px rgba(30, 68, 128, .08);
@@ -1148,4 +1149,20 @@ html.aarepdc-lb-open { overflow: hidden; }
     .aarepdc-lb__img,
     .aarepdc-lb__btn { transition: none; }
     .gallery .gallery-icon a:hover img { transform: none; }
+}
+
+/* Events page: centre the "View AAREP DC events on Eventbrite" button and give it room,
+   instead of sitting flush left against the banner image beneath it. */
+body.page-id-13 .wpb_wrapper > a.btn[href*="eventbrite.com/o/african-american-real-estate-professionals-dc"] {
+    display: flex !important;
+    width: fit-content;
+    max-width: 100%;
+    margin: 30px auto 40px !important;
+    text-align: center;
+}
+@media (max-width: 600px) {
+    body.page-id-13 .wpb_wrapper > a.btn[href*="eventbrite.com/o/african-american-real-estate-professionals-dc"] {
+        margin: 24px auto 30px !important;
+        white-space: normal;
+    }
 }
