@@ -36,7 +36,10 @@ function events_page_shrt_sction( $atts ) {
 					<div class="hes_event_location" style="margin-bottom:35px;">
 						<div class="event_icons_wapp"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
 						<p class="event_big_text1"><?php echo wp_kses_post( $venue_details['linked_name'] ); ?></p>
-						<p><?php echo esc_html( $venue_details['address'] ); ?></p>
+						<?php $aarepdc_address = aarepdc_event_venue_address( $event_id ); ?>
+						<?php if ( '' !== $aarepdc_address ) : ?>
+							<p><?php echo esc_html( $aarepdc_address ); ?></p>
+						<?php endif; ?>
 					</div>
 				<?php endif; ?>
 

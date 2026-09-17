@@ -175,6 +175,27 @@ function aarepdc_eventbrite_button( $event_id, $class = 'site_button' ) {
 	);
 }
 
+/**
+ * Plain-text venue address, e.g. "1640 Columbia Road NW, Washington, DC 20009".
+ *
+ * tribe_get_venue_details()['address'] returns formatted markup, which printed as raw
+ * <span> text when escaped. Build the line from the individual fields instead.
+ */
+function aarepdc_event_venue_address( $event_id ) {
+	$event_id = (int) $event_id;
+	if ( ! function_exists( 'tribe_get_venue_id' ) || ! tribe_has_venue( $event_id ) ) {
+		return '';
+	}
+	$venue_id = tribe_get_venue_id( $event_id );
+	$street   = trim( (string) tribe_get_address( $venue_id ) );
+	$city     = trim( (string) tribe_get_city( $venue_id ) );
+	$region   = trim( (string) tribe_get_stateprovince( $venue_id ) );
+	$zip      = trim( (string) tribe_get_zip( $venue_id ) );
+	$locality = trim( $city . ( '' !== $city && '' !== $region ? ', ' : '' ) . $region . ( '' !== $zip ? ' ' . $zip : '' ) );
+
+	return implode( ', ', array_filter( array( $street, $locality ) ) );
+}
+
 /** Render a correctly populated Add to Calendar control for an event. */
 function aarepdc_add_to_calendar_button( $event_id ) {
 	$event_id       = (int) $event_id;
@@ -190,7 +211,7 @@ function aarepdc_add_to_calendar_button( $event_id ) {
 			array_filter(
 				array(
 					tribe_get_venue( $event_id ),
-					wp_strip_all_tags( tribe_get_full_address( $event_id ) ),
+					aarepdc_event_venue_address( $event_id ),
 				)
 			)
 		)
