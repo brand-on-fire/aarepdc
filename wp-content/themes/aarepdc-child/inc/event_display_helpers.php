@@ -190,6 +190,13 @@ function aarepdc_event_venue_address( $event_id ) {
 	$street   = trim( (string) tribe_get_address( $venue_id ) );
 	$city     = trim( (string) tribe_get_city( $venue_id ) );
 	$region   = trim( (string) tribe_get_stateprovince( $venue_id ) );
+	// US venues created through the ORM fill _VenueState but can leave _VenueStateProvince empty.
+	if ( '' === $region && function_exists( 'tribe_get_state' ) ) {
+		$region = trim( (string) tribe_get_state( $venue_id ) );
+	}
+	if ( '' === $region && function_exists( 'tribe_get_province' ) ) {
+		$region = trim( (string) tribe_get_province( $venue_id ) );
+	}
 	$zip      = trim( (string) tribe_get_zip( $venue_id ) );
 	$locality = trim( $city . ( '' !== $city && '' !== $region ? ', ' : '' ) . $region . ( '' !== $zip ? ' ' . $zip : '' ) );
 
