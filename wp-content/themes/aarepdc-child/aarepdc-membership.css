@@ -1026,6 +1026,60 @@ form.pmpro_form.pmpro_member_directory_search {
     .aarepdc-network-grid { grid-template-columns: 1fr; gap: 14px; }
 }
 
+/* Live event-album covers from the public AAREP DC SmugMug feed. */
+.aarepdc-smugmug-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 18px 0 8px;
+}
+.aarepdc-smugmug-card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    background: #eef3fa;
+    box-shadow: 0 2px 10px rgba(30, 68, 128, .1);
+}
+.aarepdc-smugmug-card::after {
+    content: "";
+    position: absolute;
+    inset: 42% 0 0;
+    background: linear-gradient(to bottom, transparent, rgba(8, 24, 50, .88));
+    pointer-events: none;
+}
+.aarepdc-smugmug-card img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .35s ease;
+}
+.aarepdc-smugmug-card span {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 28px 15px 13px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.35;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, .55);
+}
+.aarepdc-smugmug-card:hover img,
+.aarepdc-smugmug-card:focus-visible img { transform: scale(1.04); }
+.aarepdc-smugmug-card:focus-visible { outline: 3px solid #b6831e; outline-offset: 3px; }
+.aarepdc-smugmug-fallback { margin: 24px 0; text-align: center; }
+.aarepdc-smugmug-fallback a { color: #1e4480; font-weight: 700; }
+
+@media (max-width: 782px) {
+    .aarepdc-smugmug-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .aarepdc-smugmug-card span { padding: 22px 11px 10px; font-size: 12px; }
+}
+
 /* =====================================================================
  * Core WordPress galleries: even grid + standard lightbox
  * (links open js/aarepdc-lightbox.js instead of attachment pages)

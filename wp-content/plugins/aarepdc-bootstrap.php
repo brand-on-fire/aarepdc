@@ -1557,6 +1557,95 @@ function aarepdc_pricing_table_shortcode( $atts ) {
 	return $out;
 }
 
+/* ---------- Event photos from AAREP DC SmugMug ----------
+ * SmugMug's public RSS feed is a more dependable source for this site than Photonic's legacy
+ * API integration. Cache the latest album covers, keep the last known-good set if SmugMug is
+ * briefly unavailable, and shuffle the visible tiles whenever WordPress renders the page. */
+function aarepdc_smugmug_album_covers() {
+	$cache_key = 'aarepdc_smugmug_album_covers';
+	$cached    = get_transient( $cache_key );
+	if ( is_array( $cached ) && $cached ) {
+		return $cached;
+	}
+
+	$feed_url = 'https://aarepdc.smugmug.com/hack/feed.mg?Type=nickname&Data=aarepdc&format=rss200';
+	$response = wp_safe_remote_get(
+		$feed_url,
+		array(
+			'timeout'     => 10,
+			'redirection' => 3,
+			'user-agent'  => 'AAREP-DC/' . get_bloginfo( 'version' ) . '; ' . home_url( '/' ),
+		)
+	);
+	$items = array();
+	if ( ! is_wp_error( $response ) && 200 === (int) wp_remote_retrieve_response_code( $response ) ) {
+		$body = wp_remote_retrieve_body( $response );
+		if ( '' !== $body && function_exists( 'simplexml_load_string' ) ) {
+			$previous = libxml_use_internal_errors( true );
+			$xml      = simplexml_load_string( $body, 'SimpleXMLElement', LIBXML_NOCDATA );
+			libxml_clear_errors();
+			libxml_use_internal_errors( $previous );
+			if ( $xml && isset( $xml->channel->item ) ) {
+				foreach ( $xml->channel->item as $item ) {
+					$title       = trim( (string) $item->title );
+					$album_url   = esc_url_raw( trim( (string) $item->link ) );
+					$description = html_entity_decode( (string) $item->description, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+					if ( ! preg_match( '/<img[^>]+src=["\']([^"\']+)["\']/i', $description, $image_match ) ) {
+						continue;
+					}
+					$image_url = esc_url_raw( $image_match[1] );
+					$album_host = strtolower( (string) wp_parse_url( $album_url, PHP_URL_HOST ) );
+					$image_host = strtolower( (string) wp_parse_url( $image_url, PHP_URL_HOST ) );
+					if ( ! $title || 'aarepdc.smugmug.com' !== $album_host || ! preg_match( '/(^|\.)smugmug\.com$/', $image_host ) ) {
+						continue;
+					}
+
+					// The feed publishes 150px thumbnails. SmugMug exposes the same signed image at L size.
+					$image_url = preg_replace( '#/Th/#', '/L/', $image_url, 1 );
+					$image_url = preg_replace( '/-Th(\.[a-z0-9]+)(?:\?.*)?$/i', '-L$1', $image_url, 1 );
+					$items[]   = array(
+						'title' => $title,
+						'url'   => $album_url,
+						'image' => $image_url,
+					);
+				}
+			}
+		}
+	}
+
+	if ( $items ) {
+		$items = array_slice( $items, 0, 40 );
+		set_transient( $cache_key, $items, 6 * HOUR_IN_SECONDS );
+		update_option( 'aarepdc_smugmug_album_covers_fallback', $items, false );
+		return $items;
+	}
+
+	$fallback = get_option( 'aarepdc_smugmug_album_covers_fallback', array() );
+	return is_array( $fallback ) ? $fallback : array();
+}
+
+add_shortcode( 'aarepdc_smugmug_gallery', 'aarepdc_smugmug_gallery_shortcode' );
+function aarepdc_smugmug_gallery_shortcode( $atts ) {
+	$atts  = shortcode_atts( array( 'count' => 9 ), (array) $atts, 'aarepdc_smugmug_gallery' );
+	$count = max( 3, min( 12, (int) $atts['count'] ) );
+	$items = aarepdc_smugmug_album_covers();
+	if ( ! $items ) {
+		return '<p class="aarepdc-smugmug-fallback"><a href="https://aarepdc.smugmug.com/" target="_blank" rel="noopener noreferrer">View AAREP DC event photos on SmugMug <span aria-hidden="true">&rarr;</span></a></p>';
+	}
+
+	shuffle( $items );
+	$items = array_slice( $items, 0, $count );
+	$out   = '<div class="aarepdc-smugmug-grid" role="list">';
+	foreach ( $items as $item ) {
+		$out .= '<a class="aarepdc-smugmug-card" role="listitem" href="' . esc_url( $item['url'] ) . '" target="_blank" rel="noopener noreferrer" aria-label="' . esc_attr( 'View ' . $item['title'] . ' on SmugMug (opens in a new tab)' ) . '">';
+		$out .= '<img src="' . esc_url( $item['image'] ) . '" alt="' . esc_attr( $item['title'] ) . '" loading="lazy" decoding="async">';
+		$out .= '<span>' . esc_html( $item['title'] ) . '</span>';
+		$out .= '</a>';
+	}
+	$out .= '</div>';
+	return $out;
+}
+
 /* ---------- AAREP National Network ----------
  * Chapter directory for /aarep-national-network/. Chapters live here rather than in page
  * content because this theme's shortcode optimizer rewrites post content on save; add or
