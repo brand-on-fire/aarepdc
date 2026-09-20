@@ -265,6 +265,16 @@ function aarepdc_is_board_member( $user_id ) {
 	return $lvl && (int) $lvl->id === $board;
 }
 
+/** The verified Board title shown on account cards, profiles, and directory badges. */
+function aarepdc_board_designation( $user_id ) {
+	if ( ! aarepdc_is_board_member( $user_id ) ) {
+		return '';
+	}
+	$allowed = array( 'President', 'Treasurer', 'Secretary', 'Parliamentarian', 'Board Member' );
+	$title   = trim( (string) get_user_meta( (int) $user_id, 'aarepdc_board_designation', true ) );
+	return in_array( $title, $allowed, true ) ? $title : 'Board Member';
+}
+
 /** Level id of the staff-managed Sponsor Employee level (0 if not created yet). */
 function aarepdc_sponsor_employee_level_id() {
 	static $id = null;
@@ -288,7 +298,7 @@ function aarepdc_is_sponsor_employee( $user_id ) {
 add_filter( 'pmpro_member_directory_display_name', 'aarepdc_board_badge_display_name', 10, 2 );
 function aarepdc_board_badge_display_name( $display_name, $user ) {
 	if ( is_object( $user ) && ! empty( $user->ID ) && aarepdc_is_board_member( $user->ID ) ) {
-		$display_name .= ' <span class="aarepdc-board-chip">Board</span>';
+		$display_name .= ' <span class="aarepdc-board-chip">' . esc_html( aarepdc_board_designation( $user->ID ) ) . '</span>';
 	}
 	return $display_name;
 }
@@ -399,6 +409,7 @@ function aarepdc_no_hero_body_class( $classes ) {
 		'member-login',
 		'member-account',
 		'member-directory',
+		'member-profile',
 		'members-resources',
 		'join',
 		'my-employees',
@@ -547,6 +558,10 @@ function aarepdc_render_member_card( $user_id ) {
 		'Role / Job Title'       => $pv( 'aarepdc_role', get_user_meta( $user_id, 'aarepdc_role', true ) ),
 		'Company / Organization' => $pv( 'aarepdc_company_name', get_user_meta( $user_id, 'aarepdc_company_name', true ) ),
 	);
+	$board_designation = aarepdc_board_designation( $user_id );
+	if ( '' !== $board_designation ) {
+		$rows['Board Designation'] = $board_designation;
+	}
 	$out  = '<div class="aarepdc-card-avatar">' . get_avatar( $user_id, 96 ) . '</div>';
 	$out .= '<ul class="aarepdc-member-card-list">';
 	foreach ( $rows as $label => $value ) {
@@ -1584,10 +1599,12 @@ function aarepdc_national_network_shortcode() {
 	}
 
 	return '<section class="aarepdc-network" aria-labelledby="aarepdc-network-title">'
+		. '<img class="aarepdc-network-logo" src="' . esc_url( get_stylesheet_directory_uri() . '/images/aarep-national-logo.png' ) . '" alt="African-American Real Estate Professionals National">'
 		. '<span class="aarepdc-network-eyebrow">A national network</span>'
 		. '<h1 id="aarepdc-network-title" class="aarepdc-network-title">AAREP National Network</h1>'
 		. '<p class="aarepdc-network-intro">AAREP DC is one of several African American Real Estate Professionals chapters across the country. Connect with a chapter in your city.</p>'
 		. '<ul class="aarepdc-network-grid">' . $cards . '</ul>'
+		. '<p class="aarepdc-network-contact">Questions about the AAREP National Network? Email <a href="mailto:info@aarepdc.org">info@aarepdc.org</a>.</p>'
 		. '</section>';
 }
 
@@ -1934,10 +1951,9 @@ function aarepdc_renew_shortcode() {
  * "renew for {year}" nudge. A legacy active provider subscription is an exception requiring
  * manual review, so those accounts are skipped rather than changed or emailed automatically.
  *
- * SAFETY: nothing is sent to anyone unless BOTH (a) option `aarepdc_renewal_send_enabled` is
- * truthy AND (b) the recipient passes the Mail Guard allowlist. With the guard total-block
- * and the option unset (the default), this renders + logs intent and sends ZERO. Real sends
- * stay gated behind an explicit CEO green-light (set the option + open the guard). */
+ * SAFETY: nothing is sent unless option `aarepdc_renewal_send_enabled` is truthy. When the
+ * optional Mail Guard is active, the recipient must also pass its allowlist. The option defaults
+ * off, so a new install renders + logs intent and sends ZERO until explicitly enabled. */
 
 /**
  * Build the renewal email for a member. Pure renderer — sends nothing.
@@ -2189,43 +2205,40 @@ function aarepdc_user_has_active_subscription( $user_id ) {
 }
 
 /**
- * Members who need a {year} renewal nudge: their latest membership term ended during {year}-1,
+ * Members who need a {year} renewal nudge: their authoritative term ended December 31 of {year}-1,
  * they are not admins, not Sponsor Employees (gated by their sponsor), and have no active sub.
- * Targeting by enddate (not just "expired" status) is race-proof — it works whether or not
- * PMPro's expiration cron has already flipped them, and lets us preview before Jan 1.
+ * The authoritative user meta is deliberate: PMPro's internal enddate includes grace and may be
+ * rewritten by its expiry process, while aarepdc_term_end always remains the true member-facing
+ * calendar-year end.
  *
  * @return array<int,int> map of user_id => prior membership_id
  */
 function aarepdc_collect_renewal_targets( $year ) {
 	global $wpdb;
-	$year = (int) $year;
-	// Grace-aware window. The stored enddate is term-end + grace, so a member whose Dec 31 {year-1}
-	// term just ended carries an enddate later in January of {year} and is still
-	// 'active'. Target that window, padded either side of the configured grace length.
-	$start = sprintf( '%d-01-01 00:00:00', $year );
-	$end   = gmdate( 'Y-m-d 23:59:59', strtotime( sprintf( '%d-01-01', $year ) ) + ( ( aarepdc_grace_days() + 16 ) * DAY_IN_SECONDS ) );
-	$rows  = $wpdb->get_results( $wpdb->prepare(
-		"SELECT mu.user_id, mu.membership_id
-		   FROM {$wpdb->prefix}pmpro_memberships_users mu
-		   INNER JOIN (
-		       SELECT user_id, MAX(id) AS max_id
-		         FROM {$wpdb->prefix}pmpro_memberships_users
-		        GROUP BY user_id
-		   ) latest ON latest.max_id = mu.id
-		  WHERE mu.enddate IS NOT NULL
-		    AND mu.enddate BETWEEN %s AND %s",
-		$start,
-		$end
+	$year      = (int) $year;
+	$term_end  = sprintf( '%d-12-31', $year - 1 );
+	$paid_ids  = aarepdc_paid_level_ids();
+	$user_ids  = get_users( array(
+		'fields'     => 'ids',
+		'number'     => -1,
+		'meta_key'   => 'aarepdc_term_end',
+		'meta_value' => $term_end,
 	) );
 	$targets = array();
-	foreach ( (array) $rows as $r ) {
-		$uid = (int) $r->user_id;
-		$level_id = (int) $r->membership_id;
-		if ( ! $uid || ! aarepdc_is_paid_level_id( $level_id ) || user_can( $uid, 'manage_options' ) ) {
+	if ( ! $paid_ids ) {
+		return $targets;
+	}
+	$id_sql = implode( ',', array_map( 'intval', $paid_ids ) );
+	foreach ( (array) $user_ids as $uid ) {
+		$uid = (int) $uid;
+		if ( ! $uid || user_can( $uid, 'manage_options' ) || aarepdc_is_board_member( $uid ) || aarepdc_is_sponsor_employee( $uid ) ) {
 			continue;
 		}
-		$lvl = pmpro_getLevel( $level_id );
-		if ( $lvl && 'Sponsor Employee' === $lvl->name ) {
+		$level_id = (int) $wpdb->get_var( $wpdb->prepare(
+			"SELECT membership_id FROM {$wpdb->prefix}pmpro_memberships_users WHERE user_id = %d AND membership_id IN ({$id_sql}) ORDER BY id DESC LIMIT 1",
+			$uid
+		) );
+		if ( ! $level_id || ! aarepdc_is_paid_level_id( $level_id ) ) {
 			continue;
 		}
 		if ( aarepdc_user_has_active_subscription( $uid ) ) {
@@ -2244,7 +2257,7 @@ function aarepdc_collect_renewal_targets( $year ) {
 function aarepdc_run_renewal_batch( $year ) {
 	$year     = (int) $year;
 	$send_on  = (bool) get_option( 'aarepdc_renewal_send_enabled' );
-	$guard_on = function_exists( 'aarepdc_mailguard_enabled' ) ? aarepdc_mailguard_enabled() : true;
+	$guard_on = function_exists( 'aarepdc_mailguard_enabled' ) ? aarepdc_mailguard_enabled() : false;
 	$allow    = function_exists( 'aarepdc_mailguard_allowlist' ) ? aarepdc_mailguard_allowlist() : array();
 	$targets  = aarepdc_collect_renewal_targets( $year );
 	$counts   = array( 'targets' => 0, 'sent' => 0, 'suppressed' => 0, 'already' => 0, 'no_email' => 0 );
@@ -2858,7 +2871,7 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				),
 				'member-account'    => array(
 					'title'   => 'My Account',
-					'content' => "<!-- wp:shortcode -->\n[pmpro_account]\n<!-- /wp:shortcode -->",
+					'content' => "<!-- wp:shortcode -->\n[pmpro_account sections=\"membership\"]\n<!-- /wp:shortcode -->",
 					'pmp_key' => 'account',
 				),
 				'renew'             => array(
@@ -2869,13 +2882,13 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				),
 				'member-directory'  => array(
 					'title'              => 'Member Directory',
-					'content'            => "<h1 class=\"aarepdc-directory-title\" style=\"text-align:center;color:#1e4480;font-size:36px;margin:32px 0 8px;\">Member Directory</h1>\n<p style=\"text-align:center;color:#475467;font-size:16px;margin:0 0 32px;\">Connect with fellow AAREP DC professionals.</p>\n[aarepdc_directory_for_members]\n[pmpro_member_directory show_email=\"false\" show_search=\"true\" show_map=\"false\" show_startdate=\"false\" fields=\"Sector,aarepdc_real_estate_sector;Company,aarepdc_company_name;City,aarepdc_city;Title,aarepdc_professional_level;Email,user_email;Phone,aarepdc_phone_number;LinkedIn,aarepdc_linkedin_url\"]\n[/aarepdc_directory_for_members]",
+					'content'            => "<h1 class=\"aarepdc-directory-title\" style=\"text-align:center;color:#1e4480;font-size:36px;margin:32px 0 8px;\">Member Directory</h1>\n<p style=\"text-align:center;color:#475467;font-size:16px;margin:0 0 32px;\">Connect with fellow AAREP DC professionals.</p>\n[aarepdc_directory_for_members]\n[pmpro_member_directory show_email=\"false\" show_search=\"true\" show_map=\"false\" show_startdate=\"false\" fields=\"Sector,aarepdc_real_estate_sector;Company,aarepdc_company_name;City,aarepdc_city;Title,aarepdc_role;Email,user_email;Phone,aarepdc_phone_number;LinkedIn,aarepdc_linkedin_url\"]\n[/aarepdc_directory_for_members]",
 					'pmp_key'            => 'directory',
 					'required_shortcode' => 'pmpro_member_directory',
 				),
 				'member-profile'    => array(
 					'title'   => 'Member Profile',
-					'content' => "<!-- wp:shortcode -->\n[pmpro_member_profile elements=\"avatar|256;Membership,membership_name;Member Since,membership_startdate\" show_search=\"false\"]\n<!-- /wp:shortcode -->",
+					'content' => "<!-- wp:shortcode -->\n[pmpro_member_profile elements=\"avatar|256;display_name;Membership,membership_name;Role / Job Title,aarepdc_role;Company / Organization,aarepdc_company_name;Board Designation,aarepdc_board_designation\" show_search=\"false\"]\n<!-- /wp:shortcode -->",
 					'pmp_key' => 'profile',
 					'force_update' => true,
 				),

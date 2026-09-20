@@ -26,7 +26,6 @@
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.1.4/semantic.min.css" /> -->
 <!-- <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri(); ?>/js/jquery-1.11.1.js"></script> -->
 <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri(); ?>/js/jquery.validate.js"></script> 
-<?php } ?>
 <script type="text/javascript">
  
 		jQuery.validator.setDefaults( {
@@ -127,6 +126,7 @@
 			} );
 		} );
 	</script>
+<?php } ?>
   <script type="text/javascript">
 jQuery( document ).ready(function() { 
 

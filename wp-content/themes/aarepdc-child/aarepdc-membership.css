@@ -318,6 +318,20 @@ body.pmpro_pages-checkout .pmpro_btn-submit-checkout:hover,
 }
 .pmpro_account h2,
 .pmpro_account h3 { color: #1e4480; margin-top: 0; }
+.pmpro_account .pmpro_list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.pmpro_account .pmpro_list > li {
+    padding-left: 0;
+    list-style: none;
+}
+.pmpro_account .pmpro_list > li::before,
+.pmpro_account .pmpro_list > li::marker {
+    content: none !important;
+    display: none !important;
+}
 
 /* ---- Login page ---- */
 .pmpro_login_wrap {
@@ -909,6 +923,12 @@ form.pmpro_form.pmpro_member_directory_search {
     margin: 32px auto 56px;
     padding: 0 24px;
 }
+.aarepdc-network-logo {
+    display: block;
+    width: min(100%, 560px);
+    height: auto;
+    margin: 0 auto 28px;
+}
 .aarepdc-network-eyebrow {
     display: block;
     margin-bottom: 8px;
@@ -993,6 +1013,13 @@ form.pmpro_form.pmpro_member_directory_search {
 .aarepdc-network-cta span { display: inline-block; transition: transform .2s ease; }
 .aarepdc-network-card a:hover .aarepdc-network-cta span,
 .aarepdc-network-card a:focus .aarepdc-network-cta span { transform: translateX(3px); }
+.aarepdc-network-contact {
+    margin: 30px 0 0;
+    color: #4e596a;
+    text-align: center;
+    font-size: 16px;
+}
+.aarepdc-network-contact a { color: #1e4480; font-weight: 700; }
 
 @media (max-width: 600px) {
     .aarepdc-network { margin-top: 18px; padding: 0 16px; }
