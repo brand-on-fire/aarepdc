@@ -339,8 +339,7 @@ add_action( 'wp_enqueue_scripts', function() {
  * Membership / Member Directory / My Account / Log Out). Hide them when logged out so the
  * dropdown only appears for members, and resolve the Log Out item to a fresh nonce'd URL.
  * Replaces the old top-level nav logout — logout now lives in this submenu + the account page.
- * The National Network page stays available by direct link but is intentionally omitted from
- * navigation per the client's launch request. */
+ * The AAREP National page remains in the public About Us submenu. */
 add_filter( 'wp_nav_menu_objects', 'aarepdc_member_submenu', 10, 2 );
 function aarepdc_member_submenu( $items, $args ) {
     $logged_in = is_user_logged_in();
@@ -349,11 +348,6 @@ function aarepdc_member_submenu( $items, $args ) {
     //   .aarepdc-member-only  => signed-in members only (Directory, Member Portal, Log Out)
     //   .aarepdc-guest-only   => signed-out visitors only (Member Account, which routes to login)
     foreach ( $items as $key => $item ) {
-        $path = (string) wp_parse_url( (string) $item->url, PHP_URL_PATH );
-        if ( '/aarep-national-network/' === trailingslashit( $path ) ) {
-            unset( $items[ $key ] );
-            continue;
-        }
         if ( false !== strpos( (string) $item->url, 'aarepdc-logout' ) ) {
             $item->url = wp_logout_url( home_url() );
         }
