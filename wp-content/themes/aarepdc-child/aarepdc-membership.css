@@ -43,6 +43,12 @@
     border-bottom: 1px solid #e8ebf2;
 }
 
+.aarepdc-member-card-list li::before,
+.aarepdc-member-card-list li::marker {
+    content: none !important;
+    display: none !important;
+}
+
 .aarepdc-member-card-list li:last-child {
     border-bottom: 0;
 }
@@ -318,17 +324,21 @@ body.pmpro_pages-checkout .pmpro_btn-submit-checkout:hover,
 }
 .pmpro_account h2,
 .pmpro_account h3 { color: #1e4480; margin-top: 0; }
-.pmpro_account .pmpro_list {
+.pmpro_account .pmpro_list,
+body.pmpro-account .pmpro_list {
     margin: 0;
     padding: 0;
     list-style: none;
 }
-.pmpro_account .pmpro_list > li {
+.pmpro_account .pmpro_list > li,
+body.pmpro-account .pmpro_list > li {
     padding-left: 0;
     list-style: none;
 }
 .pmpro_account .pmpro_list > li::before,
-.pmpro_account .pmpro_list > li::marker {
+.pmpro_account .pmpro_list > li::marker,
+body.pmpro-account .pmpro_list > li::before,
+body.pmpro-account .pmpro_list > li::marker {
     content: none !important;
     display: none !important;
 }
